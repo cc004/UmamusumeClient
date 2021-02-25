@@ -45,6 +45,10 @@ namespace Umamusume
                 {
                     accounts.Add(client.Account);
                     File.WriteAllText($"accounts.json", JsonConvert.SerializeObject(accounts, Formatting.Indented));
+                    string pwd = Utils.GenRandomPassword();
+                    client.Account.extra.password = pwd;
+                    client.PublishTransition(pwd);
+                    File.WriteAllText($"accounts.json", JsonConvert.SerializeObject(accounts, Formatting.Indented));
                 }
             }
             catch (Exception e)
