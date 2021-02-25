@@ -9,18 +9,18 @@ namespace Umamusume
 {
     class Program
     {
-        static void Main(string[] args)
+        private static void RegisterTask(int id)
         {
             List<Account> accounts;
             try
             {
-                accounts = JsonConvert.DeserializeObject<List<Account>>(File.ReadAllText("accounts.json"));
+                accounts = JsonConvert.DeserializeObject<List<Account>>(File.ReadAllText($"accounts{id}.json"));
             }
             catch
             {
                 accounts = new List<Account>();
             }
-            var client = new UmamusumeClient();
+            var client = new UmamusumeClient(new SimpleLz4Frame(id));
             signup:
             try
             {
@@ -33,6 +33,10 @@ namespace Umamusume
 
                 client.StartSession();
                 client.Login();
+                client.Request(new ChangeNameRequest
+                {
+                    name = "init"
+                });
                 client.ReceivePresents();
                 client.Gacha(30003);
                 Thread.Sleep(500);
@@ -41,14 +45,14 @@ namespace Umamusume
                 client.Gacha(30003);
                 Console.WriteLine($"gacha get = {client.Account.extra.support_cards.Count}");
 
-                if (client.Account.extra.support_cards.Count > 1)
+                if (client.Account.extra.support_cards.Count > -1)
                 {
                     accounts.Add(client.Account);
-                    File.WriteAllText($"accounts.json", JsonConvert.SerializeObject(accounts, Formatting.Indented));
+                    File.WriteAllText($"accounts{id}.json", JsonConvert.SerializeObject(accounts, Formatting.Indented));
                     string pwd = Utils.GenRandomPassword();
-                    client.Account.extra.password = pwd;
                     client.PublishTransition(pwd);
-                    File.WriteAllText($"accounts.json", JsonConvert.SerializeObject(accounts, Formatting.Indented));
+                    client.Account.extra.password = pwd;
+                    File.WriteAllText($"accounts{id}.json", JsonConvert.SerializeObject(accounts, Formatting.Indented));
                 }
             }
             catch (Exception e)
@@ -57,6 +61,10 @@ namespace Umamusume
             }
             client.ResetAccount();
             goto signup;
+        }
+        static void Main(string[] args)
+        {
+            RegisterTask(int.Parse(args[0]));
         }
     }
 }
