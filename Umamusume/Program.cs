@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SQLite;
 using System.IO;
 using System.Threading;
 using Umamusume.Model;
@@ -9,18 +11,14 @@ namespace Umamusume
 {
     class Program
     {
+        private static SQLiteConnection conn;
+        private static int i;
+        private static SQLiteTransaction trans;
+
         private static void RegisterTask(int id)
         {
-            List<Account> accounts;
-            try
-            {
-                accounts = JsonConvert.DeserializeObject<List<Account>>(File.ReadAllText($"accounts{id}.json"));
-            }
-            catch
-            {
-                accounts = new List<Account>();
-            }
             var client = new UmamusumeClient(new SimpleLz4Frame(id));
+            client.LogPrefix = $"[Thead #{id}]";
             signup:
             try
             {
@@ -47,24 +45,65 @@ namespace Umamusume
 
                 if (client.Account.extra.support_cards.Count > -1)
                 {
-                    accounts.Add(client.Account);
-                    File.WriteAllText($"accounts{id}.json", JsonConvert.SerializeObject(accounts, Formatting.Indented));
                     string pwd = Utils.GenRandomPassword();
                     client.PublishTransition(pwd);
                     client.Account.extra.password = pwd;
-                    File.WriteAllText($"accounts{id}.json", JsonConvert.SerializeObject(accounts, Formatting.Indented));
+                    const string qstr = "insert into accounts (udid, authkey, password, cards, cardnum, viewer_id) values (@udid, @authkey, @password, @cards, @cardnum, @viewer_id)";
+                    
+                    lock (conn)
+                    {
+                        if (++i % 10 == 0)
+                        {
+                            trans.Commit();
+                            trans = conn.BeginTransaction();
+                        }
+                        var cmd = new SQLiteCommand(qstr, conn);
+                        cmd.Parameters.Add("udid", DbType.String).Value = client.Account.Udid.ToString();
+                        cmd.Parameters.Add("authkey", DbType.String).Value = client.Account.Authkey;
+                        cmd.Parameters.Add("password", DbType.String).Value = client.Account.extra.password;
+                        cmd.Parameters.Add("cards", DbType.String).Value = string.Join("\n", client.Account.extra.support_cards);
+                        cmd.Parameters.Add("cardnum", DbType.Int32).Value = client.Account.extra.support_cards.Count;
+                        cmd.Parameters.Add("viewer_id", DbType.Int32).Value = client.Account.ViewerId;
+                    }
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Console.WriteLine($"[Thread #{id}] {e}");
             }
             client.ResetAccount();
             goto signup;
         }
         static void Main(string[] args)
         {
-            RegisterTask(int.Parse(args[0]));
+            ThreadPool.SetMaxThreads(512, 512);
+            ThreadPool.SetMaxThreads(128, 128);
+            conn = new SQLiteConnection("data source=accounts.db");
+            conn.Open();
+            trans = conn.BeginTransaction();
+
+            try
+            {
+                new SQLiteCommand("create table if not exists accounts(" +
+                    "TEXT udid," +
+                    "TEXT authkey," +
+                    "TEXT password," +
+                    "TEXT cards," +
+                    "INTEGER cardnum," +
+                    "INTEGER viewer_id)").ExecuteNonQuery();
+
+                new SQLiteCommand("create unique index id_index on accounts (viewer_id)", conn).ExecuteNonQuery();
+            }
+            catch
+            {
+
+            }
+
+            for (int i = 0; i < 16; ++i)
+            {
+                new Thread(new ThreadStart(() => RegisterTask(i))).Start();
+                Thread.Sleep(5000);
+            }
         }
     }
 }
