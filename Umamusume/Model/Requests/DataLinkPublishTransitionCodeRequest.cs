@@ -12,7 +12,7 @@ namespace Umamusume.Model
 		public string password;
 
 
-        protected override string Url => "/account/public_transition_code";
+        protected override string Url => "/account/publish_transition_code";
 
 
 

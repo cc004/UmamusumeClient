@@ -56,8 +56,9 @@ namespace Umamusume
 
         private string session_id;
         private string SessionId => session_id ?? Account.SessionId;
+        private readonly ICryptHandler compressor;
 
-        public UmamusumeClient() : this(new Account()) { }
+        public UmamusumeClient(ICryptHandler handler) : this(new Account(), handler) { }
 
         private static void AddCommonHeaders(HttpClient client)
         {
@@ -76,8 +77,9 @@ namespace Umamusume
 
         }
 
-        public UmamusumeClient(Account account)
+        public UmamusumeClient(Account account, ICryptHandler handler)
         {
+            compressor = handler;
             Account = account;
             client.DefaultRequestHeaders.Clear();
             AddCommonHeaders(client);
@@ -120,14 +122,15 @@ namespace Umamusume
             //Console.WriteLine(JsonConvert.SerializeObject(request, Formatting.None));
             var content = Utils.Pack(JToken.FromObject(request));
             var counthead = BitConverter.GetBytes(head.Count());
-            var crypted = SimpleLz4Frame.Compress(counthead.Concat(head.Concat(content)).ToArray());
+            var crypted = compressor.Compress(counthead.Concat(head.Concat(content)).ToArray());
             //var crypted = SimpleLz4Frame.Compress(Convert.FromBase64String("XQEAAH50j/tMf5uTRScSC0+C/r4Q9DVfhNNeCVv6Q+boA5swND6hd6/f38nhf/W/vW3aAd9/3uyolZ2GaM1kbGPhWIFCn58eiHIqoH7ctoKMoHvGw2sL8ZtmvbVCbpryiAuTQgrK9R5Bgv3M52rZq+kt8UJf9UJGncP2ed9WQsM/tdQ5SFd+V1oFKV2BDoyxhT585T2RdZrUIBiwelK7MJf2m1VISYgMc8rbCUjOMdAzOo6WlKmuLPMg1+y1FF/gbWD8CczoloK94AeEU11AgFPTe2wSCnEjZmtRsKmDjdBkoePac6t7J7DZFqlpBcgZBimXACzgPIRCRDYph0paprwoYOM4d/LWvOwCkKNS5/6CRVT0opNoCEOTsN4MV/RE7xYf0qRPvz0QADAtLKH5i04baM681PRF45gIaVMnc+kx+7qMCSJvO3HaCcaAbrKp6N3W3IUKZXh1HVddfpp9+5U="));
             PreRequestHeaders();
             HttpResponseMessage resp;
+            var apiurl = request.GetFullUrl(apiroot);
 
             try
             {
-                resp = client.PostAsync(request.GetFullUrl(apiroot), new ByteArrayContent(Encoding.UTF8.GetBytes(crypted))).Result;
+                resp = client.PostAsync(apiurl, new ByteArrayContent(Encoding.UTF8.GetBytes(crypted))).Result;
             }
             catch (Exception e)
             {
@@ -138,20 +141,20 @@ namespace Umamusume
             var res = resp.Content.ReadAsStringAsync().Result;
             if (resp.StatusCode != HttpStatusCode.OK)
             {
-                Console.WriteLine($"api ret: {resp.StatusCode}");
+                Console.WriteLine($"api {apiurl} ret: {resp.StatusCode}");
                 return null;
             }
 
-            var obj = Utils.Unpack(SimpleLz4Frame.Decompress(res)).ToObject<TResult>();
+            var obj = Utils.Unpack(compressor.Decompress(res)).ToObject<TResult>();
 
-            Console.WriteLine($"api ret: result code = {obj.data_headers.result_code}");
+            Console.WriteLine($"api {apiurl} ret: result code = {obj.data_headers.result_code}");
             Account.ViewerId = obj.data_headers.viewer_id;
             if (!string.IsNullOrEmpty(obj.data_headers.sid))
             {
                 session_id = Utils.Bin2Hex(Utils.MakeMd5(obj.data_headers.sid));
-                Console.WriteLine($"sid changed into {session_id}");
+                //Console.WriteLine($"sid changed into {session_id}");
             }
-            Console.WriteLine($"api ret:\n {obj}");
+            //Console.WriteLine($"api ret:\n {obj}");
             //Console.WriteLine(JsonConvert.SerializeObject(obj, Formatting.None));
             return obj;
         }
