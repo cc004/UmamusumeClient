@@ -60,6 +60,8 @@ namespace Umamusume
 
         public UmamusumeClient(ICryptHandler handler) : this(new Account(), handler) { }
 
+        public string LogPrefix;
+
         private static void AddCommonHeaders(HttpClient client)
         {
             var headertype = typeof(HttpClient).Assembly.GetType("System.Net.Http.Headers.HttpHeaderType");
@@ -134,20 +136,20 @@ namespace Umamusume
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Console.WriteLine($"{LogPrefix} {e}");
                 return null;
             }
             PostRequestHeaders();
             var res = resp.Content.ReadAsStringAsync().Result;
             if (resp.StatusCode != HttpStatusCode.OK)
             {
-                Console.WriteLine($"api {apiurl} ret: {resp.StatusCode}");
+                Console.WriteLine($"{LogPrefix} api {apiurl} ret: {resp.StatusCode}");
                 return null;
             }
 
             var obj = Utils.Unpack(compressor.Decompress(res)).ToObject<TResult>();
 
-            Console.WriteLine($"api {apiurl} ret: result code = {obj.data_headers.result_code}");
+            Console.WriteLine($"{LogPrefix} api {apiurl} ret: result code = {obj.data_headers.result_code}");
             Account.ViewerId = obj.data_headers.viewer_id;
             if (!string.IsNullOrEmpty(obj.data_headers.sid))
             {
@@ -180,7 +182,7 @@ namespace Umamusume
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
+                    Console.WriteLine($"{LogPrefix} {e}");
                 }
             } while (true);
 
