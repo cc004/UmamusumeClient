@@ -101,7 +101,8 @@ namespace Umamusume
 
             for (int i = 0; i < 16; ++i)
             {
-                new Thread(new ThreadStart(() => RegisterTask(i))).Start();
+                int j = i;
+                new Thread(new ThreadStart(() => RegisterTask(j))).Start();
                 Thread.Sleep(5000);
             }
         }
