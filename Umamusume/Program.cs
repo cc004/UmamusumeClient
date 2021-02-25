@@ -43,7 +43,7 @@ namespace Umamusume
                 client.Gacha(30003);
                 Console.WriteLine($"gacha get = {client.Account.extra.support_cards.Count}");
 
-                if (client.Account.extra.support_cards.Count > -1)
+                if (client.Account.extra.support_cards.Count > 1)
                 {
                     string pwd = Utils.GenRandomPassword();
                     client.PublishTransition(pwd);
@@ -64,6 +64,7 @@ namespace Umamusume
                         cmd.Parameters.Add("cards", DbType.String).Value = string.Join("\n", client.Account.extra.support_cards);
                         cmd.Parameters.Add("cardnum", DbType.Int32).Value = client.Account.extra.support_cards.Count;
                         cmd.Parameters.Add("viewer_id", DbType.Int32).Value = client.Account.ViewerId;
+                        cmd.ExecuteNonQuery();
                     }
                 }
             }
@@ -80,17 +81,16 @@ namespace Umamusume
             ThreadPool.SetMaxThreads(128, 128);
             conn = new SQLiteConnection("data source=accounts.db");
             conn.Open();
-            trans = conn.BeginTransaction();
 
             try
             {
                 new SQLiteCommand("create table if not exists accounts(" +
-                    "TEXT udid," +
-                    "TEXT authkey," +
-                    "TEXT password," +
-                    "TEXT cards," +
-                    "INTEGER cardnum," +
-                    "INTEGER viewer_id)").ExecuteNonQuery();
+                    "udid TEXT," +
+                    "authkey TEXT," +
+                    "password TEXT," +
+                    "cards TEXT," +
+                    "cardnum INTEGER," +
+                    "viewer_id INTEGER)", conn).ExecuteNonQuery();
 
                 new SQLiteCommand("create unique index id_index on accounts (viewer_id)", conn).ExecuteNonQuery();
             }
@@ -99,11 +99,13 @@ namespace Umamusume
 
             }
 
+            trans = conn.BeginTransaction();
+
             for (int i = 0; i < 16; ++i)
             {
                 int j = i;
                 new Thread(new ThreadStart(() => RegisterTask(j))).Start();
-                Thread.Sleep(5000);
+                Thread.Sleep(2000);
             }
         }
     }
