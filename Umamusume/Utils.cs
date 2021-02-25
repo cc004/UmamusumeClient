@@ -56,6 +56,22 @@ namespace Umamusume
             return b;
         }
 
+        private static readonly char[] part1 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToArray();
+        private static readonly char[] part2 = "abcdeghijklmnopqrstuvwxyz".ToArray();
+        private static readonly char[] part3 = "0123456789".ToArray();
+
+        public static T[] RandomChoices<T>(this T[] source, int n)
+        {
+            return Enumerable.Range(0, n).Select(_ => source[rand.Next(0, source.Length - 1)]).ToArray();
+        }
+
+        public static string GenRandomPassword()
+        {
+            return new string(RandomChoices(part1, 4)) +
+                new string(RandomChoices(part2, 4)) +
+                new string(RandomChoices(part3, 4));
+        }
+
         public static Guid ParseHex(byte[] b)
         {
             return Guid.Parse(Bin2Hex(b));

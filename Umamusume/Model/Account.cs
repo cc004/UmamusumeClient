@@ -12,6 +12,7 @@ namespace Umamusume.Model
     public class ExtraData
     {
         public HashSet<string> support_cards = new HashSet<string>();
+        public string password;
     }
     [JsonObject]
     public class Account
