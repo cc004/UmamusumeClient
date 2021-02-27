@@ -84,8 +84,8 @@ namespace Umamusume
             compressor = handler;
             Account = account;
             client.DefaultRequestHeaders.Clear();
-            AddCommonHeaders(client);
             client.Timeout = new TimeSpan(0, 0, 5);
+            AddCommonHeaders(client);
             ResVer = "10000010";
         }
 
@@ -150,6 +150,7 @@ namespace Umamusume
             var obj = Utils.Unpack(compressor.Decompress(res)).ToObject<TResult>();
 
             Console.WriteLine($"{LogPrefix} api {apiurl} ret: result code = {obj.data_headers.result_code}");
+
             Account.ViewerId = obj.data_headers.viewer_id;
             if (!string.IsNullOrEmpty(obj.data_headers.sid))
             {
