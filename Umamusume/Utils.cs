@@ -67,6 +67,7 @@ namespace Umamusume
 
         public static string GenRandomPassword()
         {
+            lock (rand)
             return new string(RandomChoices(part1, 4)) +
                 new string(RandomChoices(part2, 4)) +
                 new string(RandomChoices(part3, 4));

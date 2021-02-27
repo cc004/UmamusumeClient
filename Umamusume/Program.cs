@@ -36,11 +36,11 @@ namespace Umamusume
                     name = "init"
                 });
                 client.ReceivePresents();
-                client.Gacha(30003);
-                Thread.Sleep(500);
-                client.Gacha(30003);
-                Thread.Sleep(500);
-                client.Gacha(30003);
+                while (client.FCoin >= 1500)
+                {
+                    client.Gacha(30003);
+                    Thread.Sleep(700);
+                }
                 Console.WriteLine($"gacha get = {client.Account.extra.support_cards.Count}");
 
                 if (client.Account.extra.support_cards.Count > 1)
@@ -52,11 +52,6 @@ namespace Umamusume
                     
                     lock (conn)
                     {
-                        if (++i % 10 == 0)
-                        {
-                            trans.Commit();
-                            trans = conn.BeginTransaction();
-                        }
                         var cmd = new SQLiteCommand(qstr, conn);
                         cmd.Parameters.Add("udid", DbType.String).Value = client.Account.Udid.ToString();
                         cmd.Parameters.Add("authkey", DbType.String).Value = client.Account.Authkey;
@@ -65,6 +60,11 @@ namespace Umamusume
                         cmd.Parameters.Add("cardnum", DbType.Int32).Value = client.Account.extra.support_cards.Count;
                         cmd.Parameters.Add("viewer_id", DbType.Int32).Value = client.Account.ViewerId;
                         cmd.ExecuteNonQuery();
+                        if (++i % 10 == 0)
+                        {
+                            trans.Commit();
+                            trans = conn.BeginTransaction();
+                        }
                     }
                 }
             }
@@ -81,7 +81,6 @@ namespace Umamusume
             ThreadPool.SetMaxThreads(128, 128);
             conn = new SQLiteConnection("data source=accounts.db");
             conn.Open();
-
             try
             {
                 new SQLiteCommand("create table if not exists accounts(" +
