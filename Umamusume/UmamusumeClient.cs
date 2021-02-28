@@ -166,6 +166,7 @@ namespace Umamusume
 
                 foreach (KeyValuePair<string, IEnumerable<string>> header in this.client.DefaultRequestHeaders)
                     client.DefaultRequestHeaders.TryAddWithoutValidation(header.Key, header.Value);
+                this.client.Dispose();
                 this.client = client;
             }
             Account.ViewerId = obj.data_headers.viewer_id;
