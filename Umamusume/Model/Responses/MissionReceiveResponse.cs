@@ -3,34 +3,34 @@
 namespace Umamusume.Model
 {
 
-	public sealed class MissionReceiveResponse : ResponseCommon
-	{
+    public sealed class MissionReceiveResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public RewardSummaryInfo reward_summary_info;
+        public class CommonResponse
+        {
 
 
-
-			public UserMission[] updated_mission_array;
+            public RewardSummaryInfo reward_summary_info;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public UserMission[] updated_mission_array;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public MissionReceiveResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public MissionReceiveResponse()
+        {
+        }
+    }
 }

@@ -3,38 +3,38 @@
 namespace Umamusume.Model
 {
 
-	public sealed class LegendRaceRaceStartResponse : ResponseCommon
-	{
+    public sealed class LegendRaceRaceStartResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public string race_scenario;
+        public class CommonResponse
+        {
 
 
-
-			public int? state;
+            public string race_scenario;
 
 
 
-			public int? running_style;
+            public int? state;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public int? running_style;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public LegendRaceRaceStartResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public LegendRaceRaceStartResponse()
+        {
+        }
+    }
 }

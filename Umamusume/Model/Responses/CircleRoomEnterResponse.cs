@@ -3,78 +3,78 @@
 namespace Umamusume.Model
 {
 
-	public sealed class CircleRoomEnterResponse : ResponseCommon
-	{
+    public sealed class CircleRoomEnterResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public CircleInfo circle_info;
+        public class CommonResponse
+        {
 
 
-
-			public CircleUser[] circle_user_array;
+            public CircleInfo circle_info;
 
 
 
-			public UserInfoAtFriend[] summary_user_info_array;
+            public CircleUser[] circle_user_array;
 
 
 
-			public bool change_leader;
+            public UserInfoAtFriend[] summary_user_info_array;
 
 
 
-			public bool is_scout_able;
+            public bool change_leader;
 
 
 
-			public bool is_show_ranking_result;
+            public bool is_scout_able;
 
 
 
-			public CircleChatMessage[] circle_chat_message_array;
+            public bool is_show_ranking_result;
 
 
 
-			public CircleItemRequest[] circle_item_request_array;
+            public CircleChatMessage[] circle_chat_message_array;
 
 
 
-			public CircleItemDonate[] circle_item_donate_array;
+            public CircleItemRequest[] circle_item_request_array;
 
 
 
-			public CircleRanking circle_ranking_this_month;
+            public CircleItemDonate[] circle_item_donate_array;
 
 
 
-			public CircleRanking circle_ranking_last_month;
+            public CircleRanking circle_ranking_this_month;
 
 
 
-			public bool is_calculate;
+            public CircleRanking circle_ranking_last_month;
 
 
+
+            public bool is_calculate;
 
 
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+
+
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public CommonResponse data;
+        public CommonResponse data;
 
 
 
-		public CircleRoomEnterResponse()
-		{
-		}
-	}
+        public CircleRoomEnterResponse()
+        {
+        }
+    }
 }

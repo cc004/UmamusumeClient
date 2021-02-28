@@ -6,7 +6,6 @@ using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Umamusume
 {
@@ -25,7 +24,7 @@ namespace Umamusume
                 else return o.ToObject<object>();
             };
 
-            var mapped = mapper(token);
+            object mapped = mapper(token);
 
             return new BoxingPacker().Pack(mapped);
         }
@@ -44,7 +43,7 @@ namespace Umamusume
 
         public static byte[] MakeMd5(string content)
         {
-            using var md5 = MD5.Create();
+            using MD5 md5 = MD5.Create();
             return md5.ComputeHash(Encoding.UTF8.GetBytes(content + "r!I@mt8e5i="));
         }
 
@@ -54,7 +53,7 @@ namespace Umamusume
         public static byte[] GenRandomBytes(int n)
         {
             if (rand == null) rand = new Random();
-            var b = new byte[n];
+            byte[] b = new byte[n];
             rand.NextBytes(b);
             return b;
         }

@@ -1,23 +1,19 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class MissionReceiveRequest : RequestBase<MissionReceiveResponse>
-	{
+    public sealed class MissionReceiveRequest : RequestBase<MissionReceiveResponse>
+    {
 
 
-		public int[] mission_id_array;
+        public int[] mission_id_array;
 
 
 
-		
 
 
-		public MissionReceiveRequest()
-		{
-		}
-	}
+
+        public MissionReceiveRequest()
+        {
+        }
+    }
 }

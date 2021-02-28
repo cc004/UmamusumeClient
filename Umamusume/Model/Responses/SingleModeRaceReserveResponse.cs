@@ -3,26 +3,26 @@
 namespace Umamusume.Model
 {
 
-	public sealed class SingleModeRaceReserveResponse : ResponseCommon
-	{
+    public sealed class SingleModeRaceReserveResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public CommonResponse()
-			{
-			}
-		}
+        public class CommonResponse
+        {
 
 
-
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public SingleModeRaceReserveResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public SingleModeRaceReserveResponse()
+        {
+        }
+    }
 }

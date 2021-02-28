@@ -3,34 +3,34 @@
 namespace Umamusume.Model
 {
 
-	public sealed class PresentIndexResponse : ResponseCommon
-	{
+    public sealed class PresentIndexResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public PresentData[] present_array;
+        public class CommonResponse
+        {
 
 
-
-			public NoReceivePresentNum no_receive_present_num;
+            public PresentData[] present_array;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public NoReceivePresentNum no_receive_present_num;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public PresentIndexResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public PresentIndexResponse()
+        {
+        }
+    }
 }

@@ -3,30 +3,30 @@
 namespace Umamusume.Model
 {
 
-	public sealed class CardGetCardEventSkillResponse : ResponseCommon
-	{
+    public sealed class CardGetCardEventSkillResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public EventSkill[] event_skill_list;
+        public class CommonResponse
+        {
 
 
-
-			public CommonResponse()
-			{
-			}
-		}
+            public EventSkill[] event_skill_list;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public CardGetCardEventSkillResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public CardGetCardEventSkillResponse()
+        {
+        }
+    }
 }

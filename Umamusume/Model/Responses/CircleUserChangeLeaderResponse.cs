@@ -3,30 +3,30 @@
 namespace Umamusume.Model
 {
 
-	public sealed class CircleUserChangeLeaderResponse : ResponseCommon
-	{
+    public sealed class CircleUserChangeLeaderResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public CircleUser circle_user;
+        public class CommonResponse
+        {
 
 
-
-			public CommonResponse()
-			{
-			}
-		}
+            public CircleUser circle_user;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public CircleUserChangeLeaderResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public CircleUserChangeLeaderResponse()
+        {
+        }
+    }
 }

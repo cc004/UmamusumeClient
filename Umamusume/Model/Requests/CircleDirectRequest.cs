@@ -1,19 +1,15 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class CircleDirectRequest : RequestBase<CircleDirectResponse>
-	{
+    public sealed class CircleDirectRequest : RequestBase<CircleDirectResponse>
+    {
 
 
-		
 
 
-		public CircleDirectRequest()
-		{
-		}
-	}
+
+        public CircleDirectRequest()
+        {
+        }
+    }
 }

@@ -1,23 +1,19 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class ChangeNameRequest : RequestBase<ChangeNameResponse>
-	{
+    public sealed class ChangeNameRequest : RequestBase<ChangeNameResponse>
+    {
 
 
-		public string name;
+        public string name;
 
 
 
-		protected override string Url => "/user/change_name";
+        protected override string Url => "/user/change_name";
 
 
         public ChangeNameRequest()
-		{
-		}
-	}
+        {
+        }
+    }
 }

@@ -3,46 +3,46 @@
 namespace Umamusume.Model
 {
 
-	public sealed class PresentReceiveAllResponse : ResponseCommon
-	{
+    public sealed class PresentReceiveAllResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public RewardSummaryInfo reward_summary_info;
+        public class CommonResponse
+        {
 
 
-
-			public int? receive_present_num;
+            public RewardSummaryInfo reward_summary_info;
 
 
 
-			public int? rest_present_num;
+            public int? receive_present_num;
 
 
 
-			public int? no_receive_support_card_count;
+            public int? rest_present_num;
 
 
 
-			public bool no_receive_item_flg;
+            public int? no_receive_support_card_count;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public bool no_receive_item_flg;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public PresentReceiveAllResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public PresentReceiveAllResponse()
+        {
+        }
+    }
 }

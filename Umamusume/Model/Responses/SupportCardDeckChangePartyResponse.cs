@@ -3,30 +3,30 @@
 namespace Umamusume.Model
 {
 
-	public sealed class SupportCardDeckChangePartyResponse : ResponseCommon
-	{
+    public sealed class SupportCardDeckChangePartyResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public UserSupportCardDeck[] support_card_deck_array;
+        public class CommonResponse
+        {
 
 
-
-			public CommonResponse()
-			{
-			}
-		}
+            public UserSupportCardDeck[] support_card_deck_array;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public SupportCardDeckChangePartyResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public SupportCardDeckChangePartyResponse()
+        {
+        }
+    }
 }

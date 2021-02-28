@@ -3,30 +3,30 @@
 namespace Umamusume.Model
 {
 
-	public sealed class SupportCardLimitBreakResponse : ResponseCommon
-	{
+    public sealed class SupportCardLimitBreakResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public UserSupportCard support_card_data;
+        public class CommonResponse
+        {
 
 
-
-			public CommonResponse()
-			{
-			}
-		}
+            public UserSupportCard support_card_data;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public SupportCardLimitBreakResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public SupportCardLimitBreakResponse()
+        {
+        }
+    }
 }

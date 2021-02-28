@@ -3,30 +3,30 @@
 namespace Umamusume.Model
 {
 
-	public sealed class CircleUserScoutResponse : ResponseCommon
-	{
+    public sealed class CircleUserScoutResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public bool is_scout_max;
+        public class CommonResponse
+        {
 
 
-
-			public CommonResponse()
-			{
-			}
-		}
+            public bool is_scout_max;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public CircleUserScoutResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public CircleUserScoutResponse()
+        {
+        }
+    }
 }

@@ -3,50 +3,50 @@
 namespace Umamusume.Model
 {
 
-	public sealed class SingleModeExecCommandResponse : ResponseCommon
-	{
+    public sealed class SingleModeExecCommandResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public SingleModeChara chara_info;
+        public class CommonResponse
+        {
 
 
-
-			public SingleModeRaceCondition[] race_condition_array;
+            public SingleModeChara chara_info;
 
 
 
-			public NotUpParameterInfo not_up_parameter_info;
+            public SingleModeRaceCondition[] race_condition_array;
 
 
 
-			public SingleModeHomeInfo home_info;
+            public NotUpParameterInfo not_up_parameter_info;
 
 
 
-			public SingleModeCommandResult command_result;
+            public SingleModeHomeInfo home_info;
 
 
 
-			public SingleModeEventInfo[] unchecked_event_array;
+            public SingleModeCommandResult command_result;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public SingleModeEventInfo[] unchecked_event_array;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public SingleModeExecCommandResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public SingleModeExecCommandResponse()
+        {
+        }
+    }
 }

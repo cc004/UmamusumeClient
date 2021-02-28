@@ -3,38 +3,38 @@
 namespace Umamusume.Model
 {
 
-	public sealed class TeamStadiumRankingResponse : ResponseCommon
-	{
+    public sealed class TeamStadiumRankingResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public TeamStadiumRanking[] ranking_array;
+        public class CommonResponse
+        {
 
 
-
-			public UserInfoAtFriend[] summary_user_info_array;
+            public TeamStadiumRanking[] ranking_array;
 
 
 
-			public UserFriend[] user_friend_array;
+            public UserInfoAtFriend[] summary_user_info_array;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public UserFriend[] user_friend_array;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public TeamStadiumRankingResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public TeamStadiumRankingResponse()
+        {
+        }
+    }
 }

@@ -3,34 +3,34 @@
 namespace Umamusume.Model
 {
 
-	public sealed class CardUnlockResponse : ResponseCommon
-	{
+    public sealed class CardUnlockResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public RewardSummaryInfo reward_summary_info;
+        public class CommonResponse
+        {
 
 
-
-			public PieceData[] piece_data;
+            public RewardSummaryInfo reward_summary_info;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public PieceData[] piece_data;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public CardUnlockResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public CardUnlockResponse()
+        {
+        }
+    }
 }

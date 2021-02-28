@@ -3,30 +3,30 @@
 namespace Umamusume.Model
 {
 
-	public sealed class HomeStoryLoadResponse : ResponseCommon
-	{
+    public sealed class HomeStoryLoadResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public HomeStoryDataForDisplay[] home_story_data_array;
+        public class CommonResponse
+        {
 
 
-
-			public CommonResponse()
-			{
-			}
-		}
+            public HomeStoryDataForDisplay[] home_story_data_array;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public HomeStoryLoadResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public HomeStoryLoadResponse()
+        {
+        }
+    }
 }

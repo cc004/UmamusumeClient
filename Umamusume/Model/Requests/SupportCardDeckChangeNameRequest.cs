@@ -1,27 +1,23 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class SupportCardDeckChangeNameRequest : RequestBase<SupportCardDeckChangeNameResponse>
-	{
+    public sealed class SupportCardDeckChangeNameRequest : RequestBase<SupportCardDeckChangeNameResponse>
+    {
 
 
-		public int? deck_id;
-
-
-
-		public string name;
+        public int? deck_id;
 
 
 
-		
+        public string name;
 
 
-		public SupportCardDeckChangeNameRequest()
-		{
-		}
-	}
+
+
+
+
+        public SupportCardDeckChangeNameRequest()
+        {
+        }
+    }
 }

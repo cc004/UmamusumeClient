@@ -3,26 +3,26 @@
 namespace Umamusume.Model
 {
 
-	public sealed class DataLinkPublishTransitionCodeResponse : ResponseCommon
-	{
+    public sealed class DataLinkPublishTransitionCodeResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public CommonResponse()
-			{
-			}
-		}
+        public class CommonResponse
+        {
 
 
-
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public DataLinkPublishTransitionCodeResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public DataLinkPublishTransitionCodeResponse()
+        {
+        }
+    }
 }

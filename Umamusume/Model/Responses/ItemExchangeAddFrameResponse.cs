@@ -3,34 +3,34 @@
 namespace Umamusume.Model
 {
 
-	public sealed class ItemExchangeAddFrameResponse : ResponseCommon
-	{
+    public sealed class ItemExchangeAddFrameResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public UserInfo updated_user_info;
+        public class CommonResponse
+        {
 
 
-
-			public UserItem use_item_info;
+            public UserInfo updated_user_info;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public UserItem use_item_info;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public ItemExchangeAddFrameResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public ItemExchangeAddFrameResponse()
+        {
+        }
+    }
 }

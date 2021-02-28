@@ -1,19 +1,15 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class DailyRaceResumeRequest : RequestBase<DailyRaceResumeResponse>
-	{
+    public sealed class DailyRaceResumeRequest : RequestBase<DailyRaceResumeResponse>
+    {
 
 
-		
 
 
-		public DailyRaceResumeRequest()
-		{
-		}
-	}
+
+        public DailyRaceResumeRequest()
+        {
+        }
+    }
 }

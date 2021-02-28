@@ -3,34 +3,34 @@
 namespace Umamusume.Model
 {
 
-	public sealed class DebugSingleModeStoryDirectResponse : ResponseCommon
-	{
+    public sealed class DebugSingleModeStoryDirectResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public StoryDirectEventReward[] event_gain;
+        public class CommonResponse
+        {
 
 
-
-			public StoryDirectSkillSet[] skill_set;
+            public StoryDirectEventReward[] event_gain;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public StoryDirectSkillSet[] skill_set;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public DebugSingleModeStoryDirectResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public DebugSingleModeStoryDirectResponse()
+        {
+        }
+    }
 }

@@ -1,23 +1,19 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class CircleUserScoutRequest : RequestBase<CircleUserScoutResponse>
-	{
+    public sealed class CircleUserScoutRequest : RequestBase<CircleUserScoutResponse>
+    {
 
 
-		public int? target_viewer_id;
+        public int? target_viewer_id;
 
 
 
-		
 
 
-		public CircleUserScoutRequest()
-		{
-		}
-	}
+
+        public CircleUserScoutRequest()
+        {
+        }
+    }
 }

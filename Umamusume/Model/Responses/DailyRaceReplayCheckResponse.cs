@@ -3,54 +3,54 @@
 namespace Umamusume.Model
 {
 
-	public sealed class DailyRaceReplayCheckResponse : ResponseCommon
-	{
+    public sealed class DailyRaceReplayCheckResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public int? rank;
+        public class CommonResponse
+        {
 
 
-
-			public RaceRewardData[] first_clear_reward_array;
+            public int? rank;
 
 
 
-			public RaceRewardData[] normal_reward_array;
+            public RaceRewardData[] first_clear_reward_array;
 
 
 
-			public RaceRewardData[] rare_reward_array;
+            public RaceRewardData[] normal_reward_array;
 
 
 
-			public RewardSummaryInfo reward_summary_info;
+            public RaceRewardData[] rare_reward_array;
 
 
 
-			public int? state;
+            public RewardSummaryInfo reward_summary_info;
 
 
 
-			public LimitedShopInfo limited_shop_info;
+            public int? state;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public LimitedShopInfo limited_shop_info;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public DailyRaceReplayCheckResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public DailyRaceReplayCheckResponse()
+        {
+        }
+    }
 }

@@ -3,50 +3,50 @@
 namespace Umamusume.Model
 {
 
-	public sealed class CircleUserSetProfileResponse : ResponseCommon
-	{
+    public sealed class CircleUserSetProfileResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public CircleInfo circle_info;
+        public class CommonResponse
+        {
 
 
-
-			public CircleRanking circle_ranking_last_month;
+            public CircleInfo circle_info;
 
 
 
-			public int? chara_id;
+            public CircleRanking circle_ranking_last_month;
 
 
 
-			public int? bg_id;
+            public int? chara_id;
 
 
 
-			public string recruit_comment;
+            public int? bg_id;
 
 
 
-			public int? dress_id;
+            public string recruit_comment;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public int? dress_id;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public CircleUserSetProfileResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public CircleUserSetProfileResponse()
+        {
+        }
+    }
 }

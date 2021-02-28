@@ -3,62 +3,62 @@
 namespace Umamusume.Model
 {
 
-	public sealed class LegendRaceReplayCheckResponse : ResponseCommon
-	{
+    public sealed class LegendRaceReplayCheckResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public int? rank;
+        public class CommonResponse
+        {
 
 
-
-			public RaceRewardData[] first_clear_reward_array;
+            public int? rank;
 
 
 
-			public RaceRewardData[] drop_reward_array;
+            public RaceRewardData[] first_clear_reward_array;
 
 
 
-			public RaceRewardData[] victory_reward_array;
+            public RaceRewardData[] drop_reward_array;
 
 
 
-			public RewardSummaryInfo reward_summary_info;
+            public RaceRewardData[] victory_reward_array;
 
 
 
-			public int? state;
+            public RewardSummaryInfo reward_summary_info;
 
 
 
-			public LoginUserTrophyInfo add_trophy_info;
+            public int? state;
 
 
 
-			public RaceRewardData trophy_reward_info;
+            public LoginUserTrophyInfo add_trophy_info;
 
 
 
-			public LimitedShopInfo limited_shop_info;
+            public RaceRewardData trophy_reward_info;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public LimitedShopInfo limited_shop_info;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public LegendRaceReplayCheckResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public LegendRaceReplayCheckResponse()
+        {
+        }
+    }
 }

@@ -1,19 +1,15 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class LiveTheaterIndexRequest : RequestBase<LiveTheaterIndexResponse>
-	{
+    public sealed class LiveTheaterIndexRequest : RequestBase<LiveTheaterIndexResponse>
+    {
 
 
-		
 
 
-		public LiveTheaterIndexRequest()
-		{
-		}
-	}
+
+        public LiveTheaterIndexRequest()
+        {
+        }
+    }
 }

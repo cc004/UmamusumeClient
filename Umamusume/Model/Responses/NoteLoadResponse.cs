@@ -3,46 +3,46 @@
 namespace Umamusume.Model
 {
 
-	public sealed class NoteLoadResponse : ResponseCommon
-	{
+    public sealed class NoteLoadResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public DisplayRewardInfo[] reward_info_array;
+        public class CommonResponse
+        {
 
 
-
-			public int? before_directory_level;
+            public DisplayRewardInfo[] reward_info_array;
 
 
 
-			public int? rank_score;
+            public int? before_directory_level;
 
 
 
-			public int[] release_card_array;
+            public int? rank_score;
 
 
 
-			public DirectoryScoreSummary score_summary;
+            public int[] release_card_array;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public DirectoryScoreSummary score_summary;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public NoteLoadResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public NoteLoadResponse()
+        {
+        }
+    }
 }

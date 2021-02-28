@@ -1,35 +1,31 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class CircleMakeRequest : RequestBase<CircleMakeResponse>
-	{
+    public sealed class CircleMakeRequest : RequestBase<CircleMakeResponse>
+    {
 
 
-		public string name;
-
-
-
-		public string comment;
+        public string name;
 
 
 
-		public int? join_style;
+        public string comment;
 
 
 
-		public int? policy;
+        public int? join_style;
 
 
 
-		
+        public int? policy;
 
 
-		public CircleMakeRequest()
-		{
-		}
-	}
+
+
+
+
+        public CircleMakeRequest()
+        {
+        }
+    }
 }

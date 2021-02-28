@@ -3,46 +3,46 @@
 namespace Umamusume.Model
 {
 
-	public sealed class DailyRaceReflectItemEffectResponse : ResponseCommon
-	{
+    public sealed class DailyRaceReflectItemEffectResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public int? weather;
+        public class CommonResponse
+        {
 
 
-
-			public int? ground_condition;
+            public int? weather;
 
 
 
-			public RaceHorseData[] race_horse_data_array;
+            public int? ground_condition;
 
 
 
-			public UserItem[] item_info_array;
+            public RaceHorseData[] race_horse_data_array;
 
 
 
-			public int? state;
+            public UserItem[] item_info_array;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public int? state;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public DailyRaceReflectItemEffectResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public DailyRaceReflectItemEffectResponse()
+        {
+        }
+    }
 }

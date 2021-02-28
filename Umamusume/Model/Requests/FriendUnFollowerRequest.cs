@@ -1,23 +1,19 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class FriendUnFollowerRequest : RequestBase<FriendUnFollowerResponse>
-	{
+    public sealed class FriendUnFollowerRequest : RequestBase<FriendUnFollowerResponse>
+    {
 
 
-		public int? friend_viewer_id;
+        public int? friend_viewer_id;
 
 
 
-		
 
 
-		public FriendUnFollowerRequest()
-		{
-		}
-	}
+
+        public FriendUnFollowerRequest()
+        {
+        }
+    }
 }

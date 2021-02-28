@@ -3,26 +3,26 @@
 namespace Umamusume.Model
 {
 
-	public sealed class SafetyNetAttestationValidateJwsResponse : ResponseCommon
-	{
+    public sealed class SafetyNetAttestationValidateJwsResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public CommonResponse()
-			{
-			}
-		}
+        public class CommonResponse
+        {
 
 
-
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public SafetyNetAttestationValidateJwsResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public SafetyNetAttestationValidateJwsResponse()
+        {
+        }
+    }
 }

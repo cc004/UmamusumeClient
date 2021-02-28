@@ -3,30 +3,30 @@
 namespace Umamusume.Model
 {
 
-	public sealed class FriendUnFollowerResponse : ResponseCommon
-	{
+    public sealed class FriendUnFollowerResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public UserFriend friend_data;
+        public class CommonResponse
+        {
 
 
-
-			public CommonResponse()
-			{
-			}
-		}
+            public UserFriend friend_data;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public FriendUnFollowerResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public FriendUnFollowerResponse()
+        {
+        }
+    }
 }

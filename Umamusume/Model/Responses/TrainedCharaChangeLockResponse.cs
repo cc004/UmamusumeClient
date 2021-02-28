@@ -3,34 +3,34 @@
 namespace Umamusume.Model
 {
 
-	public sealed class TrainedCharaChangeLockResponse : ResponseCommon
-	{
+    public sealed class TrainedCharaChangeLockResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public int? trained_chara_id;
+        public class CommonResponse
+        {
 
 
-
-			public int? is_locked;
+            public int? trained_chara_id;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public int? is_locked;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public TrainedCharaChangeLockResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public TrainedCharaChangeLockResponse()
+        {
+        }
+    }
 }

@@ -3,42 +3,42 @@
 namespace Umamusume.Model
 {
 
-	public sealed class CharacterStoryFirstClearResponse : ResponseCommon
-	{
+    public sealed class CharacterStoryFirstClearResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public CharacterStoryData character_story_data;
+        public class CommonResponse
+        {
 
 
-
-			public DisplayRewardInfo[] reward_array;
+            public CharacterStoryData character_story_data;
 
 
 
-			public RewardSummaryInfo reward_summary_info;
+            public DisplayRewardInfo[] reward_array;
 
 
 
-			public int? release_item_flag;
+            public RewardSummaryInfo reward_summary_info;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public int? release_item_flag;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public CharacterStoryFirstClearResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public CharacterStoryFirstClearResponse()
+        {
+        }
+    }
 }

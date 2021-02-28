@@ -3,30 +3,30 @@
 namespace Umamusume.Model
 {
 
-	public sealed class DailyRaceGetRewardListResponse : ResponseCommon
-	{
+    public sealed class DailyRaceGetRewardListResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public RaceRewardData[] reward_array;
+        public class CommonResponse
+        {
 
 
-
-			public CommonResponse()
-			{
-			}
-		}
+            public RaceRewardData[] reward_array;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public DailyRaceGetRewardListResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public DailyRaceGetRewardListResponse()
+        {
+        }
+    }
 }

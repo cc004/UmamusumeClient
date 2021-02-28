@@ -3,34 +3,34 @@
 namespace Umamusume.Model
 {
 
-	public sealed class DailyRaceIndexResponse : ResponseCommon
-	{
+    public sealed class DailyRaceIndexResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public DailyRaceData[] daily_race_record_array;
+        public class CommonResponse
+        {
 
 
-
-			public int? purchase_num;
+            public DailyRaceData[] daily_race_record_array;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public int? purchase_num;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public DailyRaceIndexResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public DailyRaceIndexResponse()
+        {
+        }
+    }
 }

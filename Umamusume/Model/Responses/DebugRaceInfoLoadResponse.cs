@@ -3,30 +3,30 @@
 namespace Umamusume.Model
 {
 
-	public sealed class DebugRaceInfoLoadResponse : ResponseCommon
-	{
+    public sealed class DebugRaceInfoLoadResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public string json_data;
+        public class CommonResponse
+        {
 
 
-
-			public CommonResponse()
-			{
-			}
-		}
+            public string json_data;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public DebugRaceInfoLoadResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public DebugRaceInfoLoadResponse()
+        {
+        }
+    }
 }

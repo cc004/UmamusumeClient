@@ -3,30 +3,30 @@
 namespace Umamusume.Model
 {
 
-	public sealed class CardGetReleaseCardResponse : ResponseCommon
-	{
+    public sealed class CardGetReleaseCardResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public int[] release_card_array;
+        public class CommonResponse
+        {
 
 
-
-			public CommonResponse()
-			{
-			}
-		}
+            public int[] release_card_array;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public CardGetReleaseCardResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public CardGetReleaseCardResponse()
+        {
+        }
+    }
 }

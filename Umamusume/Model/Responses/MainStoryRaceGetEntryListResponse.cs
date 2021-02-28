@@ -3,30 +3,30 @@
 namespace Umamusume.Model
 {
 
-	public sealed class MainStoryRaceGetEntryListResponse : ResponseCommon
-	{
+    public sealed class MainStoryRaceGetEntryListResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public MainStoryRaceEntryChara[] entry_chara_array;
+        public class CommonResponse
+        {
 
 
-
-			public CommonResponse()
-			{
-			}
-		}
+            public MainStoryRaceEntryChara[] entry_chara_array;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public MainStoryRaceGetEntryListResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public MainStoryRaceGetEntryListResponse()
+        {
+        }
+    }
 }

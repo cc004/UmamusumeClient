@@ -1,19 +1,15 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class TutorialSkipRequest : RequestBase<TutorialSkipResponse>
-	{
+    public sealed class TutorialSkipRequest : RequestBase<TutorialSkipResponse>
+    {
 
 
-		protected override string Url => "/tutorial/skip";
+        protected override string Url => "/tutorial/skip";
 
 
         public TutorialSkipRequest()
-		{
-		}
-	}
+        {
+        }
+    }
 }

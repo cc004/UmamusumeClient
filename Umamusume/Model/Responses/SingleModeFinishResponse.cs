@@ -3,82 +3,82 @@
 namespace Umamusume.Model
 {
 
-	public sealed class SingleModeFinishResponse : ResponseCommon
-	{
+    public sealed class SingleModeFinishResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public TrainedChara[] trained_chara;
+        public class CommonResponse
+        {
 
 
-
-			public DirectoryCard[] directory_card_array;
+            public TrainedChara[] trained_chara;
 
 
 
-			public int? directory_ranking;
+            public DirectoryCard[] directory_card_array;
 
 
 
-			public int? trained_chara_id;
+            public int? directory_ranking;
 
 
 
-			public SingleModeChara chara_info;
+            public int? trained_chara_id;
 
 
 
-			public LovePointInfo love_point_info;
+            public SingleModeChara chara_info;
 
 
 
-			public RewardSummaryInfo reward_item_info;
+            public LovePointInfo love_point_info;
 
 
 
-			public UserSupportCard[] support_card_data_array;
+            public RewardSummaryInfo reward_item_info;
 
 
 
-			public LimitedShopInfo limited_shop_info;
+            public UserSupportCard[] support_card_data_array;
 
 
 
-			public UserChara update_user_chara_info;
+            public LimitedShopInfo limited_shop_info;
 
 
 
-			public int? release_item_flag;
+            public UserChara update_user_chara_info;
 
 
 
-			public ulong circle_point;
+            public int? release_item_flag;
 
 
 
-			public CharaProfileData[] new_chara_profile_array;
+            public ulong circle_point;
 
 
 
-			public int[] campaign_id_array;
+            public CharaProfileData[] new_chara_profile_array;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public int[] campaign_id_array;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public SingleModeFinishResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public SingleModeFinishResponse()
+        {
+        }
+    }
 }

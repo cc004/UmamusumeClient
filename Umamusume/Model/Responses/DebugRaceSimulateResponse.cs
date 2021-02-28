@@ -3,38 +3,38 @@
 namespace Umamusume.Model
 {
 
-	public sealed class DebugRaceSimulateResponse : ResponseCommon
-	{
+    public sealed class DebugRaceSimulateResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public string race_scenario;
+        public class CommonResponse
+        {
 
 
-
-			public RaceSimulateResult[] result_array;
+            public string race_scenario;
 
 
 
-			public TeamStadiumResultTeam result_team;
+            public RaceSimulateResult[] result_array;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public TeamStadiumResultTeam result_team;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public DebugRaceSimulateResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public DebugRaceSimulateResponse()
+        {
+        }
+    }
 }

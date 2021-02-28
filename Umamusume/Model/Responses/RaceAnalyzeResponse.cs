@@ -3,30 +3,30 @@
 namespace Umamusume.Model
 {
 
-	public sealed class RaceAnalyzeResponse : ResponseCommon
-	{
+    public sealed class RaceAnalyzeResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public RaceHorseData[] race_horse_data_array;
+        public class CommonResponse
+        {
 
 
-
-			public CommonResponse()
-			{
-			}
-		}
+            public RaceHorseData[] race_horse_data_array;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public RaceAnalyzeResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public RaceAnalyzeResponse()
+        {
+        }
+    }
 }

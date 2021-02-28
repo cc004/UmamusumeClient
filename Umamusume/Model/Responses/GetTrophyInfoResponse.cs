@@ -3,34 +3,34 @@
 namespace Umamusume.Model
 {
 
-	public sealed class GetTrophyInfoResponse : ResponseCommon
-	{
+    public sealed class GetTrophyInfoResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public UserTrophyInfo[] user_trophy_info_array;
+        public class CommonResponse
+        {
 
 
-
-			public long last_checked_time;
+            public UserTrophyInfo[] user_trophy_info_array;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public long last_checked_time;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public GetTrophyInfoResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public GetTrophyInfoResponse()
+        {
+        }
+    }
 }

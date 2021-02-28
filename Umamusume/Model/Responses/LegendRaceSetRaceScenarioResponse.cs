@@ -3,26 +3,26 @@
 namespace Umamusume.Model
 {
 
-	public sealed class LegendRaceSetRaceScenarioResponse : ResponseCommon
-	{
+    public sealed class LegendRaceSetRaceScenarioResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public CommonResponse()
-			{
-			}
-		}
+        public class CommonResponse
+        {
 
 
-
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public LegendRaceSetRaceScenarioResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public LegendRaceSetRaceScenarioResponse()
+        {
+        }
+    }
 }

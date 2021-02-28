@@ -3,34 +3,34 @@
 namespace Umamusume.Model
 {
 
-	public sealed class SingleModeChangeShortCutResponse : ResponseCommon
-	{
+    public sealed class SingleModeChangeShortCutResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public SingleModeChara chara_info;
+        public class CommonResponse
+        {
 
 
-
-			public SingleModeEventInfo[] unchecked_event_array;
+            public SingleModeChara chara_info;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public SingleModeEventInfo[] unchecked_event_array;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public SingleModeChangeShortCutResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public SingleModeChangeShortCutResponse()
+        {
+        }
+    }
 }

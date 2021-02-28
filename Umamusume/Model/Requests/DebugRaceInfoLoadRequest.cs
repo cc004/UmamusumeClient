@@ -1,19 +1,15 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class DebugRaceInfoLoadRequest : RequestBase<DebugRaceInfoLoadResponse>
-	{
+    public sealed class DebugRaceInfoLoadRequest : RequestBase<DebugRaceInfoLoadResponse>
+    {
 
 
-		
 
 
-		public DebugRaceInfoLoadRequest()
-		{
-		}
-	}
+
+        public DebugRaceInfoLoadRequest()
+        {
+        }
+    }
 }

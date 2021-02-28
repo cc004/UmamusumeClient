@@ -3,26 +3,26 @@
 namespace Umamusume.Model
 {
 
-	public sealed class ToolDeviceAttestResponse : ResponseCommon
-	{
+    public sealed class ToolDeviceAttestResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public CommonResponse()
-			{
-			}
-		}
+        public class CommonResponse
+        {
 
 
-
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public ToolDeviceAttestResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public ToolDeviceAttestResponse()
+        {
+        }
+    }
 }

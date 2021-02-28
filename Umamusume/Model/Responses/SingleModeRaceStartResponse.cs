@@ -3,34 +3,34 @@
 namespace Umamusume.Model
 {
 
-	public sealed class SingleModeRaceStartResponse : ResponseCommon
-	{
+    public sealed class SingleModeRaceStartResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public SingleRaceStartInfo race_start_info;
+        public class CommonResponse
+        {
 
 
-
-			public string race_scenario;
+            public SingleRaceStartInfo race_start_info;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public string race_scenario;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public SingleModeRaceStartResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public SingleModeRaceStartResponse()
+        {
+        }
+    }
 }

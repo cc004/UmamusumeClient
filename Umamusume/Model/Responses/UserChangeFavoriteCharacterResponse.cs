@@ -3,30 +3,30 @@
 namespace Umamusume.Model
 {
 
-	public sealed class UserChangeFavoriteCharacterResponse : ResponseCommon
-	{
+    public sealed class UserChangeFavoriteCharacterResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public HomeCharacterDressInfo home_position_info;
+        public class CommonResponse
+        {
 
 
-
-			public CommonResponse()
-			{
-			}
-		}
+            public HomeCharacterDressInfo home_position_info;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public UserChangeFavoriteCharacterResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public UserChangeFavoriteCharacterResponse()
+        {
+        }
+    }
 }

@@ -1,23 +1,19 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class TeamStadiumRankingRequest : RequestBase<TeamStadiumRankingResponse>
-	{
+    public sealed class TeamStadiumRankingRequest : RequestBase<TeamStadiumRankingResponse>
+    {
 
 
-		public int? ranking_type;
+        public int? ranking_type;
 
 
 
-		
 
 
-		public TeamStadiumRankingRequest()
-		{
-		}
-	}
+
+        public TeamStadiumRankingRequest()
+        {
+        }
+    }
 }

@@ -3,30 +3,30 @@
 namespace Umamusume.Model
 {
 
-	public sealed class PaymentGetCoinBreakDownInfoResponse : ResponseCommon
-	{
+    public sealed class PaymentGetCoinBreakDownInfoResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public PaymentCoinBreakDownInfo[] coin_break_down_info_array;
+        public class CommonResponse
+        {
 
 
-
-			public CommonResponse()
-			{
-			}
-		}
+            public PaymentCoinBreakDownInfo[] coin_break_down_info_array;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public PaymentGetCoinBreakDownInfoResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public PaymentGetCoinBreakDownInfoResponse()
+        {
+        }
+    }
 }

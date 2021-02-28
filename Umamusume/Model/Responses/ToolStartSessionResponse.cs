@@ -3,50 +3,50 @@
 namespace Umamusume.Model
 {
 
-	public sealed class ToolStartSessionResponse : ResponseCommon
-	{
+    public sealed class ToolStartSessionResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public bool is_tutorial;
+        public class CommonResponse
+        {
 
 
-
-			public string resource_version;
+            public bool is_tutorial;
 
 
 
-			public bool attest;
+            public string resource_version;
 
 
 
-			public string nonce;
+            public bool attest;
 
 
 
-			public bool terms_updated;
+            public string nonce;
 
 
 
-			public string auth_key;
+            public bool terms_updated;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public string auth_key;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public ToolStartSessionResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public ToolStartSessionResponse()
+        {
+        }
+    }
 }

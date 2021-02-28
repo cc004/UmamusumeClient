@@ -1,23 +1,19 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class MainStoryFirstClearRequest : RequestBase<MainStoryFirstClearResponse>
-	{
+    public sealed class MainStoryFirstClearRequest : RequestBase<MainStoryFirstClearResponse>
+    {
 
 
-		public int? episode_id;
+        public int? episode_id;
 
 
 
-		
 
 
-		public MainStoryFirstClearRequest()
-		{
-		}
-	}
+
+        public MainStoryFirstClearRequest()
+        {
+        }
+    }
 }

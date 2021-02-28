@@ -3,26 +3,26 @@
 namespace Umamusume.Model
 {
 
-	public sealed class TutorialResponse : ResponseCommon
-	{
+    public sealed class TutorialResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public CommonResponse()
-			{
-			}
-		}
+        public class CommonResponse
+        {
 
 
-
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public TutorialResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public TutorialResponse()
+        {
+        }
+    }
 }

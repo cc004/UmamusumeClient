@@ -1,23 +1,19 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class GetTrophyDetailRequest : RequestBase<GetTrophyDetailResponse>
-	{
+    public sealed class GetTrophyDetailRequest : RequestBase<GetTrophyDetailResponse>
+    {
 
 
-		public int? trophy_id;
+        public int? trophy_id;
 
 
 
-		
 
 
-		public GetTrophyDetailRequest()
-		{
-		}
-	}
+
+        public GetTrophyDetailRequest()
+        {
+        }
+    }
 }

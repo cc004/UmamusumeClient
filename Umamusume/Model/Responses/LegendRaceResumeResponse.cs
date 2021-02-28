@@ -3,66 +3,66 @@
 namespace Umamusume.Model
 {
 
-	public sealed class LegendRaceResumeResponse : ResponseCommon
-	{
+    public sealed class LegendRaceResumeResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public RaceHorseData[] race_horse_data_array;
+        public class CommonResponse
+        {
 
 
-
-			public int? season;
+            public RaceHorseData[] race_horse_data_array;
 
 
 
-			public int? weather;
+            public int? season;
 
 
 
-			public int? ground_condition;
+            public int? weather;
 
 
 
-			public int? random_seed;
+            public int? ground_condition;
 
 
 
-			public int? race_instance_id;
+            public int? random_seed;
 
 
 
-			public string race_scenario;
+            public int? race_instance_id;
 
 
 
-			public int? state;
+            public string race_scenario;
 
 
 
-			public int? purchase_num;
+            public int? state;
 
 
 
-			public int? is_cleared;
+            public int? purchase_num;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public int? is_cleared;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public LegendRaceResumeResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public LegendRaceResumeResponse()
+        {
+        }
+    }
 }
