@@ -164,7 +164,7 @@ namespace Umamusume
 
         public void Signup()
         {
-            ToolSignupResponse resp = null;
+            ToolSignupResponse resp;
             do
             {
                 try

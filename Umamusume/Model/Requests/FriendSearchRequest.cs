@@ -13,10 +13,10 @@ namespace Umamusume.Model
 
 
 
-		
+		protected override string Url => "/friend/search";
 
 
-		public FriendSearchRequest()
+        public FriendSearchRequest()
 		{
 		}
 	}

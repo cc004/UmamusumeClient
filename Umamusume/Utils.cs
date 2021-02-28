@@ -48,9 +48,12 @@ namespace Umamusume
             return md5.ComputeHash(Encoding.UTF8.GetBytes(content + "r!I@mt8e5i="));
         }
 
-        private static readonly Random rand = new Random();
+        [ThreadStatic]
+        private static Random rand;
+
         public static byte[] GenRandomBytes(int n)
         {
+            if (rand == null) rand = new Random();
             var b = new byte[n];
             rand.NextBytes(b);
             return b;
@@ -67,7 +70,7 @@ namespace Umamusume
 
         public static string GenRandomPassword()
         {
-            lock (rand)
+            if (rand == null) rand = new Random();
             return new string(RandomChoices(part1, 4)) +
                 new string(RandomChoices(part2, 4)) +
                 new string(RandomChoices(part3, 4));
