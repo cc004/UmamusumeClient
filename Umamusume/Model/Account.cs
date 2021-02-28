@@ -11,7 +11,7 @@ namespace Umamusume.Model
     [JsonObject]
     public class ExtraData
     {
-        public HashSet<string> support_cards = new HashSet<string>();
+        public Dictionary<string, int> support_cards = new Dictionary<string, int>();
         public string password;
     }
     [JsonObject]

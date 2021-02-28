@@ -48,7 +48,7 @@ namespace Umamusume
             private set
             {
                 resver = value;
-                Console.WriteLine($"resver changed into {resver}");
+                //Console.WriteLine($"resver changed into {resver}");
                 client.DefaultRequestHeaders.Remove("RES-VER");
                 client.DefaultRequestHeaders.TryAddWithoutValidation("RES-VER", resver);
             }
@@ -149,8 +149,28 @@ namespace Umamusume
 
             var obj = Utils.Unpack(compressor.Decompress(res)).ToObject<TResult>();
 
-            Console.WriteLine($"{LogPrefix} api {apiurl} ret: result code = {obj.data_headers.result_code}");
+            if (obj.data_headers.result_code != GallopResultCode.RESULT_CODE_OK)
+                Console.WriteLine($"{LogPrefix} api {apiurl} ret: result code = {obj.data_headers.result_code}");
 
+            if (obj.data_headers.result_code == GallopResultCode.BOT_ACCESS_ATTACK_ERROR)
+            {
+                var headertype = typeof(HttpClient).Assembly.GetType("System.Net.Http.Headers.HttpHeaderType");
+                var client = new HttpClient(new HttpClientHandler
+                {
+                    UseProxy = true,
+                    Proxy = new WebProxy("127.0.0.1:1080")
+                });
+
+
+                typeof(HttpHeaders).GetField("_allowedHeaderTypes", bindingAttr: BindingFlags.NonPublic | BindingFlags.Instance)
+                    .SetValue(client.DefaultRequestHeaders, Enum.Parse(headertype, "All"));
+
+                client.DefaultRequestHeaders.Clear();
+
+                foreach (var header in this.client.DefaultRequestHeaders)
+                    client.DefaultRequestHeaders.TryAddWithoutValidation(header.Key, header.Value);
+                this.client = client;
+            }
             Account.ViewerId = obj.data_headers.viewer_id;
             if (!string.IsNullOrEmpty(obj.data_headers.sid))
             {
@@ -227,7 +247,12 @@ namespace Umamusume
             FCoin = resp.data.coin_info.fcoin;
             foreach (var card in resp.data.reward_summary_info.add_support_card_num_array)
                 if (card.support_card_id >= 30000)
-                    Account.extra.support_cards.Add(suuport_name_cache[card.support_card_id]);
+                {
+                    var key = suuport_name_cache[card.support_card_id];
+                    if (!Account.extra.support_cards.ContainsKey(key))
+                        Account.extra.support_cards[key] = 0;
+                    ++Account.extra.support_cards[key];
+                }
         }
 
         public void ResetAccount()

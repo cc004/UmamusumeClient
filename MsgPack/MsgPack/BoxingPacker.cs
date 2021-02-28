@@ -236,7 +236,8 @@ namespace MsgPack
 							if (key is byte[] ba) key = Encoding.UTF8.GetString(ba);
 					if (value is byte[] ba2) value = Encoding.UTF8.GetString(ba2);
 
-					dictionary.Add(key, value);
+					if (!dictionary.ContainsKey(key))
+						dictionary.Add(key, value);
 				}
 				return dictionary;
 			}
