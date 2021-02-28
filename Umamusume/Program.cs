@@ -11,7 +11,7 @@ namespace Umamusume
     {
         private static SQLiteConnection conn;
         private static readonly string[] cl = "[B・N・Winner!!]ウイニングチケット	[千紫万紅にまぎれぬ一凛]グラスワンダー	[Run(my)way]ゴールドシチー	[夢は掲げるものなのだっ！]トウカイテイオー	[輝く景色の、その先に]サイレンススズカ	[不沈艦の進撃]ゴールドシップ	[はやい！うまい！はやい！]サクラバクシンオー	[パッションチャンピオーナ！]エルコンドルパサー	[待望の大謀]セイウンスカイ	[これが私のウマドル道☆]スマートファルコン	[感謝は指先まで込めて]ファインモーション	[まだ小さな蕾でも]ニシノフラワー	[天をも切り裂くイナズマ娘！]タマモクロス	[一粒の安らぎ]スーパークリーク	[日本一のステージを]スペシャルウィーク	[ロード・オブ・ウオッカ]ウオッカ	[7センチの先へ]エアシャカール	[必殺！Wキャロットパンチ！]ビコーペガサス	[ようこそ、トレセン学園へ！]駿川たづな	[飛び出せ、キラメケ]アイネスフウジン"
-            .Split("	").Select(s => s[1..(s.IndexOf("]") - 1)]).ToArray();
+            .Split("	").ToArray();
 
         private static void RegisterTask(int id)
         {
@@ -52,7 +52,7 @@ namespace Umamusume
 
                     lock (conn)
                     {
-                        SQLiteCommand cmd = new SQLiteCommand(string.Format(qstr, string.Join(",", cl.Select(s => $"`{s}`")), string.Join(",", Enumerable.Range(1, cl.Length).Select(i => $"@c{i}"))), conn);
+                        SQLiteCommand cmd = new SQLiteCommand(string.Format(qstr, string.Join(",", cl.Select(s => s[1..(s.IndexOf("]") - 1)]).Select(s => $"`{s}`")), string.Join(",", Enumerable.Range(1, cl.Length).Select(i => $"@c{i}"))), conn);
                         cmd.Parameters.Add("udid", DbType.String).Value = client.Account.Udid.ToString();
                         cmd.Parameters.Add("authkey", DbType.String).Value = client.Account.Authkey;
                         cmd.Parameters.Add("password", DbType.String).Value = client.Account.extra.password;
@@ -83,7 +83,7 @@ namespace Umamusume
             {
                 new SQLiteCommand("create table if not exists accounts(" +
                     "cardnum INTEGER," +
-                    string.Concat(cl.Select(c => $"`{c}` INTEGER,")) +
+                    string.Concat(cl.Select(s => s[1..(s.IndexOf("]") - 1)]).Select(c => $"`{c}` INTEGER,")) +
                     "viewer_id INTEGER," +
                     "password TEXT," +
                     "udid TEXT," +
