@@ -15,7 +15,6 @@ using Umamusume.Model;
 
 namespace Umamusume
 {
-
     public class UmamusumeClient
     {
         private static Dictionary<int, string> suuport_name_cache = new Dictionary<int, string>();
@@ -136,7 +135,7 @@ namespace Umamusume
             }
             catch (Exception e)
             {
-                Console.WriteLine($"{LogPrefix} {e}");
+                //Console.WriteLine($"{LogPrefix} {e}");
                 return null;
             }
             PostRequestHeaders();

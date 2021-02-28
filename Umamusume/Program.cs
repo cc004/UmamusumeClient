@@ -14,12 +14,14 @@ namespace Umamusume
     {
         private static SQLiteConnection conn;
         private readonly static string[] cl = "[B・N・Winner!!]ウイニングチケット	[千紫万紅にまぎれぬ一凛]グラスワンダー	[Run(my)way]ゴールドシチー	[夢は掲げるものなのだっ！]トウカイテイオー	[輝く景色の、その先に]サイレンススズカ	[不沈艦の進撃]ゴールドシップ	[はやい！うまい！はやい！]サクラバクシンオー	[パッションチャンピオーナ！]エルコンドルパサー	[待望の大謀]セイウンスカイ	[これが私のウマドル道☆]スマートファルコン	[感謝は指先まで込めて]ファインモーション	[まだ小さな蕾でも]ニシノフラワー	[天をも切り裂くイナズマ娘！]タマモクロス	[一粒の安らぎ]スーパークリーク	[日本一のステージを]スペシャルウィーク	[ロード・オブ・ウオッカ]ウオッカ	[7センチの先へ]エアシャカール	[必殺！Wキャロットパンチ！]ビコーペガサス	[ようこそ、トレセン学園へ！]駿川たづな	[飛び出せ、キラメケ]アイネスフウジン"
-            .Split("	").ToArray();
+            .Split("	").Select(s => s[1..(s.IndexOf("]") - 1)]).ToArray();
 
         private static void RegisterTask(int id)
         {
-            var client = new UmamusumeClient(new SimpleLz4Frame(id));
-            client.LogPrefix = $"[Thread #{id}]";
+            var client = new UmamusumeClient(new SimpleLz4Frame(id))
+            {
+                LogPrefix = $"[Thread #{id}]"
+            };
             signup:
             try
             {
@@ -60,7 +62,7 @@ namespace Umamusume
                         int i = 0;
                         foreach (var c in cl)
                             cmd.Parameters.Add($"c{++i}", DbType.Int32).Value = client.Account.extra.support_cards.TryGetValue(c, out var val) ? val : 0;
-                        cmd.Parameters.Add("cardnum", DbType.Int32).Value = client.Account.extra.support_cards.Sum(pair => pair.Value);
+                        cmd.Parameters.Add("cardnum", DbType.Int32).Value = client.Account.extra.support_cards.Count;
                         cmd.Parameters.Add("viewer_id", DbType.Int32).Value = client.Account.ViewerId;
                         cmd.ExecuteNonQuery();
                     }

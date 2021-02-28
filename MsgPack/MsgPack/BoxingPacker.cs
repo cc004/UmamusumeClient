@@ -218,7 +218,14 @@ namespace MsgPack
 				object[] array = new object[reader.Length];
 				for (int j = 0; j < array.Length; j++)
 				{
-					array[j] = Unpack(reader);
+					try
+					{
+						array[j] = Unpack(reader);
+					}
+					catch
+                    {
+						array[j] = null;
+                    }
 				}
 				return array;
 			}
@@ -230,14 +237,20 @@ namespace MsgPack
 				int length = (int)reader.Length;
 				for (int i = 0; i < length; i++)
 				{
-					object key = Unpack(reader) ?? "null";
-					object value = Unpack(reader);
+					try
+					{
+						object key = Unpack(reader) ?? "null";
+						object value = Unpack(reader);
 
-							if (key is byte[] ba) key = Encoding.UTF8.GetString(ba);
-					if (value is byte[] ba2) value = Encoding.UTF8.GetString(ba2);
+						if (key is byte[] ba) key = Encoding.UTF8.GetString(ba);
+						if (value is byte[] ba2) value = Encoding.UTF8.GetString(ba2);
 
-					if (!dictionary.ContainsKey(key))
 						dictionary.Add(key, value);
+					}
+					catch
+                    {
+
+                    }
 				}
 				return dictionary;
 			}
