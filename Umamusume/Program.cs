@@ -19,39 +19,38 @@ namespace Umamusume
             {
                 LogPrefix = $"[Thread #{id}]"
             };
-            signup:
-            try
+            while (true)
             {
-                client.Signup();
-                //var client = new UmamusumeClient(JsonConvert.DeserializeObject<Account>(File.ReadAllText("account.json")));
-                //File.WriteAllText("account.json", JsonConvert.SerializeObject(client.Account));
-                client.StartSession();
-                client.Login();
-                client.Request(new TutorialSkipRequest());
-
-                client.StartSession();
-                client.Login();
-                client.Request(new ChangeNameRequest
+                try
                 {
-                    name = "init"
-                });
-                client.ReceivePresents();
-                while (client.FCoin >= 1500)
-                {
-                    client.Gacha(30003);
-                    Thread.Sleep(700);
-                }
-                Console.WriteLine($"[Thread #{id}] gacha get = {client.Account.extra.support_cards.Count}");
+                    client.Signup();
+                    //var client = new UmamusumeClient(JsonConvert.DeserializeObject<Account>(File.ReadAllText("account.json")));
+                    //File.WriteAllText("account.json", JsonConvert.SerializeObject(client.Account));
+                    client.StartSession();
+                    client.Login();
+                    client.Request(new TutorialSkipRequest());
 
-                if (client.Account.extra.support_cards.Count > 4)
-                {
-                    string pwd = Utils.GenRandomPassword();
-                    client.PublishTransition(pwd);
-                    client.Account.extra.password = pwd;
-                    const string qstr = "insert into accounts (udid, authkey, password, cardnum, viewer_id, {0}) values (@udid, @authkey, @password, @cardnum, @viewer_id, {1})";
-
-                    lock (conn)
+                    client.StartSession();
+                    client.Login();
+                    client.Request(new ChangeNameRequest
                     {
+                        name = "init"
+                    });
+                    client.ReceivePresents();
+                    while (client.FCoin >= 1500)
+                    {
+                        client.Gacha(30003);
+                        Thread.Sleep(700);
+                    }
+                    Console.WriteLine($"[Thread #{id}] gacha get = {client.Account.extra.support_cards.Count}");
+
+                    if (client.Account.extra.support_cards.Count > 4)
+                    {
+                        string pwd = Utils.GenRandomPassword();
+                        client.PublishTransition(pwd);
+                        client.Account.extra.password = pwd;
+                        const string qstr = "insert into accounts (udid, authkey, password, cardnum, viewer_id, {0}) values (@udid, @authkey, @password, @cardnum, @viewer_id, {1})";
+
                         SQLiteCommand cmd = new SQLiteCommand(string.Format(qstr, string.Join(",", cl.Select(s => s[1..(s.IndexOf("]") - 1)]).Select(s => $"`{s}`")), string.Join(",", Enumerable.Range(1, cl.Length).Select(i => $"@c{i}"))), conn);
                         cmd.Parameters.Add("udid", DbType.String).Value = client.Account.Udid.ToString();
                         cmd.Parameters.Add("authkey", DbType.String).Value = client.Account.Authkey;
@@ -61,16 +60,17 @@ namespace Umamusume
                             cmd.Parameters.Add($"c{++i}", DbType.Int32).Value = client.Account.extra.support_cards.TryGetValue(c, out int val) ? val : 0;
                         cmd.Parameters.Add("cardnum", DbType.Int32).Value = client.Account.extra.support_cards.Count;
                         cmd.Parameters.Add("viewer_id", DbType.Int32).Value = client.Account.ViewerId;
-                        cmd.ExecuteNonQuery();
+
+                        lock (conn)
+                            cmd.ExecuteNonQuery();
                     }
                 }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"[Thread #{id}] {e}");
+                }
+                client.ResetAccount();
             }
-            catch (Exception e)
-            {
-                Console.WriteLine($"[Thread #{id}] {e}");
-            }
-            client.ResetAccount();
-            goto signup;
         }
 
         private static void Main(string[] args)
@@ -79,6 +79,7 @@ namespace Umamusume
             ThreadPool.SetMaxThreads(128, 128);
             conn = new SQLiteConnection("data source=accounts.db");
             conn.Open();
+
             try
             {
                 new SQLiteCommand("create table if not exists accounts(" +
@@ -95,6 +96,15 @@ namespace Umamusume
             {
 
             }
+
+            new Thread(new ThreadStart(() =>
+            {
+                while (true)
+                {
+                    GC.Collect();
+                    Thread.Sleep(5000);
+                }
+            })).Start();
 
             for (int i = 0; i < 32; ++i)
             {
