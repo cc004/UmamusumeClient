@@ -216,16 +216,9 @@ namespace MsgPack
 			{
 				object[] array = new object[reader.Length];
 				for (int j = 0; j < array.Length; j++)
-				{
-					try
-					{
-						array[j] = Unpack(reader);
-					}
-					catch
-                    {
-						array[j] = null;
-                    }
-				}
+						{
+							array[j] = Unpack(reader);
+						}
 				return array;
 			}
 			case TypePrefixes.FixMap:
@@ -235,22 +228,15 @@ namespace MsgPack
 				IDictionary<object, object> dictionary = new Dictionary<object, object>((int)reader.Length);
 				int length = (int)reader.Length;
 				for (int i = 0; i < length; i++)
-				{
-					try
-					{
-						object key = Unpack(reader) ?? "null";
-						object value = Unpack(reader);
+						{
+							object key = Unpack(reader) ?? "null";
+							object value = Unpack(reader);
 
-						if (key is byte[] ba) key = Encoding.UTF8.GetString(ba);
-						if (value is byte[] ba2) value = Encoding.UTF8.GetString(ba2);
+							if (key is byte[] ba) key = Encoding.UTF8.GetString(ba);
+							if (value is byte[] ba2) value = Encoding.UTF8.GetString(ba2);
 
-						dictionary.Add(key, value);
-					}
-					catch
-                    {
-
-                    }
-				}
+							dictionary.Add(key, value);
+						}
 				return dictionary;
 			}
 			default:

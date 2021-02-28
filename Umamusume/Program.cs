@@ -10,9 +10,29 @@ namespace Umamusume
     internal class Program
     {
         private static SQLiteConnection conn;
+        private static SQLiteConnection conn2;
         private static readonly string[] cl = "[B・N・Winner!!]ウイニングチケット	[千紫万紅にまぎれぬ一凛]グラスワンダー	[Run(my)way]ゴールドシチー	[夢は掲げるものなのだっ！]トウカイテイオー	[輝く景色の、その先に]サイレンススズカ	[不沈艦の進撃]ゴールドシップ	[はやい！うまい！はやい！]サクラバクシンオー	[パッションチャンピオーナ！]エルコンドルパサー	[待望の大謀]セイウンスカイ	[これが私のウマドル道☆]スマートファルコン	[感謝は指先まで込めて]ファインモーション	[まだ小さな蕾でも]ニシノフラワー	[天をも切り裂くイナズマ娘！]タマモクロス	[一粒の安らぎ]スーパークリーク	[日本一のステージを]スペシャルウィーク	[ロード・オブ・ウオッカ]ウオッカ	[7センチの先へ]エアシャカール	[必殺！Wキャロットパンチ！]ビコーペガサス	[ようこそ、トレセン学園へ！]駿川たづな	[飛び出せ、キラメケ]アイネスフウジン"
             .Split("	").ToArray();
 
+        private static void SaveTo(UmamusumeClient client, SQLiteConnection conn)
+        {
+            string pwd = Utils.GenRandomPassword();
+            client.PublishTransition(pwd);
+            client.Account.extra.password = pwd;
+            const string qstr = "insert into accounts (udid, authkey, password, cardnum, viewer_id, {0}) values (@udid, @authkey, @password, @cardnum, @viewer_id, {1})";
+
+            SQLiteCommand cmd = new SQLiteCommand(string.Format(qstr, string.Join(",", cl.Select(s => s[1..(s.IndexOf("]") - 1)]).Select(s => $"`{s}`")), string.Join(",", Enumerable.Range(1, cl.Length).Select(i => $"@c{i}"))), conn);
+            cmd.Parameters.Add("udid", DbType.String).Value = client.Account.Udid.ToString();
+            cmd.Parameters.Add("authkey", DbType.String).Value = client.Account.Authkey;
+            cmd.Parameters.Add("password", DbType.String).Value = client.Account.extra.password;
+            int i = 0;
+            foreach (string c in cl)
+                cmd.Parameters.Add($"c{++i}", DbType.Int32).Value = client.Account.extra.support_cards.TryGetValue(c, out int val) ? val : 0;
+            cmd.Parameters.Add("cardnum", DbType.Int32).Value = client.Account.extra.support_cards.Count;
+            cmd.Parameters.Add("viewer_id", DbType.Int32).Value = client.Account.ViewerId;
+            lock (conn)
+                cmd.ExecuteNonQuery();
+        }
         private static void RegisterTask(int id)
         {
             UmamusumeClient client = new UmamusumeClient(new SimpleLz4Frame(id))
@@ -46,23 +66,13 @@ namespace Umamusume
 
                     if (client.Account.extra.support_cards.Count > 4)
                     {
-                        string pwd = Utils.GenRandomPassword();
-                        client.PublishTransition(pwd);
-                        client.Account.extra.password = pwd;
-                        const string qstr = "insert into accounts (udid, authkey, password, cardnum, viewer_id, {0}) values (@udid, @authkey, @password, @cardnum, @viewer_id, {1})";
-
-                        SQLiteCommand cmd = new SQLiteCommand(string.Format(qstr, string.Join(",", cl.Select(s => s[1..(s.IndexOf("]") - 1)]).Select(s => $"`{s}`")), string.Join(",", Enumerable.Range(1, cl.Length).Select(i => $"@c{i}"))), conn);
-                        cmd.Parameters.Add("udid", DbType.String).Value = client.Account.Udid.ToString();
-                        cmd.Parameters.Add("authkey", DbType.String).Value = client.Account.Authkey;
-                        cmd.Parameters.Add("password", DbType.String).Value = client.Account.extra.password;
-                        int i = 0;
-                        foreach (string c in cl)
-                            cmd.Parameters.Add($"c{++i}", DbType.Int32).Value = client.Account.extra.support_cards.TryGetValue(c, out int val) ? val : 0;
-                        cmd.Parameters.Add("cardnum", DbType.Int32).Value = client.Account.extra.support_cards.Count;
-                        cmd.Parameters.Add("viewer_id", DbType.Int32).Value = client.Account.ViewerId;
-
-                        lock (conn)
-                            cmd.ExecuteNonQuery();
+                        SaveTo(client, conn);
+                    }
+                    else if (client.Account.extra.support_cards.Count == 4)
+                    {
+                        var sc = client.Account.extra.support_cards;
+                        if (sc.ContainsKey("[まだ小さな蕾でも]ニシノフラワー") && sc.ContainsKey("[ようこそ、トレセン学園へ！]駿川たづな"))
+                            SaveTo(client, conn2);
                     }
                 }
                 catch (Exception e)
@@ -79,6 +89,8 @@ namespace Umamusume
             ThreadPool.SetMaxThreads(128, 128);
             conn = new SQLiteConnection("data source=accounts.db");
             conn.Open();
+            conn2 = new SQLiteConnection("data source=accounts2.db");
+            conn2.Open();
 
             try
             {
@@ -91,6 +103,22 @@ namespace Umamusume
                     "authkey TEXT);", conn).ExecuteNonQuery();
 
                 new SQLiteCommand("create unique index id_index on accounts (viewer_id)", conn).ExecuteNonQuery();
+            }
+            catch
+            {
+
+            }
+            try
+            {
+                new SQLiteCommand("create table if not exists accounts(" +
+                    "cardnum INTEGER," +
+                    string.Concat(cl.Select(s => s[1..(s.IndexOf("]") - 1)]).Select(c => $"`{c}` INTEGER,")) +
+                    "viewer_id INTEGER," +
+                    "password TEXT," +
+                    "udid TEXT," +
+                    "authkey TEXT);", conn2).ExecuteNonQuery();
+
+                new SQLiteCommand("create unique index id_index on accounts (viewer_id)", conn2).ExecuteNonQuery();
             }
             catch
             {
