@@ -77,6 +77,7 @@ namespace Umamusume
         }
         static void Main(string[] args)
         {
+            
             ThreadPool.SetMaxThreads(512, 512);
             ThreadPool.SetMaxThreads(128, 128);
             conn = new SQLiteConnection("data source=accounts.db");

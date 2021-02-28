@@ -20,8 +20,8 @@ namespace Umamusume
 			Proxy = null,
 			UseProxy = false
 		});
-		private object locker = new object();
-		private int id;
+
+		private readonly int id;
 
 		public SimpleLz4Frame(int id)
 		{
@@ -31,15 +31,11 @@ namespace Umamusume
 
 		public byte[] Decompress(string src)
 		{
-			var enc = HttpUtility.UrlEncode(src);
-			lock (locker)
-				return Convert.FromBase64String(client.GetStringAsync($"http://localhost:2333/{id}/decompress?content={enc}").Result);
+			return Convert.FromBase64String(client.PostAsync($"http://localhost:2333/{id}/decompress", new StringContent(src)).Result.Content.ReadAsStringAsync().Result);
 		}
 		public string Compress(byte[] src)
 		{
-			var enc = HttpUtility.UrlEncode(Convert.ToBase64String(src));
-			lock (locker)
-				return client.GetStringAsync($"http://localhost:2333/{id}/compress?content={enc}").Result;
+			return client.PostAsync($"http://localhost:2333/{id}/compress", new StringContent(Convert.ToBase64String(src))).Result.Content.ReadAsStringAsync().Result;
 		}
 	}
 }
