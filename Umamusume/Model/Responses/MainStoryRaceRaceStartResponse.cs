@@ -3,38 +3,38 @@
 namespace Umamusume.Model
 {
 
-	public sealed class MainStoryRaceRaceStartResponse : ResponseCommon
-	{
+    public sealed class MainStoryRaceRaceStartResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public int? random_seed;
+        public class CommonResponse
+        {
 
 
-
-			public RaceHorseData[] race_horse_data;
+            public int? random_seed;
 
 
 
-			public int? running_style;
+            public RaceHorseData[] race_horse_data;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public int? running_style;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public MainStoryRaceRaceStartResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public MainStoryRaceRaceStartResponse()
+        {
+        }
+    }
 }

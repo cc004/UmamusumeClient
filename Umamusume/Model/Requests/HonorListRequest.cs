@@ -1,19 +1,15 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class HonorListRequest : RequestBase<HonorListResponse>
-	{
+    public sealed class HonorListRequest : RequestBase<HonorListResponse>
+    {
 
 
-		
 
 
-		public HonorListRequest()
-		{
-		}
-	}
+
+        public HonorListRequest()
+        {
+        }
+    }
 }

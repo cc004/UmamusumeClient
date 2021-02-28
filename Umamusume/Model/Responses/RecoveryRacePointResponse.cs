@@ -3,34 +3,34 @@
 namespace Umamusume.Model
 {
 
-	public sealed class RecoveryRacePointResponse : ResponseCommon
-	{
+    public sealed class RecoveryRacePointResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public CoinInfo coin_info;
+        public class CommonResponse
+        {
 
 
-
-			public RpInfo rp_info;
+            public CoinInfo coin_info;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public RpInfo rp_info;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public RecoveryRacePointResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public RecoveryRacePointResponse()
+        {
+        }
+    }
 }

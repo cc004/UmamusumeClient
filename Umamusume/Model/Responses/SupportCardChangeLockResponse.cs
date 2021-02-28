@@ -3,34 +3,34 @@
 namespace Umamusume.Model
 {
 
-	public sealed class SupportCardChangeLockResponse : ResponseCommon
-	{
+    public sealed class SupportCardChangeLockResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public int? support_card_id;
+        public class CommonResponse
+        {
 
 
-
-			public int? is_locked;
+            public int? support_card_id;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public int? is_locked;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public SupportCardChangeLockResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public SupportCardChangeLockResponse()
+        {
+        }
+    }
 }

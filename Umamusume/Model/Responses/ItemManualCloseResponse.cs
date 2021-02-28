@@ -3,30 +3,30 @@
 namespace Umamusume.Model
 {
 
-	public sealed class ItemManualCloseResponse : ResponseCommon
-	{
+    public sealed class ItemManualCloseResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public LimitedShopInfo limited_shop_info;
+        public class CommonResponse
+        {
 
 
-
-			public CommonResponse()
-			{
-			}
-		}
+            public LimitedShopInfo limited_shop_info;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public ItemManualCloseResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public ItemManualCloseResponse()
+        {
+        }
+    }
 }

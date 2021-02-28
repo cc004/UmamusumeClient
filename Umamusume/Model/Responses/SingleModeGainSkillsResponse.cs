@@ -3,34 +3,34 @@
 namespace Umamusume.Model
 {
 
-	public sealed class SingleModeGainSkillsResponse : ResponseCommon
-	{
+    public sealed class SingleModeGainSkillsResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public SingleModeChara chara_info;
+        public class CommonResponse
+        {
 
 
-
-			public SingleModeHomeInfo home_info;
+            public SingleModeChara chara_info;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public SingleModeHomeInfo home_info;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public SingleModeGainSkillsResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public SingleModeGainSkillsResponse()
+        {
+        }
+    }
 }

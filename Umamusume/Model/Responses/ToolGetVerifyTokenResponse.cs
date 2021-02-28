@@ -3,30 +3,30 @@
 namespace Umamusume.Model
 {
 
-	public sealed class ToolGetVerifyTokenResponse : ResponseCommon
-	{
+    public sealed class ToolGetVerifyTokenResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public string token;
+        public class CommonResponse
+        {
 
 
-
-			public CommonResponse()
-			{
-			}
-		}
+            public string token;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public ToolGetVerifyTokenResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public ToolGetVerifyTokenResponse()
+        {
+        }
+    }
 }

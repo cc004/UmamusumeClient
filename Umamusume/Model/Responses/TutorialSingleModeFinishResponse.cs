@@ -3,66 +3,66 @@
 namespace Umamusume.Model
 {
 
-	public sealed class TutorialSingleModeFinishResponse : ResponseCommon
-	{
+    public sealed class TutorialSingleModeFinishResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public TrainedChara[] trained_chara;
+        public class CommonResponse
+        {
 
 
-
-			public DirectoryCard[] directory_card_array;
+            public TrainedChara[] trained_chara;
 
 
 
-			public int? directory_ranking;
+            public DirectoryCard[] directory_card_array;
 
 
 
-			public int? trained_chara_id;
+            public int? directory_ranking;
 
 
 
-			public LovePointInfo love_point_info;
+            public int? trained_chara_id;
 
 
 
-			public RewardSummaryInfo reward_item_info;
+            public LovePointInfo love_point_info;
 
 
 
-			public UserSupportCard[] support_card_data_array;
+            public RewardSummaryInfo reward_item_info;
 
 
 
-			public LimitedShopInfo limited_shop_info;
+            public UserSupportCard[] support_card_data_array;
 
 
 
-			public UserChara update_user_chara_info;
+            public LimitedShopInfo limited_shop_info;
 
 
 
-			public CharaProfileData[] new_chara_profile_array;
+            public UserChara update_user_chara_info;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public CharaProfileData[] new_chara_profile_array;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public TutorialSingleModeFinishResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public TutorialSingleModeFinishResponse()
+        {
+        }
+    }
 }

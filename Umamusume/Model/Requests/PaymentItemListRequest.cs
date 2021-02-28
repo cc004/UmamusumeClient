@@ -1,19 +1,15 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class PaymentItemListRequest : RequestBase<PaymentItemListResponse>
-	{
+    public sealed class PaymentItemListRequest : RequestBase<PaymentItemListResponse>
+    {
 
 
-		
 
 
-		public PaymentItemListRequest()
-		{
-		}
-	}
+
+        public PaymentItemListRequest()
+        {
+        }
+    }
 }

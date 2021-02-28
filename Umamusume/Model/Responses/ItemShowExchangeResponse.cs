@@ -3,46 +3,46 @@
 namespace Umamusume.Model
 {
 
-	public sealed class ItemShowExchangeResponse : ResponseCommon
-	{
+    public sealed class ItemShowExchangeResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public ItemExchangeLimit[] limit_list;
+        public class CommonResponse
+        {
 
 
-
-			public int[] disabled_id_array;
+            public ItemExchangeLimit[] limit_list;
 
 
 
-			public int[] release_id_array;
+            public int[] disabled_id_array;
 
 
 
-			public LimitedShopInfo limited_shop_info;
+            public int[] release_id_array;
 
 
 
-			public LimitedGoodsInfo[] limited_goods_info_array;
+            public LimitedShopInfo limited_shop_info;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public LimitedGoodsInfo[] limited_goods_info_array;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public ItemShowExchangeResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public ItemShowExchangeResponse()
+        {
+        }
+    }
 }

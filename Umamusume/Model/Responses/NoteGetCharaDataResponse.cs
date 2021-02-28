@@ -3,38 +3,38 @@
 namespace Umamusume.Model
 {
 
-	public sealed class NoteGetCharaDataResponse : ResponseCommon
-	{
+    public sealed class NoteGetCharaDataResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public NoteDataForDisplay[] voice_data_array;
+        public class CommonResponse
+        {
 
 
-
-			public int? dress_id;
+            public NoteDataForDisplay[] voice_data_array;
 
 
 
-			public int? mini_dress_id;
+            public int? dress_id;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public int? mini_dress_id;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public NoteGetCharaDataResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public NoteGetCharaDataResponse()
+        {
+        }
+    }
 }

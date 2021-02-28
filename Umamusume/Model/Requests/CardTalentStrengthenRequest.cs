@@ -1,31 +1,27 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class CardTalentStrengthenRequest : RequestBase<CardTalentStrengthenResponse>
-	{
+    public sealed class CardTalentStrengthenRequest : RequestBase<CardTalentStrengthenResponse>
+    {
 
 
-		public int? card_id;
-
-
-
-		public int? talent_level;
+        public int? card_id;
 
 
 
-		public int? new_talent_level;
+        public int? talent_level;
 
 
 
-		
+        public int? new_talent_level;
 
 
-		public CardTalentStrengthenRequest()
-		{
-		}
-	}
+
+
+
+
+        public CardTalentStrengthenRequest()
+        {
+        }
+    }
 }

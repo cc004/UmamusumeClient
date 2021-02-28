@@ -1,19 +1,15 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class SingleModeLoadRequest : RequestBase<SingleModeLoadResponse>
-	{
+    public sealed class SingleModeLoadRequest : RequestBase<SingleModeLoadResponse>
+    {
 
 
-		
 
 
-		public SingleModeLoadRequest()
-		{
-		}
-	}
+
+        public SingleModeLoadRequest()
+        {
+        }
+    }
 }

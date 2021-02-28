@@ -1,19 +1,15 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class DailyRacePreReplayCheckRequest : RequestBase<DailyRacePreReplayCheckResponse>
-	{
+    public sealed class DailyRacePreReplayCheckRequest : RequestBase<DailyRacePreReplayCheckResponse>
+    {
 
 
-		
 
 
-		public DailyRacePreReplayCheckRequest()
-		{
-		}
-	}
+
+        public DailyRacePreReplayCheckRequest()
+        {
+        }
+    }
 }

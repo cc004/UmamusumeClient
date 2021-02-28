@@ -3,34 +3,34 @@
 namespace Umamusume.Model
 {
 
-	public sealed class ItemUseRecoveryItemResponse : ResponseCommon
-	{
+    public sealed class ItemUseRecoveryItemResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public RpInfo rp_info;
+        public class CommonResponse
+        {
 
 
-
-			public TpInfo tp_info;
+            public RpInfo rp_info;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public TpInfo tp_info;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public ItemUseRecoveryItemResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public ItemUseRecoveryItemResponse()
+        {
+        }
+    }
 }

@@ -3,46 +3,46 @@
 namespace Umamusume.Model
 {
 
-	public sealed class SingleModeContinueResponse : ResponseCommon
-	{
+    public sealed class SingleModeContinueResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public SingleModeChara chara_info;
+        public class CommonResponse
+        {
 
 
-
-			public SingleModeHomeInfo home_info;
+            public SingleModeChara chara_info;
 
 
 
-			public SingleRaceStartInfo race_start_info;
+            public SingleModeHomeInfo home_info;
 
 
 
-			public SingleModeEventInfo[] unchecked_event_array;
+            public SingleRaceStartInfo race_start_info;
 
 
 
-			public UserItem user_item;
+            public SingleModeEventInfo[] unchecked_event_array;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public UserItem user_item;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public SingleModeContinueResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public SingleModeContinueResponse()
+        {
+        }
+    }
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Umamusume.Data
+﻿namespace Umamusume.Data
 {
     [CsvFile("text_data")]
     public class CsvTextData

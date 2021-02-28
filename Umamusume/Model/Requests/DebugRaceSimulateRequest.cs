@@ -1,75 +1,71 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class DebugRaceSimulateRequest : RequestBase<DebugRaceSimulateResponse>
-	{
+    public sealed class DebugRaceSimulateRequest : RequestBase<DebugRaceSimulateResponse>
+    {
 
 
-		public string simulator_version;
-
-
-
-		public string simulate_resource_version;
+        public string simulator_version;
 
 
 
-		public int? race_instance_id;
+        public string simulate_resource_version;
 
 
 
-		public int? random_seed;
+        public int? race_instance_id;
 
 
 
-		public int? season;
+        public int? random_seed;
 
 
 
-		public int? weather;
+        public int? season;
 
 
 
-		public int? ground_condition;
+        public int? weather;
 
 
 
-		public RaceHorseData[] race_horse_data;
+        public int? ground_condition;
 
 
 
-		public int? race_type;
+        public RaceHorseData[] race_horse_data;
 
 
 
-		public int? self_evaluate;
+        public int? race_type;
 
 
 
-		public int? opponent_evaluate;
+        public int? self_evaluate;
 
 
 
-		public int? score_calc_team_id;
+        public int? opponent_evaluate;
 
 
 
-		public int? win_count;
+        public int? score_calc_team_id;
 
 
 
-		public int? support_card_bonus;
+        public int? win_count;
 
 
 
-		
+        public int? support_card_bonus;
 
 
-		public DebugRaceSimulateRequest()
-		{
-		}
-	}
+
+
+
+
+        public DebugRaceSimulateRequest()
+        {
+        }
+    }
 }

@@ -3,34 +3,34 @@
 namespace Umamusume.Model
 {
 
-	public sealed class SafetyNetAttestationGetNonceResponse : ResponseCommon
-	{
+    public sealed class SafetyNetAttestationGetNonceResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public int? can_use;
+        public class CommonResponse
+        {
 
 
-
-			public string nonce;
+            public int? can_use;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public string nonce;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public SafetyNetAttestationGetNonceResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public SafetyNetAttestationGetNonceResponse()
+        {
+        }
+    }
 }

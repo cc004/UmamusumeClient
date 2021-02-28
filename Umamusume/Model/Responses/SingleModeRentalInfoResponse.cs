@@ -3,34 +3,34 @@
 namespace Umamusume.Model
 {
 
-	public sealed class SingleModeRentalInfoResponse : ResponseCommon
-	{
+    public sealed class SingleModeRentalInfoResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public SingleModeFriendSupportCard friend_support_card_data;
+        public class CommonResponse
+        {
 
 
-
-			public SingleModeSuccessionTrainedChara succession_trained_chara_data;
+            public SingleModeFriendSupportCard friend_support_card_data;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public SingleModeSuccessionTrainedChara succession_trained_chara_data;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public SingleModeRentalInfoResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public SingleModeRentalInfoResponse()
+        {
+        }
+    }
 }

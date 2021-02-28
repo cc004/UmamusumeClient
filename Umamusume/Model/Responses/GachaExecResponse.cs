@@ -3,50 +3,50 @@
 namespace Umamusume.Model
 {
 
-	public sealed class GachaExecResponse : ResponseCommon
-	{
+    public sealed class GachaExecResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public GachaResultData[] gacha_result_list;
+        public class CommonResponse
+        {
 
 
-
-			public ResponseItem[] bonus_item_array;
+            public GachaResultData[] gacha_result_list;
 
 
 
-			public CoinInfo coin_info;
+            public ResponseItem[] bonus_item_array;
 
 
 
-			public RewardSummaryInfo reward_summary_info;
+            public CoinInfo coin_info;
 
 
 
-			public ResponseItem[] item_list;
+            public RewardSummaryInfo reward_summary_info;
 
 
 
-			public GachaLimitItemInfo limit_item_info;
+            public ResponseItem[] item_list;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public GachaLimitItemInfo limit_item_info;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public GachaExecResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public GachaExecResponse()
+        {
+        }
+    }
 }

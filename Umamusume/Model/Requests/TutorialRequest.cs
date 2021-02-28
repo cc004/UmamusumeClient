@@ -1,24 +1,20 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class TutorialRequest : RequestBase<TutorialResponse>
-	{
+    public sealed class TutorialRequest : RequestBase<TutorialResponse>
+    {
 
 
-		public int? step;
+        public int? step;
 
 
 
 
-		protected override string Url => "/tutorial/update_step";
+        protected override string Url => "/tutorial/update_step";
 
 
-		public TutorialRequest()
-		{
-		}
-	}
+        public TutorialRequest()
+        {
+        }
+    }
 }

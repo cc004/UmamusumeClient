@@ -3,26 +3,26 @@
 namespace Umamusume.Model
 {
 
-	public sealed class NoteSaveCharaDataResponse : ResponseCommon
-	{
+    public sealed class NoteSaveCharaDataResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public CommonResponse()
-			{
-			}
-		}
+        public class CommonResponse
+        {
 
 
-
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public NoteSaveCharaDataResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public NoteSaveCharaDataResponse()
+        {
+        }
+    }
 }

@@ -3,38 +3,38 @@
 namespace Umamusume.Model
 {
 
-	public sealed class DailyRaceRecoveryTicketResponse : ResponseCommon
-	{
+    public sealed class DailyRaceRecoveryTicketResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public CoinInfo coin_info;
+        public class CommonResponse
+        {
 
 
-
-			public RewardSummaryInfo reward_summary_info;
+            public CoinInfo coin_info;
 
 
 
-			public int? purchase_num;
+            public RewardSummaryInfo reward_summary_info;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public int? purchase_num;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public DailyRaceRecoveryTicketResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public DailyRaceRecoveryTicketResponse()
+        {
+        }
+    }
 }

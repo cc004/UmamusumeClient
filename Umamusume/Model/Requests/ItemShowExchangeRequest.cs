@@ -1,19 +1,15 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class ItemShowExchangeRequest : RequestBase<ItemShowExchangeResponse>
-	{
+    public sealed class ItemShowExchangeRequest : RequestBase<ItemShowExchangeResponse>
+    {
 
 
-		
 
 
-		public ItemShowExchangeRequest()
-		{
-		}
-	}
+
+        public ItemShowExchangeRequest()
+        {
+        }
+    }
 }

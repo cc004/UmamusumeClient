@@ -3,50 +3,50 @@
 namespace Umamusume.Model
 {
 
-	public sealed class FriendLoadResponse : ResponseCommon
-	{
+    public sealed class FriendLoadResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public UserFriend[] friend_list;
+        public class CommonResponse
+        {
 
 
-
-			public UserFriend[] recommend_list;
+            public UserFriend[] friend_list;
 
 
 
-			public UserInfoAtFriend[] user_info_summary_list;
+            public UserFriend[] recommend_list;
 
 
 
-			public UserInfoAtFollower[] follower_info_summary_list;
+            public UserInfoAtFriend[] user_info_summary_list;
 
 
 
-			public string last_friend_checked_time;
+            public UserInfoAtFollower[] follower_info_summary_list;
 
 
 
-			public int? follower_num;
+            public string last_friend_checked_time;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public int? follower_num;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public FriendLoadResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public FriendLoadResponse()
+        {
+        }
+    }
 }

@@ -1,19 +1,15 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class CircleListRequest : RequestBase<CircleListResponse>
-	{
+    public sealed class CircleListRequest : RequestBase<CircleListResponse>
+    {
 
 
-		
 
 
-		public CircleListRequest()
-		{
-		}
-	}
+
+        public CircleListRequest()
+        {
+        }
+    }
 }

@@ -3,30 +3,30 @@
 namespace Umamusume.Model
 {
 
-	public sealed class GachaGetPrizeHistoryResponse : ResponseCommon
-	{
+    public sealed class GachaGetPrizeHistoryResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public GachaPrizeHistory[] prize_history_array;
+        public class CommonResponse
+        {
 
 
-
-			public CommonResponse()
-			{
-			}
-		}
+            public GachaPrizeHistory[] prize_history_array;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public GachaGetPrizeHistoryResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public GachaGetPrizeHistoryResponse()
+        {
+        }
+    }
 }

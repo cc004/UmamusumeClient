@@ -3,34 +3,34 @@
 namespace Umamusume.Model
 {
 
-	public sealed class CircleMakeResponse : ResponseCommon
-	{
+    public sealed class CircleMakeResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public CircleInfo circle_info;
+        public class CommonResponse
+        {
 
 
-
-			public CircleUser circle_user;
+            public CircleInfo circle_info;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public CircleUser circle_user;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public CircleMakeResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public CircleMakeResponse()
+        {
+        }
+    }
 }

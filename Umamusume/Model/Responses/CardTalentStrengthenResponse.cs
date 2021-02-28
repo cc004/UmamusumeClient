@@ -3,34 +3,34 @@
 namespace Umamusume.Model
 {
 
-	public sealed class CardTalentStrengthenResponse : ResponseCommon
-	{
+    public sealed class CardTalentStrengthenResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public UserCard card_data;
+        public class CommonResponse
+        {
 
 
-
-			public UserItem[] item_data_array;
+            public UserCard card_data;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public UserItem[] item_data_array;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public CardTalentStrengthenResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public CardTalentStrengthenResponse()
+        {
+        }
+    }
 }

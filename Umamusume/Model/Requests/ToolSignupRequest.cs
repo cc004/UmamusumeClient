@@ -1,31 +1,27 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class ToolSignupRequest : RequestBase<ToolSignupResponse>
-	{
+    public sealed class ToolSignupRequest : RequestBase<ToolSignupResponse>
+    {
 
 
-		public string credential;
-
-
-
-		public int? error_code;
+        public string credential;
 
 
 
-		public string error_message;
+        public int? error_code;
 
 
 
-		protected override string Url => "/tool/signup";
+        public string error_message;
+
+
+
+        protected override string Url => "/tool/signup";
 
 
         public ToolSignupRequest()
-		{
-		}
-	}
+        {
+        }
+    }
 }

@@ -3,26 +3,26 @@
 namespace Umamusume.Model
 {
 
-	public sealed class SingleModeChangeRunningStyleResponse : ResponseCommon
-	{
+    public sealed class SingleModeChangeRunningStyleResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public CommonResponse()
-			{
-			}
-		}
+        public class CommonResponse
+        {
 
 
-
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public SingleModeChangeRunningStyleResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public SingleModeChangeRunningStyleResponse()
+        {
+        }
+    }
 }

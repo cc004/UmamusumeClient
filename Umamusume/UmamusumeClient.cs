@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +8,6 @@ using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using Umamusume.Data;
 using Umamusume.Model;
 
@@ -17,7 +15,7 @@ namespace Umamusume
 {
     public class UmamusumeClient
     {
-        private static Dictionary<int, string> suuport_name_cache = new Dictionary<int, string>();
+        private static readonly Dictionary<int, string> suuport_name_cache = new Dictionary<int, string>();
 
         static UmamusumeClient()
         {
@@ -63,7 +61,7 @@ namespace Umamusume
 
         private static void AddCommonHeaders(HttpClient client)
         {
-            var headertype = typeof(HttpClient).Assembly.GetType("System.Net.Http.Headers.HttpHeaderType");
+            Type headertype = typeof(HttpClient).Assembly.GetType("System.Net.Http.Headers.HttpHeaderType");
             typeof(HttpHeaders).GetField("_allowedHeaderTypes", bindingAttr: BindingFlags.NonPublic | BindingFlags.Instance)
                 .SetValue(client.DefaultRequestHeaders, Enum.Parse(headertype, "All"));
             client.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/x-msgpack");
@@ -113,7 +111,7 @@ namespace Umamusume
         public TResult Request<TResult>(RequestBase<TResult> request) where TResult : ResponseCommon
         {
             //var arr = CommonHeader.Concat(Utils.Hex2bin(Account.SessionId)).Concat(Account.udid.ToString())
-            var head = CommonHeader
+            IEnumerable<byte> head = CommonHeader
                 .Concat(Utils.Hex2bin(SessionId))
                 .Concat(Utils.Hex2bin(Account.Udid.ToString().Replace("-", "")))
                 .Concat(Utils.GenRandomBytes(32));
@@ -121,40 +119,40 @@ namespace Umamusume
             if (Account.Authkey != null) head = head.Concat(Convert.FromBase64String(Account.Authkey));
             request.UpdateInfo(env, Account);
             //Console.WriteLine(JsonConvert.SerializeObject(request, Formatting.None));
-            var content = Utils.Pack(JToken.FromObject(request));
-            var counthead = BitConverter.GetBytes(head.Count());
-            var crypted = compressor.Compress(counthead.Concat(head.Concat(content)).ToArray());
+            byte[] content = Utils.Pack(JToken.FromObject(request));
+            byte[] counthead = BitConverter.GetBytes(head.Count());
+            string crypted = compressor.Compress(counthead.Concat(head.Concat(content)).ToArray());
             //var crypted = SimpleLz4Frame.Compress(Convert.FromBase64String("XQEAAH50j/tMf5uTRScSC0+C/r4Q9DVfhNNeCVv6Q+boA5swND6hd6/f38nhf/W/vW3aAd9/3uyolZ2GaM1kbGPhWIFCn58eiHIqoH7ctoKMoHvGw2sL8ZtmvbVCbpryiAuTQgrK9R5Bgv3M52rZq+kt8UJf9UJGncP2ed9WQsM/tdQ5SFd+V1oFKV2BDoyxhT585T2RdZrUIBiwelK7MJf2m1VISYgMc8rbCUjOMdAzOo6WlKmuLPMg1+y1FF/gbWD8CczoloK94AeEU11AgFPTe2wSCnEjZmtRsKmDjdBkoePac6t7J7DZFqlpBcgZBimXACzgPIRCRDYph0paprwoYOM4d/LWvOwCkKNS5/6CRVT0opNoCEOTsN4MV/RE7xYf0qRPvz0QADAtLKH5i04baM681PRF45gIaVMnc+kx+7qMCSJvO3HaCcaAbrKp6N3W3IUKZXh1HVddfpp9+5U="));
             PreRequestHeaders();
             HttpResponseMessage resp;
-            var apiurl = request.GetFullUrl(apiroot);
+            string apiurl = request.GetFullUrl(apiroot);
 
             try
             {
                 resp = client.PostAsync(apiurl, new ByteArrayContent(Encoding.UTF8.GetBytes(crypted))).Result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //Console.WriteLine($"{LogPrefix} {e}");
                 return null;
             }
             PostRequestHeaders();
-            var res = resp.Content.ReadAsStringAsync().Result;
+            string res = resp.Content.ReadAsStringAsync().Result;
             if (resp.StatusCode != HttpStatusCode.OK)
             {
                 Console.WriteLine($"{LogPrefix} api {apiurl} ret: {resp.StatusCode}");
                 return null;
             }
 
-            var obj = Utils.Unpack(compressor.Decompress(res)).ToObject<TResult>();
+            TResult obj = Utils.Unpack(compressor.Decompress(res)).ToObject<TResult>();
 
             if (obj.data_headers.result_code != GallopResultCode.RESULT_CODE_OK)
                 Console.WriteLine($"{LogPrefix} api {apiurl} ret: result code = {obj.data_headers.result_code}");
 
             if (obj.data_headers.result_code == GallopResultCode.BOT_ACCESS_ATTACK_ERROR)
             {
-                var headertype = typeof(HttpClient).Assembly.GetType("System.Net.Http.Headers.HttpHeaderType");
-                var client = new HttpClient(new HttpClientHandler
+                Type headertype = typeof(HttpClient).Assembly.GetType("System.Net.Http.Headers.HttpHeaderType");
+                HttpClient client = new HttpClient(new HttpClientHandler
                 {
                     UseProxy = true,
                     Proxy = new WebProxy("127.0.0.1:1080")
@@ -166,7 +164,7 @@ namespace Umamusume
 
                 client.DefaultRequestHeaders.Clear();
 
-                foreach (var header in this.client.DefaultRequestHeaders)
+                foreach (KeyValuePair<string, IEnumerable<string>> header in this.client.DefaultRequestHeaders)
                     client.DefaultRequestHeaders.TryAddWithoutValidation(header.Key, header.Value);
                 this.client = client;
             }
@@ -211,20 +209,20 @@ namespace Umamusume
 
         public void StartSession()
         {
-            var resp = RetryRequest(new ToolStartSessionRequest());
+            ToolStartSessionResponse resp = RetryRequest(new ToolStartSessionRequest());
             ResVer = resp.data.resource_version;
         }
 
         public void Login()
         {
-            var resp = RetryRequest(new LoginRequest());
+            LoginResponse resp = RetryRequest(new LoginRequest());
             if (resp.data.coin_info != null)
                 FCoin = resp.data.coin_info.fcoin;
         }
 
         public void ReceivePresents()
         {
-            var resp = RetryRequest(new PresentReceiveAllRequest
+            PresentReceiveAllResponse resp = RetryRequest(new PresentReceiveAllRequest
             {
                 category_filter_type = new int[0],
                 is_asc = true,
@@ -235,7 +233,7 @@ namespace Umamusume
 
         public void Gacha(int gachaId)
         {
-            var resp = RetryRequest(new GachaExecRequest
+            GachaExecResponse resp = RetryRequest(new GachaExecRequest
             {
                 current_num = FCoin,
                 item_id = 0,
@@ -244,10 +242,10 @@ namespace Umamusume
                 gacha_id = gachaId
             });
             FCoin = resp.data.coin_info.fcoin;
-            foreach (var card in resp.data.reward_summary_info.add_support_card_num_array)
+            foreach (RewardAddSupportCardNum card in resp.data.reward_summary_info.add_support_card_num_array)
                 if (card.support_card_id >= 30000)
                 {
-                    var key = suuport_name_cache[card.support_card_id];
+                    string key = suuport_name_cache[card.support_card_id];
                     if (!Account.extra.support_cards.ContainsKey(key))
                         Account.extra.support_cards[key] = 0;
                     ++Account.extra.support_cards[key];

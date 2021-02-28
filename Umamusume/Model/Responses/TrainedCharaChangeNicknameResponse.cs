@@ -3,30 +3,30 @@
 namespace Umamusume.Model
 {
 
-	public sealed class TrainedCharaChangeNicknameResponse : ResponseCommon
-	{
+    public sealed class TrainedCharaChangeNicknameResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public TrainedChara trained_chara_info;
+        public class CommonResponse
+        {
 
 
-
-			public CommonResponse()
-			{
-			}
-		}
+            public TrainedChara trained_chara_info;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public TrainedCharaChangeNicknameResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public TrainedCharaChangeNicknameResponse()
+        {
+        }
+    }
 }

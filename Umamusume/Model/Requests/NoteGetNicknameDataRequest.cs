@@ -1,23 +1,19 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class NoteGetNicknameDataRequest : RequestBase<NoteGetNicknameDataResponse>
-	{
+    public sealed class NoteGetNicknameDataRequest : RequestBase<NoteGetNicknameDataResponse>
+    {
 
 
-		public int? chara_id;
+        public int? chara_id;
 
 
 
-		
 
 
-		public NoteGetNicknameDataRequest()
-		{
-		}
-	}
+
+        public NoteGetNicknameDataRequest()
+        {
+        }
+    }
 }

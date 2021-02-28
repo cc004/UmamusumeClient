@@ -3,30 +3,30 @@
 namespace Umamusume.Model
 {
 
-	public sealed class CircleUserApproveJoinRequestResponse : ResponseCommon
-	{
+    public sealed class CircleUserApproveJoinRequestResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public CircleUser circle_user;
+        public class CommonResponse
+        {
 
 
-
-			public CommonResponse()
-			{
-			}
-		}
+            public CircleUser circle_user;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public CircleUserApproveJoinRequestResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public CircleUserApproveJoinRequestResponse()
+        {
+        }
+    }
 }

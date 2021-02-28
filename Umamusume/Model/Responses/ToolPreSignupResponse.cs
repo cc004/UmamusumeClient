@@ -3,34 +3,34 @@
 namespace Umamusume.Model
 {
 
-	public sealed class ToolPreSignupResponse : ResponseCommon
-	{
+    public sealed class ToolPreSignupResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public string nonce;
+        public class CommonResponse
+        {
 
 
-
-			public bool attest;
+            public string nonce;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public bool attest;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public ToolPreSignupResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public ToolPreSignupResponse()
+        {
+        }
+    }
 }

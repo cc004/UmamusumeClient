@@ -3,34 +3,34 @@
 namespace Umamusume.Model
 {
 
-	public sealed class FriendRenewRecommendListResponse : ResponseCommon
-	{
+    public sealed class FriendRenewRecommendListResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public UserFriend[] recommend_list;
+        public class CommonResponse
+        {
 
 
-
-			public UserInfoAtFriend[] user_info_summary_list;
+            public UserFriend[] recommend_list;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public UserInfoAtFriend[] user_info_summary_list;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public FriendRenewRecommendListResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public FriendRenewRecommendListResponse()
+        {
+        }
+    }
 }

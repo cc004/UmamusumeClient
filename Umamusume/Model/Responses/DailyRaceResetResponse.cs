@@ -3,30 +3,30 @@
 namespace Umamusume.Model
 {
 
-	public sealed class DailyRaceResetResponse : ResponseCommon
-	{
+    public sealed class DailyRaceResetResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public int? state;
+        public class CommonResponse
+        {
 
 
-
-			public CommonResponse()
-			{
-			}
-		}
+            public int? state;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public DailyRaceResetResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public DailyRaceResetResponse()
+        {
+        }
+    }
 }

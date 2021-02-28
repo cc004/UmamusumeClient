@@ -3,42 +3,42 @@
 namespace Umamusume.Model
 {
 
-	public sealed class DataLinkGetGameDataBySocialAccountResponse : ResponseCommon
-	{
+    public sealed class DataLinkGetGameDataBySocialAccountResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public int? viewer_id;
+        public class CommonResponse
+        {
 
 
-
-			public string name;
+            public int? viewer_id;
 
 
 
-			public int? is_chained;
+            public string name;
 
 
 
-			public string request_user_name;
+            public int? is_chained;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public string request_user_name;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public DataLinkGetGameDataBySocialAccountResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public DataLinkGetGameDataBySocialAccountResponse()
+        {
+        }
+    }
 }

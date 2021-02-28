@@ -1,23 +1,19 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class PaymentDummyRequest : RequestBase<PaymentDummyResponse>
-	{
+    public sealed class PaymentDummyRequest : RequestBase<PaymentDummyResponse>
+    {
 
 
-		public PaymentDummyFinishParam payment;
+        public PaymentDummyFinishParam payment;
 
 
 
-		
 
 
-		public PaymentDummyRequest()
-		{
-		}
-	}
+
+        public PaymentDummyRequest()
+        {
+        }
+    }
 }

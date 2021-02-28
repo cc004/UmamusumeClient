@@ -3,30 +3,30 @@
 namespace Umamusume.Model
 {
 
-	public sealed class changeLeaderCardResponse : ResponseCommon
-	{
+    public sealed class changeLeaderCardResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public UserInfo user_info;
+        public class CommonResponse
+        {
 
 
-
-			public CommonResponse()
-			{
-			}
-		}
+            public UserInfo user_info;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public changeLeaderCardResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public changeLeaderCardResponse()
+        {
+        }
+    }
 }

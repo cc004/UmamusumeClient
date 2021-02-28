@@ -3,30 +3,30 @@
 namespace Umamusume.Model
 {
 
-	public sealed class PresentHistoryResponse : ResponseCommon
-	{
+    public sealed class PresentHistoryResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public PresentData[] present_array;
+        public class CommonResponse
+        {
 
 
-
-			public CommonResponse()
-			{
-			}
-		}
+            public PresentData[] present_array;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public PresentHistoryResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public PresentHistoryResponse()
+        {
+        }
+    }
 }

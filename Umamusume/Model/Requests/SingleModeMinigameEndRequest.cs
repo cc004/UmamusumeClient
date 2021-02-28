@@ -1,23 +1,19 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class SingleModeMinigameEndRequest : RequestBase<SingleModeMinigameEndResponse>
-	{
+    public sealed class SingleModeMinigameEndRequest : RequestBase<SingleModeMinigameEndResponse>
+    {
 
 
-		public MinigameResult result;
+        public MinigameResult result;
 
 
 
-		
 
 
-		public SingleModeMinigameEndRequest()
-		{
-		}
-	}
+
+        public SingleModeMinigameEndRequest()
+        {
+        }
+    }
 }

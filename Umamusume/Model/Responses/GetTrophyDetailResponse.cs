@@ -3,30 +3,30 @@
 namespace Umamusume.Model
 {
 
-	public sealed class GetTrophyDetailResponse : ResponseCommon
-	{
+    public sealed class GetTrophyDetailResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public UserTrophyInfo user_trophy_info;
+        public class CommonResponse
+        {
 
 
-
-			public CommonResponse()
-			{
-			}
-		}
+            public UserTrophyInfo user_trophy_info;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public GetTrophyDetailResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public GetTrophyDetailResponse()
+        {
+        }
+    }
 }

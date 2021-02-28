@@ -3,34 +3,34 @@
 namespace Umamusume.Model
 {
 
-	public sealed class TeamStadiumSaveRaceResultResponse : ResponseCommon
-	{
+    public sealed class TeamStadiumSaveRaceResultResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public TeamStadiumRaceResult[] race_result_array;
+        public class CommonResponse
+        {
 
 
-
-			public TeamStadiumWinningRewardInfo[] winning_reward_info_array;
+            public TeamStadiumRaceResult[] race_result_array;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public TeamStadiumWinningRewardInfo[] winning_reward_info_array;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public TeamStadiumSaveRaceResultResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public TeamStadiumSaveRaceResultResponse()
+        {
+        }
+    }
 }

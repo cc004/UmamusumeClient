@@ -3,34 +3,34 @@
 namespace Umamusume.Model
 {
 
-	public sealed class TeamStadiumUserDetailResponse : ResponseCommon
-	{
+    public sealed class TeamStadiumUserDetailResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public TeamStadiumTeamData[] team_data_array;
+        public class CommonResponse
+        {
 
 
-
-			public TrainedChara[] trained_chara_array;
+            public TeamStadiumTeamData[] team_data_array;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public TrainedChara[] trained_chara_array;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public TeamStadiumUserDetailResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public TeamStadiumUserDetailResponse()
+        {
+        }
+    }
 }

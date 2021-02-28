@@ -1,23 +1,19 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class CircleUserChangeLeaderRequest : RequestBase<CircleUserChangeLeaderResponse>
-	{
+    public sealed class CircleUserChangeLeaderRequest : RequestBase<CircleUserChangeLeaderResponse>
+    {
 
 
-		public int? target_viewer_id;
+        public int? target_viewer_id;
 
 
 
-		
 
 
-		public CircleUserChangeLeaderRequest()
-		{
-		}
-	}
+
+        public CircleUserChangeLeaderRequest()
+        {
+        }
+    }
 }

@@ -3,30 +3,30 @@
 namespace Umamusume.Model
 {
 
-	public sealed class PaymentUpdateBirthResponse : ResponseCommon
-	{
+    public sealed class PaymentUpdateBirthResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public string user_birth;
+        public class CommonResponse
+        {
 
 
-
-			public CommonResponse()
-			{
-			}
-		}
+            public string user_birth;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public PaymentUpdateBirthResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public PaymentUpdateBirthResponse()
+        {
+        }
+    }
 }

@@ -1,23 +1,19 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class CircleChatSendStampRequest : RequestBase<CircleChatSendStampResponse>
-	{
+    public sealed class CircleChatSendStampRequest : RequestBase<CircleChatSendStampResponse>
+    {
 
 
-		public int? stamp_id;
+        public int? stamp_id;
 
 
 
-		
 
 
-		public CircleChatSendStampRequest()
-		{
-		}
-	}
+
+        public CircleChatSendStampRequest()
+        {
+        }
+    }
 }

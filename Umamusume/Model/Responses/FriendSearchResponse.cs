@@ -3,70 +3,70 @@
 namespace Umamusume.Model
 {
 
-	public sealed class FriendSearchResponse : ResponseCommon
-	{
+    public sealed class FriendSearchResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public UserFriend friend_info;
+        public class CommonResponse
+        {
 
 
-
-			public UserInfoAtFriend user_info_summary;
+            public UserFriend friend_info;
 
 
 
-			public TrainedChara practice_partner_info;
+            public UserInfoAtFriend user_info_summary;
 
 
 
-			public TrainedChara[] directory_chara_info;
+            public TrainedChara practice_partner_info;
 
 
 
-			public DirectoryCard[] directory_card_array;
+            public TrainedChara[] directory_chara_info;
 
 
 
-			public UserSupportCard support_card_data;
+            public DirectoryCard[] directory_card_array;
 
 
 
-			public TrophyNumInfo trophy_num_info;
+            public UserSupportCard support_card_data;
 
 
 
-			public ReleaseNumInfo release_num_info;
+            public TrophyNumInfo trophy_num_info;
 
 
 
-			public TeamStadiumUser team_stadium_user;
+            public ReleaseNumInfo release_num_info;
 
 
 
-			public int? follower_num;
+            public TeamStadiumUser team_stadium_user;
 
 
 
-			public int? own_follow_num;
+            public int? follower_num;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public int? own_follow_num;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public FriendSearchResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public FriendSearchResponse()
+        {
+        }
+    }
 }

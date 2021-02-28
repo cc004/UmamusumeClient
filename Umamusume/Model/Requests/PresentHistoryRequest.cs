@@ -1,35 +1,31 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class PresentHistoryRequest : RequestBase<PresentHistoryResponse>
-	{
+    public sealed class PresentHistoryRequest : RequestBase<PresentHistoryResponse>
+    {
 
 
-		public int[] category_filter_type;
-
-
-
-		public int? offset;
+        public int[] category_filter_type;
 
 
 
-		public int? limit;
+        public int? offset;
 
 
 
-		public bool is_asc;
+        public int? limit;
 
 
 
-		
+        public bool is_asc;
 
 
-		public PresentHistoryRequest()
-		{
-		}
-	}
+
+
+
+
+        public PresentHistoryRequest()
+        {
+        }
+    }
 }

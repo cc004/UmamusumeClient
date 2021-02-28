@@ -3,38 +3,38 @@
 namespace Umamusume.Model
 {
 
-	public sealed class ItemExchangeResponse : ResponseCommon
-	{
+    public sealed class ItemExchangeResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public RewardSummaryInfo reward_summary_info;
+        public class CommonResponse
+        {
 
 
-
-			public CoinInfo coin_info;
+            public RewardSummaryInfo reward_summary_info;
 
 
 
-			public UserItem use_item_info;
+            public CoinInfo coin_info;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public UserItem use_item_info;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public ItemExchangeResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public ItemExchangeResponse()
+        {
+        }
+    }
 }

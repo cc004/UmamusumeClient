@@ -3,58 +3,58 @@
 namespace Umamusume.Model
 {
 
-	public sealed class PaymentFinishResponse : ResponseCommon
-	{
+    public sealed class PaymentFinishResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public bool first_time;
+        public class CommonResponse
+        {
 
 
-
-			public PaymentPurchaseTimesData purchased_times_data;
+            public bool first_time;
 
 
 
-			public string purchase_id;
+            public PaymentPurchaseTimesData purchased_times_data;
 
 
 
-			public int? before_paid_coin;
+            public string purchase_id;
 
 
 
-			public int? before_free_coin;
+            public int? before_paid_coin;
 
 
 
-			public int? after_paid_coin;
+            public int? before_free_coin;
 
 
 
-			public int? after_free_coin;
+            public int? after_paid_coin;
 
 
 
-			public PaymentSeasonPackInfo season_pack_info;
+            public int? after_free_coin;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public PaymentSeasonPackInfo season_pack_info;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public PaymentFinishResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public PaymentFinishResponse()
+        {
+        }
+    }
 }

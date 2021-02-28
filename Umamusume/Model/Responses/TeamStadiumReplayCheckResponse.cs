@@ -3,30 +3,30 @@
 namespace Umamusume.Model
 {
 
-	public sealed class TeamStadiumReplayCheckResponse : ResponseCommon
-	{
+    public sealed class TeamStadiumReplayCheckResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public int? last_checked_round;
+        public class CommonResponse
+        {
 
 
-
-			public CommonResponse()
-			{
-			}
-		}
+            public int? last_checked_round;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public TeamStadiumReplayCheckResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public TeamStadiumReplayCheckResponse()
+        {
+        }
+    }
 }

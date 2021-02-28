@@ -3,30 +3,30 @@
 namespace Umamusume.Model
 {
 
-	public sealed class changePracticePartnerResponse : ResponseCommon
-	{
+    public sealed class changePracticePartnerResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public UserInfo user_info;
+        public class CommonResponse
+        {
 
 
-
-			public CommonResponse()
-			{
-			}
-		}
+            public UserInfo user_info;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public changePracticePartnerResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public changePracticePartnerResponse()
+        {
+        }
+    }
 }

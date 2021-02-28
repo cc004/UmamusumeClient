@@ -3,30 +3,30 @@
 namespace Umamusume.Model
 {
 
-	public sealed class NoteGetNicknameDataResponse : ResponseCommon
-	{
+    public sealed class NoteGetNicknameDataResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public int[] nickname_id_array;
+        public class CommonResponse
+        {
 
 
-
-			public CommonResponse()
-			{
-			}
-		}
+            public int[] nickname_id_array;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public NoteGetNicknameDataResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public NoteGetNicknameDataResponse()
+        {
+        }
+    }
 }

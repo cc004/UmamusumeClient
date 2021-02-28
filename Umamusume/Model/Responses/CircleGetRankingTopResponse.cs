@@ -3,42 +3,42 @@
 namespace Umamusume.Model
 {
 
-	public sealed class CircleGetRankingTopResponse : ResponseCommon
-	{
+    public sealed class CircleGetRankingTopResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public CircleInfo[] circle_info_array;
+        public class CommonResponse
+        {
 
 
-
-			public UserInfoAtFriend[] leader_info_array;
+            public CircleInfo[] circle_info_array;
 
 
 
-			public CircleRanking[] circle_ranking_array;
+            public UserInfoAtFriend[] leader_info_array;
 
 
 
-			public bool is_calculate;
+            public CircleRanking[] circle_ranking_array;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public bool is_calculate;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public CircleGetRankingTopResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public CircleGetRankingTopResponse()
+        {
+        }
+    }
 }

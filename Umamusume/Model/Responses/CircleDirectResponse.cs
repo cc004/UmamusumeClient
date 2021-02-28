@@ -3,38 +3,38 @@
 namespace Umamusume.Model
 {
 
-	public sealed class CircleDirectResponse : ResponseCommon
-	{
+    public sealed class CircleDirectResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public DisplayRewardInfo[] reward_info_array;
+        public class CommonResponse
+        {
 
 
-
-			public int? after_rank;
+            public DisplayRewardInfo[] reward_info_array;
 
 
 
-			public int? best_team_evaluation_point;
+            public int? after_rank;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public int? best_team_evaluation_point;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public CircleDirectResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public CircleDirectResponse()
+        {
+        }
+    }
 }

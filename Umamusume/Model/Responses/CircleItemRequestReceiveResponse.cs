@@ -3,38 +3,38 @@
 namespace Umamusume.Model
 {
 
-	public sealed class CircleItemRequestReceiveResponse : ResponseCommon
-	{
+    public sealed class CircleItemRequestReceiveResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public CircleItemDonate[] circle_item_donate_array;
+        public class CommonResponse
+        {
 
 
-
-			public CircleChatUser[] circle_chat_user_array;
+            public CircleItemDonate[] circle_item_donate_array;
 
 
 
-			public RewardSummaryInfo reward_summary_info;
+            public CircleChatUser[] circle_chat_user_array;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public RewardSummaryInfo reward_summary_info;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public CircleItemRequestReceiveResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public CircleItemRequestReceiveResponse()
+        {
+        }
+    }
 }

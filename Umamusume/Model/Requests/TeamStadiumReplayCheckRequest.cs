@@ -1,23 +1,19 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class TeamStadiumReplayCheckRequest : RequestBase<TeamStadiumReplayCheckResponse>
-	{
+    public sealed class TeamStadiumReplayCheckRequest : RequestBase<TeamStadiumReplayCheckResponse>
+    {
 
 
-		public int? round;
+        public int? round;
 
 
 
-		
 
 
-		public TeamStadiumReplayCheckRequest()
-		{
-		}
-	}
+
+        public TeamStadiumReplayCheckRequest()
+        {
+        }
+    }
 }

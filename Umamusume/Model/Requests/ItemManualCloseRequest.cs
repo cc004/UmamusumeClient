@@ -1,19 +1,15 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class ItemManualCloseRequest : RequestBase<ItemManualCloseResponse>
-	{
+    public sealed class ItemManualCloseRequest : RequestBase<ItemManualCloseResponse>
+    {
 
 
-		
 
 
-		public ItemManualCloseRequest()
-		{
-		}
-	}
+
+        public ItemManualCloseRequest()
+        {
+        }
+    }
 }

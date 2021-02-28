@@ -3,38 +3,38 @@
 namespace Umamusume.Model
 {
 
-	public sealed class PaymentItemListResponse : ResponseCommon
-	{
+    public sealed class PaymentItemListResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public PaymentPurchaseItemParam[] data;
+        public class CommonResponse
+        {
 
 
-
-			public PaymentSeasonPackInfo season_pack_info;
+            public PaymentPurchaseItemParam[] data;
 
 
 
-			public int? last_checked_time;
+            public PaymentSeasonPackInfo season_pack_info;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public int? last_checked_time;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public PaymentItemListResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public PaymentItemListResponse()
+        {
+        }
+    }
 }

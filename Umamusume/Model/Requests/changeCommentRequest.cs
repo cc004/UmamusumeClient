@@ -1,23 +1,19 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class changeCommentRequest : RequestBase<changeCommentResponse>
-	{
+    public sealed class changeCommentRequest : RequestBase<changeCommentResponse>
+    {
 
 
-		public string comment;
+        public string comment;
 
 
 
-		
 
 
-		public changeCommentRequest()
-		{
-		}
-	}
+
+        public changeCommentRequest()
+        {
+        }
+    }
 }

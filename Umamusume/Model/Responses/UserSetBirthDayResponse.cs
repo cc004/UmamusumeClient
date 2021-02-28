@@ -3,30 +3,30 @@
 namespace Umamusume.Model
 {
 
-	public sealed class UserSetBirthDayResponse : ResponseCommon
-	{
+    public sealed class UserSetBirthDayResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public UserInfo user_info;
+        public class CommonResponse
+        {
 
 
-
-			public CommonResponse()
-			{
-			}
-		}
+            public UserInfo user_info;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public UserSetBirthDayResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public UserSetBirthDayResponse()
+        {
+        }
+    }
 }

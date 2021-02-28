@@ -3,30 +3,30 @@
 namespace Umamusume.Model
 {
 
-	public sealed class TutorialSkipResponse : ResponseCommon
-	{
+    public sealed class TutorialSkipResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public int? step;
+        public class CommonResponse
+        {
 
 
-
-			public CommonResponse()
-			{
-			}
-		}
+            public int? step;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public TutorialSkipResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public TutorialSkipResponse()
+        {
+        }
+    }
 }

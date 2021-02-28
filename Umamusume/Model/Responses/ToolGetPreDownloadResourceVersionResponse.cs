@@ -3,30 +3,30 @@
 namespace Umamusume.Model
 {
 
-	public sealed class ToolGetPreDownloadResourceVersionResponse : ResponseCommon
-	{
+    public sealed class ToolGetPreDownloadResourceVersionResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public string resource_version;
+        public class CommonResponse
+        {
 
 
-
-			public CommonResponse()
-			{
-			}
-		}
+            public string resource_version;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public ToolGetPreDownloadResourceVersionResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public ToolGetPreDownloadResourceVersionResponse()
+        {
+        }
+    }
 }

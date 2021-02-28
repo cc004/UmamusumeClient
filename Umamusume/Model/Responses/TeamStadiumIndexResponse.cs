@@ -3,58 +3,58 @@
 namespace Umamusume.Model
 {
 
-	public sealed class TeamStadiumIndexResponse : ResponseCommon
-	{
+    public sealed class TeamStadiumIndexResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public int? team_stadium_id;
+        public class CommonResponse
+        {
 
 
-
-			public TeamStadiumUser team_stadium_user;
+            public int? team_stadium_id;
 
 
 
-			public TeamStadiumRanking ranking;
+            public TeamStadiumUser team_stadium_user;
 
 
 
-			public TeamStadiumBorderLine border_line;
+            public TeamStadiumRanking ranking;
 
 
 
-			public int? team_class_change_state;
+            public TeamStadiumBorderLine border_line;
 
 
 
-			public DisplayRewardInfo[] reward_info_array;
+            public int? team_class_change_state;
 
 
 
-			public int? race_status;
+            public DisplayRewardInfo[] reward_info_array;
 
 
 
-			public int? term_state;
+            public int? race_status;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public int? term_state;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public TeamStadiumIndexResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public TeamStadiumIndexResponse()
+        {
+        }
+    }
 }

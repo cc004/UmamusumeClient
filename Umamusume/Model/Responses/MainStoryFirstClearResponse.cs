@@ -3,46 +3,46 @@
 namespace Umamusume.Model
 {
 
-	public sealed class MainStoryFirstClearResponse : ResponseCommon
-	{
+    public sealed class MainStoryFirstClearResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public MainStoryData main_story_data;
+        public class CommonResponse
+        {
 
 
-
-			public DisplayRewardInfo[] reward_array;
+            public MainStoryData main_story_data;
 
 
 
-			public RewardSummaryInfo reward_summary_info;
+            public DisplayRewardInfo[] reward_array;
 
 
 
-			public UserMusic[] add_music_array;
+            public RewardSummaryInfo reward_summary_info;
 
 
 
-			public int? release_item_flag;
+            public UserMusic[] add_music_array;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public int? release_item_flag;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public MainStoryFirstClearResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public MainStoryFirstClearResponse()
+        {
+        }
+    }
 }

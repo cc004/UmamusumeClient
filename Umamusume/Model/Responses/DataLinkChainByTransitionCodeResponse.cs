@@ -3,38 +3,38 @@
 namespace Umamusume.Model
 {
 
-	public sealed class DataLinkChainByTransitionCodeResponse : ResponseCommon
-	{
+    public sealed class DataLinkChainByTransitionCodeResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public int? chained_viewer_id;
+        public class CommonResponse
+        {
 
 
-
-			public string chained_user_name;
+            public int? chained_viewer_id;
 
 
 
-			public string auth_key;
+            public string chained_user_name;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public string auth_key;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public DataLinkChainByTransitionCodeResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public DataLinkChainByTransitionCodeResponse()
+        {
+        }
+    }
 }

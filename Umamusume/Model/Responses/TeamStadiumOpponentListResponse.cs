@@ -3,30 +3,30 @@
 namespace Umamusume.Model
 {
 
-	public sealed class TeamStadiumOpponentListResponse : ResponseCommon
-	{
+    public sealed class TeamStadiumOpponentListResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public TeamStadiumOpponent[] opponent_info_array;
+        public class CommonResponse
+        {
 
 
-
-			public CommonResponse()
-			{
-			}
-		}
+            public TeamStadiumOpponent[] opponent_info_array;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public TeamStadiumOpponentListResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public TeamStadiumOpponentListResponse()
+        {
+        }
+    }
 }

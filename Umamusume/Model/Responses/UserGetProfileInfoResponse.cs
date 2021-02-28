@@ -3,50 +3,50 @@
 namespace Umamusume.Model
 {
 
-	public sealed class UserGetProfileInfoResponse : ResponseCommon
-	{
+    public sealed class UserGetProfileInfoResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public int? voice_num;
+        public class CommonResponse
+        {
 
 
-
-			public int? act_num;
+            public int? voice_num;
 
 
 
-			public int? good_end_num;
+            public int? act_num;
 
 
 
-			public int? team_stadium_win_count;
+            public int? good_end_num;
 
 
 
-			public int? single_mode_play_count;
+            public int? team_stadium_win_count;
 
 
 
-			public int? rank_score;
+            public int? single_mode_play_count;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public int? rank_score;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public UserGetProfileInfoResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public UserGetProfileInfoResponse()
+        {
+        }
+    }
 }

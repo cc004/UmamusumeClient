@@ -3,30 +3,30 @@
 namespace Umamusume.Model
 {
 
-	public sealed class LiveTheaterLiveStartResponse : ResponseCommon
-	{
+    public sealed class LiveTheaterLiveStartResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public LiveTheaterSaveInfo live_theater_save_info;
+        public class CommonResponse
+        {
 
 
-
-			public CommonResponse()
-			{
-			}
-		}
+            public LiveTheaterSaveInfo live_theater_save_info;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public LiveTheaterLiveStartResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public LiveTheaterLiveStartResponse()
+        {
+        }
+    }
 }

@@ -1,19 +1,15 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class CircleRoomEnterRequest : RequestBase<CircleRoomEnterResponse>
-	{
+    public sealed class CircleRoomEnterRequest : RequestBase<CircleRoomEnterResponse>
+    {
 
 
-		
 
 
-		public CircleRoomEnterRequest()
-		{
-		}
-	}
+
+        public CircleRoomEnterRequest()
+        {
+        }
+    }
 }

@@ -3,30 +3,30 @@
 namespace Umamusume.Model
 {
 
-	public sealed class BannerUrlResponse : ResponseCommon
-	{
+    public sealed class BannerUrlResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public string url;
+        public class CommonResponse
+        {
 
 
-
-			public CommonResponse()
-			{
-			}
-		}
+            public string url;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public BannerUrlResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public BannerUrlResponse()
+        {
+        }
+    }
 }

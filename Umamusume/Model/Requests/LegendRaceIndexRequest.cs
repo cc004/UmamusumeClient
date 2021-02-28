@@ -1,19 +1,15 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class LegendRaceIndexRequest : RequestBase<LegendRaceIndexResponse>
-	{
+    public sealed class LegendRaceIndexRequest : RequestBase<LegendRaceIndexResponse>
+    {
 
 
-		
 
 
-		public LegendRaceIndexRequest()
-		{
-		}
-	}
+
+        public LegendRaceIndexRequest()
+        {
+        }
+    }
 }

@@ -3,74 +3,74 @@
 namespace Umamusume.Model
 {
 
-	public sealed class SingleModeLoadResponse : ResponseCommon
-	{
+    public sealed class SingleModeLoadResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public SingleModeChara chara_info;
+        public class CommonResponse
+        {
 
 
-
-			public SingleModeRaceCondition[] race_condition_array;
+            public SingleModeChara chara_info;
 
 
 
-			public SingleModeEventInfo[] unchecked_event_array;
+            public SingleModeRaceCondition[] race_condition_array;
 
 
 
-			public SingleModeHomeInfo home_info;
+            public SingleModeEventInfo[] unchecked_event_array;
 
 
 
-			public SingleRaceHistory[] race_history;
+            public SingleModeHomeInfo home_info;
 
 
 
-			public int[] win_saddle_id_array;
+            public SingleRaceHistory[] race_history;
 
 
 
-			public SuccessionEffectedFactor[] effected_factor_array;
+            public int[] win_saddle_id_array;
 
 
 
-			public SingleRaceStartInfo race_start_info;
+            public SuccessionEffectedFactor[] effected_factor_array;
 
 
 
-			public string race_scenario;
+            public SingleRaceStartInfo race_start_info;
 
 
 
-			public CharaRaceReward race_reward_info;
+            public string race_scenario;
 
 
 
-			public LoginUserTrophyInfo add_trophy_info;
+            public CharaRaceReward race_reward_info;
 
 
 
-			public RaceRewardData trophy_reward_info;
+            public LoginUserTrophyInfo add_trophy_info;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public RaceRewardData trophy_reward_info;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public SingleModeLoadResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public SingleModeLoadResponse()
+        {
+        }
+    }
 }

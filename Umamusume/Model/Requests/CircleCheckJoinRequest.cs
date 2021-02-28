@@ -1,19 +1,15 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class CircleCheckJoinRequest : RequestBase<CircleCheckJoinResponse>
-	{
+    public sealed class CircleCheckJoinRequest : RequestBase<CircleCheckJoinResponse>
+    {
 
 
-		
 
 
-		public CircleCheckJoinRequest()
-		{
-		}
-	}
+
+        public CircleCheckJoinRequest()
+        {
+        }
+    }
 }

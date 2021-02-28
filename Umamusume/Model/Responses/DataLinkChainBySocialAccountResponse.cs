@@ -3,38 +3,38 @@
 namespace Umamusume.Model
 {
 
-	public sealed class DataLinkChainBySocialAccountResponse : ResponseCommon
-	{
+    public sealed class DataLinkChainBySocialAccountResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public string social_account_id;
+        public class CommonResponse
+        {
 
 
-
-			public int? social_account_type;
+            public string social_account_id;
 
 
 
-			public string auth_key;
+            public int? social_account_type;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public string auth_key;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public DataLinkChainBySocialAccountResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public DataLinkChainBySocialAccountResponse()
+        {
+        }
+    }
 }

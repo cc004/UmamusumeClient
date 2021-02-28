@@ -1,19 +1,15 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class FriendRenewRecommendListRequest : RequestBase<FriendRenewRecommendListResponse>
-	{
+    public sealed class FriendRenewRecommendListRequest : RequestBase<FriendRenewRecommendListResponse>
+    {
 
 
-		
 
 
-		public FriendRenewRecommendListRequest()
-		{
-		}
-	}
+
+        public FriendRenewRecommendListRequest()
+        {
+        }
+    }
 }

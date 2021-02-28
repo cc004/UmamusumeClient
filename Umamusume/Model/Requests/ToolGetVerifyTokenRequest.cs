@@ -1,19 +1,15 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class ToolGetVerifyTokenRequest : RequestBase<ToolGetVerifyTokenResponse>
-	{
+    public sealed class ToolGetVerifyTokenRequest : RequestBase<ToolGetVerifyTokenResponse>
+    {
 
 
-		
 
 
-		public ToolGetVerifyTokenRequest()
-		{
-		}
-	}
+
+        public ToolGetVerifyTokenRequest()
+        {
+        }
+    }
 }

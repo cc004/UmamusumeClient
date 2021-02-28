@@ -3,34 +3,34 @@
 namespace Umamusume.Model
 {
 
-	public sealed class HonorListResponse : ResponseCommon
-	{
+    public sealed class HonorListResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public HonorData[] honor_list;
+        public class CommonResponse
+        {
 
 
-
-			public long last_checked_time;
+            public HonorData[] honor_list;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public long last_checked_time;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public HonorListResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public HonorListResponse()
+        {
+        }
+    }
 }

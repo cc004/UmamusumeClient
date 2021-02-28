@@ -1,39 +1,35 @@
-using System;
-
-
-
 namespace Umamusume.Model
 {
 
-	public sealed class GachaExecRequest : RequestBase<GachaExecResponse>
-	{
+    public sealed class GachaExecRequest : RequestBase<GachaExecResponse>
+    {
 
 
-		public int gacha_id;
-
-
-
-		public int draw_type;
+        public int gacha_id;
 
 
 
-		public int draw_num;
+        public int draw_type;
 
 
 
-		public int current_num;
+        public int draw_num;
 
 
 
-		public int item_id;
+        public int current_num;
 
 
-		protected override string Url => "/gacha/exec";
+
+        public int item_id;
+
+
+        protected override string Url => "/gacha/exec";
 
 
 
         public GachaExecRequest()
-		{
-		}
-	}
+        {
+        }
+    }
 }

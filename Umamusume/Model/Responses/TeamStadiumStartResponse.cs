@@ -3,82 +3,82 @@
 namespace Umamusume.Model
 {
 
-	public sealed class TeamStadiumStartResponse : ResponseCommon
-	{
+    public sealed class TeamStadiumStartResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public int[] use_item_id_array;
+        public class CommonResponse
+        {
 
 
-
-			public TeamStadiumRaceStartParams[] race_start_params_array;
+            public int[] use_item_id_array;
 
 
 
-			public TeamStadiumRaceResult[] race_result_array;
+            public TeamStadiumRaceStartParams[] race_start_params_array;
 
 
 
-			public RpInfo rp_info;
+            public TeamStadiumRaceResult[] race_result_array;
 
 
 
-			public UserItem[] item_info_array;
+            public RpInfo rp_info;
 
 
 
-			public bool is_include_unsupported_race;
+            public UserItem[] item_info_array;
 
 
 
-			public TeamStadiumWinningRewardInfo[] winning_reward_info_array;
+            public bool is_include_unsupported_race;
 
 
 
-			public int? winning_reward_guarantee_status;
+            public TeamStadiumWinningRewardInfo[] winning_reward_info_array;
 
 
 
-			public int? last_checked_round;
+            public int? winning_reward_guarantee_status;
 
 
 
-			public int? support_card_bonus;
+            public int? last_checked_round;
 
 
 
-			public TeamStadiumTeamData[] user_team_data_array_copy;
+            public int? support_card_bonus;
 
 
 
-			public TrainedChara[] user_trained_chara_array_copy;
+            public TeamStadiumTeamData[] user_team_data_array_copy;
 
 
 
-			public TeamStadiumOpponent opponent_info_copy;
+            public TrainedChara[] user_trained_chara_array_copy;
 
 
 
-			public TrainedChara[] opponent_chara_info_array_latest_copy;
+            public TeamStadiumOpponent opponent_info_copy;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public TrainedChara[] opponent_chara_info_array_latest_copy;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public TeamStadiumStartResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public TeamStadiumStartResponse()
+        {
+        }
+    }
 }

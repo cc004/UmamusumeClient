@@ -3,38 +3,38 @@
 namespace Umamusume.Model
 {
 
-	public sealed class GachaLimitExchangeResponse : ResponseCommon
-	{
+    public sealed class GachaLimitExchangeResponse : ResponseCommon
+    {
 
-		public class CommonResponse
-		{
-
-
-			public GachaResultData exchange_result;
+        public class CommonResponse
+        {
 
 
-
-			public RewardSummaryInfo reward_summary_info;
+            public GachaResultData exchange_result;
 
 
 
-			public GachaLimitItemInfo limit_item_info;
+            public RewardSummaryInfo reward_summary_info;
 
 
 
-			public CommonResponse()
-			{
-			}
-		}
+            public GachaLimitItemInfo limit_item_info;
 
 
 
-		public CommonResponse data;
+            public CommonResponse()
+            {
+            }
+        }
 
 
 
-		public GachaLimitExchangeResponse()
-		{
-		}
-	}
+        public CommonResponse data;
+
+
+
+        public GachaLimitExchangeResponse()
+        {
+        }
+    }
 }

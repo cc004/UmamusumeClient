@@ -3,32 +3,32 @@
 namespace Umamusume.Model
 {
 
-	public class CircleItemRequest
-	{
+    public class CircleItemRequest
+    {
 
 
-		public int? request_id;
-
-
-
-		public int? viewer_id;
+        public int? request_id;
 
 
 
-		public int? item_id;
+        public int? viewer_id;
 
 
 
-		public string end_time;
+        public int? item_id;
 
 
 
-		public int? state;
+        public string end_time;
 
 
 
-		public CircleItemRequest()
-		{
-		}
-	}
+        public int? state;
+
+
+
+        public CircleItemRequest()
+        {
+        }
+    }
 }
