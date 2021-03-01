@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -81,7 +82,7 @@ namespace Umamusume
             compressor = handler;
             Account = account;
             client.DefaultRequestHeaders.Clear();
-            client.Timeout = new TimeSpan(0, 0, 5);
+            client.Timeout = new TimeSpan(0, 0, 10);
             AddCommonHeaders(client);
             ResVer = "10000010";
         }
@@ -131,7 +132,7 @@ namespace Umamusume
             {
                 resp = client.PostAsync(apiurl, new ByteArrayContent(Encoding.UTF8.GetBytes(crypted))).Result;
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 //Console.WriteLine($"{LogPrefix} {e}");
                 return null;
@@ -176,7 +177,7 @@ namespace Umamusume
                 //Console.WriteLine($"sid changed into {session_id}");
             }
             //Console.WriteLine($"api ret:\n {obj}");
-            //Console.WriteLine(JsonConvert.SerializeObject(obj, Formatting.None));
+            //Console.WriteLine(JsonConvert.SerializeObject(obj, Formatting.Indented));
             return obj;
         }
 
@@ -232,17 +233,18 @@ namespace Umamusume
             FCoin += resp.data.reward_summary_info.add_fcoin;
         }
 
-        public void Gacha(int gachaId)
+        public void Gacha(int gachaId, int draw_num = 10, int item_id = 0, int current_num = 0)
         {
             GachaExecResponse resp = RetryRequest(new GachaExecRequest
             {
-                current_num = FCoin,
-                item_id = 0,
-                draw_num = 10,
+                current_num = item_id == 0 ? FCoin : current_num,
+                item_id = item_id,
+                draw_num = draw_num,
                 draw_type = 1,
                 gacha_id = gachaId
             });
-            FCoin = resp.data.coin_info.fcoin;
+            if (resp.data.coin_info != null)
+                FCoin = resp.data.coin_info.fcoin;
             foreach (RewardAddSupportCardNum card in resp.data.reward_summary_info.add_support_card_num_array)
                 if (card.support_card_id >= 30000)
                 {
