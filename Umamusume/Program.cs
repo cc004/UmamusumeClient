@@ -17,6 +17,10 @@ namespace Umamusume
         private static void SaveTo(UmamusumeClient client, SQLiteConnection conn)
         {
             string pwd = Utils.GenRandomPassword();
+            client.Request(new ChangeNameRequest
+            {
+                name = "init"
+            });
             client.PublishTransition(pwd);
             client.Account.extra.password = pwd;
             const string qstr = "insert into accounts (udid, authkey, password, cardnum, viewer_id, {0}) values (@udid, @authkey, @password, @cardnum, @viewer_id, {1})";
@@ -52,17 +56,13 @@ namespace Umamusume
 
                     client.StartSession();
                     client.Login();
-                    client.Request(new ChangeNameRequest
-                    {
-                        name = "init"
-                    });
                     client.ReceivePresents();
-                    client.Gacha(20002, 1, 114, 1);
                     while (client.FCoin >= 1500)
                     {
                         client.Gacha(30003);
                         Thread.Sleep(700);
                     }
+                    client.Gacha(20002, 1, 114, 1);
                     Console.WriteLine($"[Thread #{id}] gacha get = {client.Account.extra.support_cards.Count}");
 
                     if (client.Account.extra.support_cards.Count > 5)
