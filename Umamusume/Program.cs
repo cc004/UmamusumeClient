@@ -57,6 +57,7 @@ namespace Umamusume
                         name = "init"
                     });
                     client.ReceivePresents();
+                    client.Gacha(20002, 1, 114, 1);
                     while (client.FCoin >= 1500)
                     {
                         client.Gacha(30003);
@@ -64,11 +65,11 @@ namespace Umamusume
                     }
                     Console.WriteLine($"[Thread #{id}] gacha get = {client.Account.extra.support_cards.Count}");
 
-                    if (client.Account.extra.support_cards.Count > 4)
+                    if (client.Account.extra.support_cards.Count > 5)
                     {
                         SaveTo(client, conn);
                     }
-                    else if (client.Account.extra.support_cards.Count == 4)
+                    else if (client.Account.extra.support_cards.Count == 5)
                     {
                         var sc = client.Account.extra.support_cards;
                         if (sc.ContainsKey("[まだ小さな蕾でも]ニシノフラワー") && sc.ContainsKey("[ようこそ、トレセン学園へ！]駿川たづな"))
@@ -108,31 +109,6 @@ namespace Umamusume
             {
 
             }
-            try
-            {
-                new SQLiteCommand("create table if not exists accounts(" +
-                    "cardnum INTEGER," +
-                    string.Concat(cl.Select(s => s[1..(s.IndexOf("]") - 1)]).Select(c => $"`{c}` INTEGER,")) +
-                    "viewer_id INTEGER," +
-                    "password TEXT," +
-                    "udid TEXT," +
-                    "authkey TEXT);", conn2).ExecuteNonQuery();
-
-                new SQLiteCommand("create unique index id_index on accounts (viewer_id)", conn2).ExecuteNonQuery();
-            }
-            catch
-            {
-
-            }
-
-            new Thread(new ThreadStart(() =>
-            {
-                while (true)
-                {
-                    GC.Collect();
-                    Thread.Sleep(5000);
-                }
-            })).Start();
 
             for (int i = 0; i < 32; ++i)
             {
