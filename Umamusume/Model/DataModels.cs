@@ -441,12 +441,12 @@
     public class GachaInfoList
     {
 
-        public int? id;
-        public int? is_daily_draw_end;
-        public int? prize_selected_card_type;
-        public int? prize_selected_card_id;
-        public int? is_campaign_draw_enable_single;
-        public int? is_campaign_draw_enable_multi;
+        public int id;
+        public int is_daily_draw_end;
+        public int prize_selected_card_type;
+        public int prize_selected_card_id;
+        public int is_campaign_draw_enable_single;
+        public int is_campaign_draw_enable_multi;
 
 
 
