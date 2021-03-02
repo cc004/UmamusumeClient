@@ -50,6 +50,12 @@ namespace Umamusume.Model
         [JsonProperty]
         private string locale;
 
+        [JsonProperty]
+        private string dmm_viewer_id;
+
+        [JsonProperty]
+        private string dmm_onetime_token;
+
         protected void UpdateInfo(RequestEnvironment env)
         {
             locale = env.locale;
@@ -61,6 +67,8 @@ namespace Umamusume.Model
             device_name = env.device_name;
             device_id = env.device_id;
             device = env.device;
+            dmm_viewer_id = env.dmm_viewer_id;
+            dmm_onetime_token = env.dmm_onetime_token;
         }
 
         public static RequestEnvironment CreateDefault()
@@ -68,13 +76,13 @@ namespace Umamusume.Model
             return new RequestEnvironment
             {
                 platform_os_version = "Android OS 7.1.2 / API-25 (N2G48H/rel.se.infra.20200730.150525)",
-                carrier = "OPPO",
+                carrier = "HUAWEI",
                 keychain = 0,
                 locale = "JPN",
                 ip_address = "10.0.2.15",
                 device = 2,
-                device_id = Guid.NewGuid().ToString().Replace("-", ""),
-                device_name = "OPPO PCRT00",
+                device_id = "374b909de679462599a92f904d46ea7d",// Guid.NewGuid().ToString().Replace("-", ""),
+                device_name = "HUAWEI TAS-AN00",
                 graphics_device_name = "Adreno (TM) 640"
             };
         }

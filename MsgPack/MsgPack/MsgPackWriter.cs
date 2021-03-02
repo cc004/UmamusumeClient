@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace MsgPack
@@ -227,6 +228,12 @@ namespace MsgPack
 
 		public void WriteRawHeader(int N)
 		{
+			if (N < 256 && N >= 32)
+			{
+				_strm.WriteByte(0xd9);
+				_strm.WriteByte((byte)N);
+			}
+			else
 			WriteLengthHeader(N, 32, 160, 218, 219);
 		}
 

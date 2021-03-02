@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MsgPack;
+using System;
 using System.Data;
 using System.Data.SQLite;
 using System.Linq;
@@ -84,6 +85,20 @@ namespace Umamusume
             }
         }
 
+        private static void Test()
+        {
+            Console.WriteLine(string.Join(",", new BoxingPacker().Pack("374b909de679462599a92f904d46ea7d").Select(i => $"{i:x2}")));
+            var client = new UmamusumeClient(new Account
+            {
+                Udid = Guid.Parse("45ad69a1-c6f4-41f0-ad8f-cac997beacb0")
+            }, new SimpleLz4Frame(0))
+            {
+                LogPrefix = ""
+            };
+
+            client.Signup();
+        }
+
         private static void Main(string[] args)
         {
             ThreadPool.SetMaxThreads(512, 512);
@@ -104,6 +119,23 @@ namespace Umamusume
                     "authkey TEXT);", conn).ExecuteNonQuery();
 
                 new SQLiteCommand("create unique index id_index on accounts (viewer_id)", conn).ExecuteNonQuery();
+            }
+            catch
+            {
+
+            }
+
+            try
+            {
+                new SQLiteCommand("create table if not exists accounts(" +
+                    "cardnum INTEGER," +
+                    string.Concat(cl.Select(s => s[1..(s.IndexOf("]") - 1)]).Select(c => $"`{c}` INTEGER,")) +
+                    "viewer_id INTEGER," +
+                    "password TEXT," +
+                    "udid TEXT," +
+                    "authkey TEXT);", conn2).ExecuteNonQuery();
+
+                new SQLiteCommand("create unique index id_index on accounts (viewer_id)", conn2).ExecuteNonQuery();
             }
             catch
             {
