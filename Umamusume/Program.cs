@@ -12,7 +12,7 @@ namespace Umamusume
     {
         private static SQLiteConnection conn;
         private static SQLiteConnection conn2;
-        private static readonly string[] cl = "[B・N・Winner!!]ウイニングチケット	[千紫万紅にまぎれぬ一凛]グラスワンダー	[Run(my)way]ゴールドシチー	[夢は掲げるものなのだっ！]トウカイテイオー	[輝く景色の、その先に]サイレンススズカ	[不沈艦の進撃]ゴールドシップ	[はやい！うまい！はやい！]サクラバクシンオー	[パッションチャンピオーナ！]エルコンドルパサー	[待望の大謀]セイウンスカイ	[これが私のウマドル道☆]スマートファルコン	[感謝は指先まで込めて]ファインモーション	[まだ小さな蕾でも]ニシノフラワー	[天をも切り裂くイナズマ娘！]タマモクロス	[一粒の安らぎ]スーパークリーク	[日本一のステージを]スペシャルウィーク	[ロード・オブ・ウオッカ]ウオッカ	[7センチの先へ]エアシャカール	[必殺！Wキャロットパンチ！]ビコーペガサス	[ようこそ、トレセン学園へ！]駿川たづな	[飛び出せ、キラメケ]アイネスフウジン"
+        private static string[] cl = "[B・N・Winner!!]ウイニングチケット	[千紫万紅にまぎれぬ一凛]グラスワンダー	[Run(my)way]ゴールドシチー	[夢は掲げるものなのだっ！]トウカイテイオー	[輝く景色の、その先に]サイレンススズカ	[不沈艦の進撃]ゴールドシップ	[はやい！うまい！はやい！]サクラバクシンオー	[パッションチャンピオーナ！]エルコンドルパサー	[待望の大謀]セイウンスカイ	[これが私のウマドル道☆]スマートファルコン	[感謝は指先まで込めて]ファインモーション	[まだ小さな蕾でも]ニシノフラワー	[天をも切り裂くイナズマ娘！]タマモクロス	[一粒の安らぎ]スーパークリーク	[日本一のステージを]スペシャルウィーク	[ロード・オブ・ウオッカ]ウオッカ	[7センチの先へ]エアシャカール	[必殺！Wキャロットパンチ！]ビコーペガサス	[ようこそ、トレセン学園へ！]駿川たづな	[飛び出せ、キラメケ]アイネスフウジン"
             .Split("	").ToArray();
 
         private static void SaveTo(UmamusumeClient client, SQLiteConnection conn)
@@ -77,9 +77,7 @@ namespace Umamusume
                     }
                     else if (client.Account.extra.support_cards.Count == 5)
                     {
-                        var sc = client.Account.extra.support_cards;
-                        if (sc.ContainsKey("[まだ小さな蕾でも]ニシノフラワー") && sc.ContainsKey("[ようこそ、トレセン学園へ！]駿川たづな"))
-                            SaveTo(client, conn2);
+                        SaveTo(client, conn2);
                     }
                 }
                 catch (Exception e)
@@ -104,8 +102,14 @@ namespace Umamusume
             client.Signup();
         }
 
+        private static void AddCard(string name, int id)
+        {
+            cl = cl.Concat(new string[] { name }).ToArray();
+            UmamusumeClient.AddCard(name, id);
+        }
         private static void Main(string[] args)
         {
+            AddCard("[好歌剧]", 30024);
             ThreadPool.SetMaxThreads(512, 512);
             ThreadPool.SetMaxThreads(128, 128);
             conn = new SQLiteConnection("data source=accounts.db");
