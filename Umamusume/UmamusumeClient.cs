@@ -24,6 +24,11 @@ namespace Umamusume
                 .ToDictionary(text => text.index, text => text.text);
         }
 
+        public static void AddCard(string name, int id)
+        {
+            suuport_name_cache.Add(id, name);
+        }
+
         private static readonly byte[] CommonHeader = Convert.FromBase64String("ayDiq2wxEzD3Ydc3zj8wJXUIUGZe6li2Ny+NL1dQHrPIC2FyWFOosCPZTzpEfrVrvMlu/w==");
 
         private const string apiroot = "https://api-umamusume.cygames.jp/umamusume";
