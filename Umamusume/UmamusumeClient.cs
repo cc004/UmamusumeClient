@@ -24,7 +24,7 @@ namespace Umamusume
                 .ToDictionary(text => text.index, text => text.text);
         }
 
-        private static readonly byte[] CommonHeader = Convert.FromBase64String("ayDiq2wxEzD3Ydc3zj8wJXUIUGZe6li2Ny+NL1dQHrMYsUuX4Hfvd1m/0/YcBUjjvl2MLQ==");
+        private static readonly byte[] CommonHeader = Convert.FromBase64String("ayDiq2wxEzD3Ydc3zj8wJXUIUGZe6li2Ny+NL1dQHrPIC2FyWFOosCPZTzpEfrVrvMlu/w==");
 
         private const string apiroot = "https://api-umamusume.cygames.jp/umamusume";
 
@@ -71,7 +71,7 @@ namespace Umamusume
             client.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Encoding", "deflate, gzip");
             client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "UnityPlayer/2019.4.1f1 (UnityWebRequest/1.0, libcurl/7.52.0-DEV)");
             client.DefaultRequestHeaders.TryAddWithoutValidation("X-Unity-Version", "2019.4.1f1");
-            client.DefaultRequestHeaders.TryAddWithoutValidation("APP-VER", "1.0.2");
+            client.DefaultRequestHeaders.TryAddWithoutValidation("APP-VER", "1.1.0");
             client.DefaultRequestHeaders.TryAddWithoutValidation("RES-VER", "");
 
 
@@ -184,17 +184,12 @@ namespace Umamusume
         public void Signup()
         {
             ToolSignupResponse resp;
+            /*
             do
             {
                 try
                 {
                     Account.Udid = Guid.NewGuid();
-                    resp = Request(new ToolSignupRequest
-                    {
-                        credential = "",
-                        error_code = 0,
-                        error_message = "TimeOut Error: Timed out waiting for Task"
-                    });
                     if (resp != null && resp.data_headers.result_code == GallopResultCode.RESULT_CODE_OK) break;
                     Thread.Sleep(2000);
                     if (resp?.data_headers?.result_code == GallopResultCode.SAFETYNET_RETRY)
@@ -205,7 +200,13 @@ namespace Umamusume
                     Console.WriteLine($"{LogPrefix} {e}");
                 }
             } while (true);
-
+            */
+            resp = RetryRequest(new ToolSignupRequest
+            {
+                credential = "",
+                error_code = 0,
+                error_message = ""
+            }, 100);
             Account.Authkey = resp.data.auth_key;
         }
 

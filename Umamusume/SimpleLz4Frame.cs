@@ -18,19 +18,23 @@ namespace Umamusume
         });
 
         private readonly int id;
+        private readonly bool crypt;
 
-        public SimpleLz4Frame(int id)
+        public SimpleLz4Frame(int id, bool crypt = true)
         {
             this.id = id;
+            this.crypt = crypt;
             client.DefaultRequestHeaders.Clear();
         }
 
         public byte[] Decompress(string src)
         {
+            if (!crypt) return Convert.FromBase64String(src);
             return Convert.FromBase64String(client.PostAsync($"http://localhost:2333/{id}/decompress", new StringContent(src)).Result.Content.ReadAsStringAsync().Result);
         }
         public string Compress(byte[] src)
         {
+            if (!crypt) return Convert.ToBase64String(src);
             return client.PostAsync($"http://localhost:2333/{id}/compress", new StringContent(Convert.ToBase64String(src))).Result.Content.ReadAsStringAsync().Result;
         }
     }
