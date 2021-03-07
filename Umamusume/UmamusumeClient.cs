@@ -29,7 +29,7 @@ namespace Umamusume
             suuport_name_cache.Add(id, name);
         }
 
-        private static readonly byte[] CommonHeader = Convert.FromBase64String("ayDiq2wxEzD3Ydc3zj8wJXUIUGZe6li2Ny+NL1dQHrPIC2FyWFOosCPZTzpEfrVrvMlu/w==");
+        private static readonly byte[] CommonHeader = Convert.FromBase64String("ayDiq2wxEzD3Ydc3zj8wJXUIUGZe6li2Ny+NL1dQHrOf+CZ4yAUlQ5KZifwvoMuGBWsIqQ==");
 
         private const string apiroot = "https://api-umamusume.cygames.jp/umamusume";
 
