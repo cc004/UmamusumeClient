@@ -109,7 +109,8 @@ namespace Umamusume
         }
         private static void Main(string[] args)
         {
-            AddCard("[好歌剧]", 30024);
+            AddCard("[『愛してもらうんだぞ』]オグリキャップ", 30024);
+            AddCard("[ツインターボ]", 30025);
             ThreadPool.SetMaxThreads(512, 512);
             ThreadPool.SetMaxThreads(128, 128);
             conn = new SQLiteConnection("data source=accounts.db");
@@ -121,7 +122,7 @@ namespace Umamusume
             {
                 new SQLiteCommand("create table if not exists accounts(" +
                     "cardnum INTEGER," +
-                    string.Concat(cl.Select(s => s[1..(s.IndexOf("]") - 1)]).Select(c => $"`{c}` INTEGER,")) +
+                    string.Concat(cl.Select(s => s[1..(s.IndexOf("]"))]).Select(c => $"`{c}` INTEGER,")) +
                     "viewer_id INTEGER," +
                     "password TEXT," +
                     "udid TEXT," +
@@ -138,7 +139,7 @@ namespace Umamusume
             {
                 new SQLiteCommand("create table if not exists accounts(" +
                     "cardnum INTEGER," +
-                    string.Concat(cl.Select(s => s[1..(s.IndexOf("]") - 1)]).Select(c => $"`{c}` INTEGER,")) +
+                    string.Concat(cl.Select(s => s[1..(s.IndexOf("]"))]).Select(c => $"`{c}` INTEGER,")) +
                     "viewer_id INTEGER," +
                     "password TEXT," +
                     "udid TEXT," +

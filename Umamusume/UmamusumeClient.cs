@@ -76,7 +76,7 @@ namespace Umamusume
             client.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Encoding", "deflate, gzip");
             client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "UnityPlayer/2019.4.1f1 (UnityWebRequest/1.0, libcurl/7.52.0-DEV)");
             client.DefaultRequestHeaders.TryAddWithoutValidation("X-Unity-Version", "2019.4.1f1");
-            client.DefaultRequestHeaders.TryAddWithoutValidation("APP-VER", "1.1.0");
+            client.DefaultRequestHeaders.TryAddWithoutValidation("APP-VER", "1.1.2");
             client.DefaultRequestHeaders.TryAddWithoutValidation("RES-VER", "");
 
 
