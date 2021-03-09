@@ -9,26 +9,12 @@ using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
 using System.Threading;
-using Umamusume.Data;
 using Umamusume.Model;
 
 namespace Umamusume
 {
     public class UmamusumeClient
     {
-        private static readonly Dictionary<int, string> suuport_name_cache = new Dictionary<int, string>();
-
-        static UmamusumeClient()
-        {
-            suuport_name_cache = CsvManager.LoadData<CsvTextData>().Where(text => text.category == 75)
-                .ToDictionary(text => text.index, text => text.text);
-        }
-
-        public static void AddCard(string name, int id)
-        {
-            suuport_name_cache.Add(id, name);
-        }
-
         private static readonly byte[] CommonHeader = Convert.FromBase64String("ayDiq2wxEzD3Ydc3zj8wJXUIUGZe6li2Ny+NL1dQHrOf+CZ4yAUlQ5KZifwvoMuGBWsIqQ==");
 
         private const string apiroot = "https://api-umamusume.cygames.jp/umamusume";
@@ -137,7 +123,7 @@ namespace Umamusume
             {
                 resp = client.PostAsync(apiurl, new ByteArrayContent(Encoding.UTF8.GetBytes(crypted))).Result;
             }
-            catch (Exception e)
+            catch
             {
                 //Console.WriteLine($"{LogPrefix} {e}");
                 return null;
@@ -254,10 +240,9 @@ namespace Umamusume
             foreach (RewardAddSupportCardNum card in resp.data.reward_summary_info.add_support_card_num_array)
                 if (card.support_card_id >= 30000)
                 {
-                    string key = suuport_name_cache[card.support_card_id];
-                    if (!Account.extra.support_cards.ContainsKey(key))
-                        Account.extra.support_cards[key] = 0;
-                    ++Account.extra.support_cards[key];
+                    if (!Account.extra.support_cards.ContainsKey(card.support_card_id))
+                        Account.extra.support_cards[card.support_card_id] = 0;
+                    ++Account.extra.support_cards[card.support_card_id];
                 }
         }
 

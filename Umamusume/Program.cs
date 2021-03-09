@@ -1,5 +1,6 @@
 ﻿using MsgPack;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
 using System.Linq;
@@ -12,8 +13,34 @@ namespace Umamusume
     {
         private static SQLiteConnection conn;
         private static SQLiteConnection conn2;
-        private static string[] cl = "[B・N・Winner!!]ウイニングチケット	[千紫万紅にまぎれぬ一凛]グラスワンダー	[Run(my)way]ゴールドシチー	[夢は掲げるものなのだっ！]トウカイテイオー	[輝く景色の、その先に]サイレンススズカ	[不沈艦の進撃]ゴールドシップ	[はやい！うまい！はやい！]サクラバクシンオー	[パッションチャンピオーナ！]エルコンドルパサー	[待望の大謀]セイウンスカイ	[これが私のウマドル道☆]スマートファルコン	[感謝は指先まで込めて]ファインモーション	[まだ小さな蕾でも]ニシノフラワー	[天をも切り裂くイナズマ娘！]タマモクロス	[一粒の安らぎ]スーパークリーク	[日本一のステージを]スペシャルウィーク	[ロード・オブ・ウオッカ]ウオッカ	[7センチの先へ]エアシャカール	[必殺！Wキャロットパンチ！]ビコーペガサス	[ようこそ、トレセン学園へ！]駿川たづな	[飛び出せ、キラメケ]アイネスフウジン"
-            .Split("	").ToArray();
+        private static readonly SortedDictionary<int, string> cards = new SortedDictionary<int, string>
+        {
+            [30001] = "[日本一のステージを]",
+            [30002] = "[輝く景色の、その先に]",
+            [30003] = "[夢は掲げるものなのだっ！]",
+            [30004] = "[不沈艦の進撃]",
+            [30005] = "[ロード・オブ・ウオッカ]",
+            [30006] = "[千紫万紅にまぎれぬ一凛]",
+            [30007] = "[パッションチャンピオーナ！]",
+            [30008] = "[待望の大謀]",
+            [30009] = "[天をも切り裂くイナズマ娘！]",
+            [30010] = "[感謝は指先まで込めて]",
+            [30011] = "[飛び出せ、キラメケ]",
+            [30012] = "[B・N・Winner!!]",
+            [30013] = "[7センチの先へ]",
+            [30014] = "[Run(my)way]",
+            [30015] = "[はやい！うまい！はやい！]",
+            [30016] = "[一粒の安らぎ]",
+            [30017] = "[これが私のウマドル道☆]",
+            [30018] = "[まだ小さな蕾でも]",
+            [30019] = "[うらら～な休日]",
+            [30020] = "[必殺！Wキャロットパンチ！]",
+            [30021] = "[ようこそ、トレセン学園へ！]",
+            [30022] = "[『エース』として]",
+            [30023] = "[『幸せ』が舞う時]",
+            [30024] = "[『愛してもらうんだぞ』]オグリキャップ",
+            [30026] = "[ターボエンジン全開宣言!]ツインターボ"
+        };
 
         private static void SaveTo(UmamusumeClient client, SQLiteConnection conn)
         {
@@ -26,13 +53,13 @@ namespace Umamusume
             client.Account.extra.password = pwd;
             const string qstr = "insert into accounts (udid, authkey, password, cardnum, viewer_id, {0}) values (@udid, @authkey, @password, @cardnum, @viewer_id, {1})";
 
-            SQLiteCommand cmd = new SQLiteCommand(string.Format(qstr, string.Join(",", cl.Select(s => s[1..(s.IndexOf("]") - 1)]).Select(s => $"`{s}`")), string.Join(",", Enumerable.Range(1, cl.Length).Select(i => $"@c{i}"))), conn);
+            SQLiteCommand cmd = new SQLiteCommand(string.Format(qstr, string.Join(",", cards.Select(s => s.Value).Select(s => s[1..(s.IndexOf("]") - 1)]).Select(s => $"`{s}`")), string.Join(",", Enumerable.Range(1, cards.Count).Select(i => $"@c{i}"))), conn);
             cmd.Parameters.Add("udid", DbType.String).Value = client.Account.Udid.ToString();
             cmd.Parameters.Add("authkey", DbType.String).Value = client.Account.Authkey;
             cmd.Parameters.Add("password", DbType.String).Value = client.Account.extra.password;
             int i = 0;
-            foreach (string c in cl)
-                cmd.Parameters.Add($"c{++i}", DbType.Int32).Value = client.Account.extra.support_cards.TryGetValue(c, out int val) ? val : 0;
+            foreach (var c in cards)
+                cmd.Parameters.Add($"c{++i}", DbType.Int32).Value = client.Account.extra.support_cards.TryGetValue(c.Key, out int val) ? val : 0;
             cmd.Parameters.Add("cardnum", DbType.Int32).Value = client.Account.extra.support_cards.Count;
             cmd.Parameters.Add("viewer_id", DbType.Int32).Value = client.Account.ViewerId;
             lock (conn)
@@ -58,8 +85,8 @@ namespace Umamusume
                     client.StartSession();
                     client.Login();
                     client.ReceivePresents();
-                    var gachas = client.Request(new GachaLoadRequest()).data.gacha_info_list;
-                    var gachaid = gachas.Where(gachas => gachas.id / 10000 == 3).Select(gachas => gachas.id).Max();
+                    GachaInfoList[] gachas = client.Request(new GachaLoadRequest()).data.gacha_info_list;
+                    int gachaid = gachas.Where(gachas => gachas.id / 10000 == 3).Select(gachas => gachas.id).Max();
 
                     while (client.FCoin >= 1500)
                     {
@@ -68,7 +95,7 @@ namespace Umamusume
                     }
                     client.Gacha(20002, 1, 114, 1);
                     Console.WriteLine($"[Thread #{id}] gacha get = {client.Account.extra.support_cards.Count}");
-                    var count = client.Account.extra.support_cards.Sum(p => p.Value);
+                    int count = client.Account.extra.support_cards.Sum(p => p.Value);
 
                     if (client.Account.extra.support_cards.Count > 5)
                     {
@@ -90,7 +117,7 @@ namespace Umamusume
         private static void Test()
         {
             Console.WriteLine(string.Join(",", new BoxingPacker().Pack("374b909de679462599a92f904d46ea7d").Select(i => $"{i:x2}")));
-            var client = new UmamusumeClient(new Account
+            UmamusumeClient client = new UmamusumeClient(new Account
             {
                 Udid = Guid.Parse("45ad69a1-c6f4-41f0-ad8f-cac997beacb0")
             }, new SimpleLz4Frame(0))
@@ -101,15 +128,8 @@ namespace Umamusume
             client.Signup();
         }
 
-        private static void AddCard(string name, int id)
-        {
-            cl = cl.Concat(new string[] { name }).ToArray();
-            UmamusumeClient.AddCard(name, id);
-        }
         private static void Main(string[] args)
         {
-            AddCard("[『愛してもらうんだぞ』]オグリキャップ", 30024);
-            AddCard("[ツインターボ]", 30025);
             ThreadPool.SetMaxThreads(512, 512);
             ThreadPool.SetMaxThreads(128, 128);
             conn = new SQLiteConnection("data source=accounts.db");
@@ -121,7 +141,7 @@ namespace Umamusume
             {
                 new SQLiteCommand("create table if not exists accounts(" +
                     "cardnum INTEGER," +
-                    string.Concat(cl.Select(s => s[1..(s.IndexOf("]"))]).Select(c => $"`{c}` INTEGER,")) +
+                    string.Concat(cards.Select(s => s.Value).Select(s => s[1..(s.IndexOf("]"))]).Select(c => $"`{c}` INTEGER,")) +
                     "viewer_id INTEGER," +
                     "password TEXT," +
                     "udid TEXT," +
@@ -138,7 +158,7 @@ namespace Umamusume
             {
                 new SQLiteCommand("create table if not exists accounts(" +
                     "cardnum INTEGER," +
-                    string.Concat(cl.Select(s => s[1..(s.IndexOf("]"))]).Select(c => $"`{c}` INTEGER,")) +
+                    string.Concat(cards.Select(s => s.Value).Select(s => s[1..(s.IndexOf("]"))]).Select(c => $"`{c}` INTEGER,")) +
                     "viewer_id INTEGER," +
                     "password TEXT," +
                     "udid TEXT," +
