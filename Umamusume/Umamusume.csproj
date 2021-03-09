@@ -21,10 +21,4 @@
     <ProjectReference Include="..\MsgPack\MsgPack.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="Data\text_data.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>
