@@ -53,7 +53,7 @@ namespace Umamusume
             client.Account.extra.password = pwd;
             const string qstr = "insert into accounts (udid, authkey, password, cardnum, viewer_id, {0}) values (@udid, @authkey, @password, @cardnum, @viewer_id, {1})";
 
-            SQLiteCommand cmd = new SQLiteCommand(string.Format(qstr, string.Join(",", cards.Select(s => s.Value).Select(s => s[1..(s.IndexOf("]") - 1)]).Select(s => $"`{s}`")), string.Join(",", Enumerable.Range(1, cards.Count).Select(i => $"@c{i}"))), conn);
+            SQLiteCommand cmd = new SQLiteCommand(string.Format(qstr, string.Join(",", cards.Select(s => s.Value).Select(s => s[1..s.IndexOf("]")]).Select(s => $"`{s}`")), string.Join(",", Enumerable.Range(1, cards.Count).Select(i => $"@c{i}"))), conn);
             cmd.Parameters.Add("udid", DbType.String).Value = client.Account.Udid.ToString();
             cmd.Parameters.Add("authkey", DbType.String).Value = client.Account.Authkey;
             cmd.Parameters.Add("password", DbType.String).Value = client.Account.extra.password;
@@ -141,7 +141,7 @@ namespace Umamusume
             {
                 new SQLiteCommand("create table if not exists accounts(" +
                     "cardnum INTEGER," +
-                    string.Concat(cards.Select(s => s.Value).Select(s => s[1..(s.IndexOf("]"))]).Select(c => $"`{c}` INTEGER,")) +
+                    string.Concat(cards.Select(s => s.Value).Select(s => s[1..s.IndexOf("]")]).Select(c => $"`{c}` INTEGER,")) +
                     "viewer_id INTEGER," +
                     "password TEXT," +
                     "udid TEXT," +
@@ -158,7 +158,7 @@ namespace Umamusume
             {
                 new SQLiteCommand("create table if not exists accounts(" +
                     "cardnum INTEGER," +
-                    string.Concat(cards.Select(s => s.Value).Select(s => s[1..(s.IndexOf("]"))]).Select(c => $"`{c}` INTEGER,")) +
+                    string.Concat(cards.Select(s => s.Value).Select(s => s[1..s.IndexOf("]")]).Select(c => $"`{c}` INTEGER,")) +
                     "viewer_id INTEGER," +
                     "password TEXT," +
                     "udid TEXT," +
