@@ -59,17 +59,16 @@ namespace Umamusume
                     client.Login();
                     client.ReceivePresents();
                     var gachas = client.Request(new GachaLoadRequest()).data.gacha_info_list;
-                    var gachaid = gachas.First(gachas => gachas.id / 10000 == 3 &&
-                        gachas.is_campaign_draw_enable_single == 1 &&
-                        gachas.is_campaign_draw_enable_multi == 0);
+                    var gachaid = gachas.Where(gachas => gachas.id / 10000 == 3).Select(gachas => gachas.id).Max();
 
                     while (client.FCoin >= 1500)
                     {
-                        client.Gacha(gachaid.id);
+                        client.Gacha(gachaid);
                         Thread.Sleep(700);
                     }
                     client.Gacha(20002, 1, 114, 1);
                     Console.WriteLine($"[Thread #{id}] gacha get = {client.Account.extra.support_cards.Count}");
+                    var count = client.Account.extra.support_cards.Sum(p => p.Value);
 
                     if (client.Account.extra.support_cards.Count > 5)
                     {
