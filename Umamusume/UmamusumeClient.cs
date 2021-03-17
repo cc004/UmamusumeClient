@@ -123,7 +123,7 @@ namespace Umamusume
             {
                 resp = client.PostAsync(apiurl, new ByteArrayContent(Encoding.UTF8.GetBytes(crypted))).Result;
             }
-            catch
+            catch (Exception e)
             {
                 //Console.WriteLine($"{LogPrefix} {e}");
                 return null;
@@ -132,7 +132,7 @@ namespace Umamusume
             string res = resp.Content.ReadAsStringAsync().Result;
             if (resp.StatusCode != HttpStatusCode.OK)
             {
-                Console.WriteLine($"{LogPrefix} api {apiurl} ret: {resp.StatusCode}");
+                //Console.WriteLine($"{LogPrefix} api {apiurl} ret: {resp.StatusCode}");
                 return null;
             }
 
@@ -214,7 +214,7 @@ namespace Umamusume
                 FCoin = resp.data.coin_info.fcoin;
         }
 
-        public void ReceivePresents()
+        public PresentReceiveAllResponse.CommonResponse ReceivePresents()
         {
             PresentReceiveAllResponse resp = RetryRequest(new PresentReceiveAllRequest
             {
@@ -223,6 +223,7 @@ namespace Umamusume
                 time_filter_type = 0
             });
             FCoin += resp.data.reward_summary_info.add_fcoin;
+            return resp.data;
         }
 
         public void Gacha(int gachaId, int draw_num = 10, int item_id = 0, int current_num = 0)
