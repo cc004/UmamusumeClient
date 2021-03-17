@@ -84,7 +84,8 @@ namespace Umamusume
 
                     client.StartSession();
                     client.Login();
-                    client.ReceivePresents();
+                    var presents = client.ReceivePresents().reward_summary_info.add_item_list;
+
                     GachaInfoList[] gachas = client.Request(new GachaLoadRequest()).data.gacha_info_list;
                     int gachaid = gachas.Where(gachas => gachas.id / 10000 == 3).Select(gachas => gachas.id).Max();
 
@@ -93,7 +94,15 @@ namespace Umamusume
                         client.Gacha(gachaid);
                         Thread.Sleep(700);
                     }
-                    client.Gacha(20002, 1, 114, 1);
+
+                    const int ssrticket_id = 114;
+
+                    for (int i = presents.SingleOrDefault(i => i.item_id == ssrticket_id)?.number ?? 0; i >0; --i)
+                    {
+                        client.Gacha(20002, 1, ssrticket_id, i);
+                        Thread.Sleep(700);
+                    }
+
                     Console.WriteLine($"[Thread #{id}] gacha get = {client.Account.extra.support_cards.Count}");
                     int count = client.Account.extra.support_cards.Sum(p => p.Value);
 
@@ -171,7 +180,7 @@ namespace Umamusume
 
             }
 
-            for (int i = 0; i < 32; ++i)
+            for (int i = 0; i < 16; ++i)
             {
                 int j = i;
                 new Thread(new ThreadStart(() => RegisterTask(j))).Start();
