@@ -132,7 +132,7 @@ namespace Umamusume
             string res = resp.Content.ReadAsStringAsync().Result;
             if (resp.StatusCode != HttpStatusCode.OK)
             {
-                //Console.WriteLine($"{LogPrefix} api {apiurl} ret: {resp.StatusCode}");
+                Console.WriteLine($"{LogPrefix} api {apiurl} ret: {resp.StatusCode}");
                 return null;
             }
 
