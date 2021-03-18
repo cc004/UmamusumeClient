@@ -39,7 +39,8 @@ namespace Umamusume
             [30022] = "[『エース』として]",
             [30023] = "[『幸せ』が舞う時]",
             [30024] = "[『愛してもらうんだぞ』]オグリキャップ",
-            [30026] = "[ターボエンジン全開宣言!]ツインターボ"
+            [30026] = "[ターボエンジン全開宣言!]ツインターボ",
+            [30027] = "[バ力と笑え]メジロパーマー"
         };
 
         private static void SaveTo(UmamusumeClient client, SQLiteConnection conn)
