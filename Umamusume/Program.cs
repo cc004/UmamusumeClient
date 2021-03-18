@@ -64,6 +64,12 @@ namespace Umamusume
             cmd.Parameters.Add("viewer_id", DbType.Int32).Value = client.Account.ViewerId;
             lock (conn)
                 cmd.ExecuteNonQuery();
+
+            var invalid = client.Account.extra.support_cards.FirstOrDefault(p => !cards.ContainsKey(p.Key));
+            if (invalid.Key > 30000)
+            {
+                Console.WriteLine($"{client.LogPrefix}未知的id{invalid.Key}，请尝试更新版本。");
+            }
         }
         private static void RegisterTask(int id)
         {
