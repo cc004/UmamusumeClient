@@ -21,4 +21,10 @@
     <ProjectReference Include="..\MsgPack\MsgPack.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="libnative.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

@@ -1,9 +1,12 @@
 ﻿using MsgPack;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using Umamusume.Model;
 
@@ -132,20 +135,30 @@ namespace Umamusume
 
         private static void Test()
         {
-            Console.WriteLine(string.Join(",", new BoxingPacker().Pack("374b909de679462599a92f904d46ea7d").Select(i => $"{i:x2}")));
-            UmamusumeClient client = new UmamusumeClient(new Account
-            {
-                Udid = Guid.Parse("45ad69a1-c6f4-41f0-ad8f-cac997beacb0")
-            }, new SimpleLz4Frame(0))
+            UmamusumeClient client = new UmamusumeClient(JsonConvert.DeserializeObject<Account>(File.ReadAllText("account.json")), new SimpleLz4Frame(0))
             {
                 LogPrefix = ""
             };
-
+            /*
             client.Signup();
+
+            File.WriteAllText("account.json", JsonConvert.SerializeObject(client.Account));
+            client.StartSession();
+            client.Login();
+            client.Request(new TutorialSkipRequest());
+            */
+            client.StartSession();
+            client.Login();
+
+            client.Request(new FriendSearchRequest
+            {
+                friend_viewer_id = 510080728
+            });
         }
 
         private static void Main(string[] args)
         {
+            //Test();
             ThreadPool.SetMaxThreads(512, 512);
             ThreadPool.SetMaxThreads(128, 128);
             conn = new SQLiteConnection("data source=accounts.db");

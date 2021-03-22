@@ -15,8 +15,9 @@ namespace Umamusume
 {
     public class UmamusumeClient
     {
-        private static readonly byte[] CommonHeader = Convert.FromBase64String("ayDiq2wxEzD3Ydc3zj8wJXUIUGZe6li2Ny+NL1dQHrOf+CZ4yAUlQ5KZifwvoMuGBWsIqQ==");
-
+        public const bool dbg = false;
+        private const string header = "ayDiq2wxEzD3Ydc3zj8wJXUIUGZe6li2Ny+NL1dQHrOr0RG/C/iVdNyCUY+W7eTWKiXFPw==";
+        private const string appver = "1.2.0";
         private const string apiroot = "https://api-umamusume.cygames.jp/umamusume";
 
         public Account Account { get; private set; }
@@ -62,7 +63,7 @@ namespace Umamusume
             client.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Encoding", "deflate, gzip");
             client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "UnityPlayer/2019.4.1f1 (UnityWebRequest/1.0, libcurl/7.52.0-DEV)");
             client.DefaultRequestHeaders.TryAddWithoutValidation("X-Unity-Version", "2019.4.1f1");
-            client.DefaultRequestHeaders.TryAddWithoutValidation("APP-VER", "1.1.2");
+            client.DefaultRequestHeaders.TryAddWithoutValidation("APP-VER", appver);
             client.DefaultRequestHeaders.TryAddWithoutValidation("RES-VER", "");
 
 
@@ -103,7 +104,7 @@ namespace Umamusume
         public TResult Request<TResult>(RequestBase<TResult> request) where TResult : ResponseCommon
         {
             //var arr = CommonHeader.Concat(Utils.Hex2bin(Account.SessionId)).Concat(Account.udid.ToString())
-            IEnumerable<byte> head = CommonHeader
+            IEnumerable<byte> head = Convert.FromBase64String(header)
                 .Concat(Utils.Hex2bin(SessionId))
                 .Concat(Utils.Hex2bin(Account.Udid.ToString().Replace("-", "")))
                 .Concat(Utils.GenRandomBytes(32));
@@ -125,7 +126,7 @@ namespace Umamusume
             }
             catch (Exception e)
             {
-                //Console.WriteLine($"{LogPrefix} {e}");
+                if (dbg) Console.WriteLine($"{LogPrefix} {e}");
                 return null;
             }
             PostRequestHeaders();
@@ -165,10 +166,10 @@ namespace Umamusume
             if (!string.IsNullOrEmpty(obj.data_headers.sid))
             {
                 session_id = Utils.Bin2Hex(Utils.MakeMd5(obj.data_headers.sid));
-                //Console.WriteLine($"sid changed into {session_id}");
+                if (dbg) Console.WriteLine($"sid changed into {session_id}");
             }
-            //Console.WriteLine($"api ret:\n {obj}");
-            //Console.WriteLine(JsonConvert.SerializeObject(obj, Formatting.Indented));
+            if (dbg) Console.WriteLine($"api ret:\n {obj}");
+            if (dbg) Console.WriteLine(JsonConvert.SerializeObject(obj, Formatting.Indented));
             return obj;
         }
 
