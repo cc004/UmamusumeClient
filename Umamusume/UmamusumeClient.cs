@@ -16,21 +16,25 @@ namespace Umamusume
     public class UmamusumeClient
     {
         public const bool dbg = false;
-        private const string header = "ayDiq2wxEzD3Ydc3zj8wJXUIUGZe6li2Ny+NL1dQHrOr0RG/C/iVdNyCUY+W7eTWKiXFPw==";
-        private const string appver = "1.2.0";
+        private const string header = "ayDiq2wxEzD3Ydc3zj8wJXUIUGZe6li2Ny+NL1dQHrMQ7UybMbU1V7NpLpiI3sr2l9V4ZA==";
+        private const string appver = "1.2.5";
         private const string apiroot = "https://api-umamusume.cygames.jp/umamusume";
+        private const string proxy_server = "127.0.0.1:1080";
 
         public Account Account { get; private set; }
         private HttpClient client = new HttpClient(new HttpClientHandler
         {
             UseProxy = true,
-            Proxy = new WebProxy("127.0.0.1:1080")
+            Proxy = new WebProxy(proxy_server)
         });
         public RequestEnvironment env = RequestEnvironment.CreateDefault();
 
         private string resver;
 
         public int FCoin { get; private set; }
+        public int current_money { get; private set; }
+        public TpInfo tpInfo { get; private set; }
+        public LoginResponse LoginResp { get; private set; }
 
         public string ResVer
         {
@@ -58,15 +62,12 @@ namespace Umamusume
             typeof(HttpHeaders).GetField("_allowedHeaderTypes", bindingAttr: BindingFlags.NonPublic | BindingFlags.Instance)
                 .SetValue(client.DefaultRequestHeaders, Enum.Parse(headertype, "All"));
             client.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/x-msgpack");
-
             client.DefaultRequestHeaders.TryAddWithoutValidation("Accept", "*/*");
             client.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Encoding", "deflate, gzip");
             client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "UnityPlayer/2019.4.1f1 (UnityWebRequest/1.0, libcurl/7.52.0-DEV)");
             client.DefaultRequestHeaders.TryAddWithoutValidation("X-Unity-Version", "2019.4.1f1");
             client.DefaultRequestHeaders.TryAddWithoutValidation("APP-VER", appver);
             client.DefaultRequestHeaders.TryAddWithoutValidation("RES-VER", "");
-
-
         }
 
         public UmamusumeClient(Account account, ICryptHandler handler)
@@ -211,8 +212,13 @@ namespace Umamusume
         public void Login()
         {
             LoginResponse resp = RetryRequest(new LoginRequest());
+            LoginResp = resp;
             if (resp.data.coin_info != null)
+            {
                 FCoin = resp.data.coin_info.fcoin;
+                current_money = GetMoneyFromIndexResp(resp);
+                tpInfo = resp.data.tp_info;
+            }
         }
 
         public PresentReceiveAllResponse.CommonResponse ReceivePresents()
@@ -226,7 +232,6 @@ namespace Umamusume
             FCoin += resp.data.reward_summary_info.add_fcoin;
             return resp.data;
         }
-
         public void Gacha(int gachaId, int draw_num = 10, int item_id = 0, int current_num = 0)
         {
             GachaExecResponse resp = RetryRequest(new GachaExecRequest
@@ -246,6 +251,18 @@ namespace Umamusume
                         Account.extra.support_cards[card.support_card_id] = 0;
                     ++Account.extra.support_cards[card.support_card_id];
                 }
+        }
+
+        private int GetMoneyFromIndexResp(LoginResponse resp)
+        {
+            foreach (var item_list in resp.data.item_list)
+            {
+                if (item_list.item_id == 59)
+                {
+                    return item_list.number;
+                }
+            }
+            return 0;
         }
 
         public void ResetAccount()

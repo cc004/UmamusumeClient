@@ -4,7 +4,7 @@ namespace Umamusume.Model
     public sealed class ReadInfoRequest : RequestBase<ReadInfoResponse>
     {
 
-
+        protected override string Url => "/single_mode/rental_info";
         public HomeStoryDataForRegist[] add_home_story_data_array;
 
 

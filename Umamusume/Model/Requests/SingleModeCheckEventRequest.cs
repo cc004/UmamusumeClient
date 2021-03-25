@@ -3,7 +3,7 @@ namespace Umamusume.Model
 
     public sealed class SingleModeCheckEventRequest : RequestBase<SingleModeCheckEventResponse>
     {
-
+        protected override string Url => "/single_mode/check_event";
 
         public int? event_id;
 
@@ -16,7 +16,7 @@ namespace Umamusume.Model
         public int? choice_number;
 
 
-
+        public int? current_turn;
 
 
 

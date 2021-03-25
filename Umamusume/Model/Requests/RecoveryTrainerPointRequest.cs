@@ -4,7 +4,8 @@ namespace Umamusume.Model
     public sealed class RecoveryTrainerPointRequest : RequestBase<RecoveryTrainerPointResponse>
     {
 
-
+        protected override string Url => "/user/recovery_trainer_point";
+        
         public int? count;
 
 

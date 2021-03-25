@@ -3,7 +3,7 @@ namespace Umamusume.Model
 
     public sealed class SingleModeExecCommandRequest : RequestBase<SingleModeExecCommandResponse>
     {
-
+        protected override string Url => "/single_mode/exec_command";
 
         public int? command_type;
 

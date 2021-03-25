@@ -62,7 +62,7 @@ namespace Umamusume.Model
 
 
 
-            //public TpInfo tp_info;
+            public TpInfo tp_info;
 
 
 
