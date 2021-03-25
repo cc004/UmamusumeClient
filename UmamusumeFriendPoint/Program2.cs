@@ -66,12 +66,12 @@ namespace UmamusumeFriendPoint
                     {
                         if (client.tpInfo.current_tp < 30)
                         {
-                            if (client.FCoin < 10) break;
+                            if (client.FCoin < 100) break;
                             Console.WriteLine($"[Thread #{id}] recovering tp");
                             Thread.Sleep(interval);
                             client.RetryRequest(new RecoveryTrainerPointRequest
                             {
-                                count = 1,
+                                count = 10,
                                 client_own_num = client.FCoin
                             });
                         }
