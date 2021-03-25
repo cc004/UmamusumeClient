@@ -64,7 +64,6 @@ namespace UmamusumeFriendPoint
 
                     while (true)
                     {
-                        Console.WriteLine(client.current_money);
                         if (client.tpInfo.current_tp < 30)
                         {
                             if (client.FCoin < 10) break;
