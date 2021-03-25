@@ -34,7 +34,6 @@ namespace Umamusume
         public int FCoin { get; private set; }
         public int current_money { get; private set; }
         public TpInfo tpInfo { get; private set; }
-        public LoginResponse LoginResp { get; private set; }
 
         public string ResVer
         {
@@ -173,7 +172,7 @@ namespace Umamusume
                 return obj;
             }
 
-            Console.WriteLine($"{LogPrefix} api {apiurl} ret: {obj.data_headers.result_code}");
+            if (dbg) Console.WriteLine($"{LogPrefix} api {apiurl} ret: {obj.data_headers.result_code}");
             if (dbg) Console.WriteLine(JsonConvert.SerializeObject(obj, Formatting.Indented));
 
             var commonResp = typeof(TResult).GetField("data").GetValue(obj);
@@ -182,7 +181,11 @@ namespace Umamusume
 
             if (tpfield != null) tpInfo = tpfield.GetValue(commonResp) as TpInfo;
             if (coinfield != null) FCoin = (coinfield.GetValue(commonResp) as CoinInfo)?.fcoin ?? 0;
-            if (obj is IMoneyChange money) current_money = money.current_money;
+            if (obj is IMoneyChange money)
+            {
+                var money2 = money.current_money;
+                if (money2 != null) current_money = (int)money2;
+            }
 
             return obj;
         }
@@ -224,8 +227,7 @@ namespace Umamusume
 
         public void Login()
         {
-            LoginResponse resp = RetryRequest(new LoginRequest());
-            LoginResp = resp;
+            RetryRequest(new LoginRequest());
         }
 
         public PresentReceiveAllResponse.CommonResponse ReceivePresents()
@@ -237,7 +239,7 @@ namespace Umamusume
                 time_filter_type = 0
             });
             FCoin += resp.data.reward_summary_info.add_fcoin;
-            current_money += resp.data.reward_summary_info.add_item_list.CalcMoney();
+            current_money += resp.data.reward_summary_info.add_item_list.CalcMoney() ?? 0;
             return resp.data;
         }
         public void Gacha(int gachaId, int draw_num = 10, int item_id = 0, int current_num = 0)

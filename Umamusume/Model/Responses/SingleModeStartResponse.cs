@@ -51,7 +51,7 @@ namespace Umamusume.Model
 
 
         [JsonIgnore]
-        public int current_money => data.user_item_array.CalcMoney();
+        public int? current_money => data.user_item_array.CalcMoney();
 
         public SingleModeStartResponse()
         {

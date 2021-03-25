@@ -12,9 +12,9 @@ namespace Umamusume
 {
     public static class Utils
     {
-        public static int CalcMoney(this UserItem[] items)
+        public static int? CalcMoney(this UserItem[] items)
         {
-            return items == null ? 0 : items.Where(item => item.item_id == 59).Sum(item => item.number);
+            return items?.Where(item => item.item_id == 59)?.Sum(item => item.number);
         }
 
         public static byte[] Pack(JToken token)

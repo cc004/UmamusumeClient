@@ -8,6 +8,6 @@ namespace Umamusume.Model
 {
     interface IMoneyChange
     {
-        int current_money { get; }
+        int? current_money { get; }
     }
 }
