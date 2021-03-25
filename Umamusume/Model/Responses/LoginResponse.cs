@@ -1,9 +1,11 @@
 
 
+using Newtonsoft.Json;
+
 namespace Umamusume.Model
 {
 
-    public sealed class LoginResponse : ResponseCommon
+    public sealed class LoginResponse : ResponseCommon, IMoneyChange
     {
 
         public class CommonResponse
@@ -243,7 +245,8 @@ namespace Umamusume.Model
 
         public CommonResponse data;
 
-
+        [JsonIgnore]
+        public int? current_money => data.item_list.CalcMoney();
 
         public LoginResponse()
         {

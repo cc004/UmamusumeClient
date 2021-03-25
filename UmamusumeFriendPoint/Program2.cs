@@ -64,6 +64,7 @@ namespace UmamusumeFriendPoint
 
                     while (true)
                     {
+                        Console.WriteLine(client.current_money);
                         if (client.tpInfo.current_tp < 30)
                         {
                             if (client.FCoin < 10) break;
@@ -104,10 +105,10 @@ namespace UmamusumeFriendPoint
                                     vid2 = job.viewer_id;
                                     --job.times;
                                     if (job.times == 0) viewer_ids2.Dequeue();
-                                    break;
                                 }
                             }
                         }
+                        else do_support_chara = false;
 
                         if (do_support_chara) --times; else vid2 = 0;
 
@@ -155,7 +156,6 @@ namespace UmamusumeFriendPoint
 
                         var resp = client.RetryRequest(new SingleModeStartRequest
                         {
-                            //FIXME: chara rent goes into error
                             start_chara = new SingleModeStartChara(do_support_chara ? infoCache[vid2] : null)
                             {
                                 card_id = 100701,
@@ -260,6 +260,11 @@ namespace UmamusumeFriendPoint
                 {
                     viewer_id = int.Parse(splits[0]),
                     times = int.Parse(splits[1])
+                });
+                lock (viewer_ids2) viewer_ids2.Enqueue(new Job
+                {
+                    viewer_id = int.Parse(splits[0]),
+                    times = 10
                 });
             }
         }
