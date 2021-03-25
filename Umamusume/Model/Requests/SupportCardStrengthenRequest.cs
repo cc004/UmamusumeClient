@@ -20,7 +20,7 @@ namespace Umamusume.Model
         public int? use_money;
 
 
-
+            
         public int? current_money;
 
 

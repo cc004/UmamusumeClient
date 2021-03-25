@@ -1928,8 +1928,8 @@
     public class SingleModeRentalSuccessionChara
     {
 
-        public int? viewer_id;
-        public int? trained_chara_id;
+        public int viewer_id;
+        public int trained_chara_id;
         public bool is_circle_member;
 
 
@@ -1970,17 +1970,39 @@
     public class SingleModeStartChara
     {
 
-        public int? card_id;
+        public int card_id;
         public int[] support_card_ids;
         public SingleModeFriendSupportCardInfo friend_support_card_info;
-        public int? succession_trained_chara_id_1;
-        public int? succession_trained_chara_id_2;
-        public SingleModeRentalSuccessionChara rental_succession_trained_chara;
-        public int? scenario_id;
+        public readonly int succession_trained_chara_id_1;
+        public readonly int succession_trained_chara_id_2;
+        public readonly SingleModeRentalSuccessionChara rental_succession_trained_chara;
+        public int scenario_id;
 
-
-
-
+        public SingleModeStartChara(UserInfoAtFriend info = null)
+        {
+            if (info == null)
+            {
+                succession_trained_chara_id_1 = 4;
+                succession_trained_chara_id_2 = 1;
+                rental_succession_trained_chara = new SingleModeRentalSuccessionChara
+                {
+                    is_circle_member = false,
+                    trained_chara_id = 0,
+                    viewer_id = 0
+                };
+            }
+            else
+            {
+                succession_trained_chara_id_1 = 4;
+                succession_trained_chara_id_2 = 0;
+                rental_succession_trained_chara = new SingleModeRentalSuccessionChara
+                {
+                    is_circle_member = false,
+                    trained_chara_id = info.user_trained_chara.trained_chara_id,
+                    viewer_id = info.user_trained_chara.viewer_id
+                };
+            }
+        }
 
     }
 
@@ -2469,9 +2491,9 @@
     public class TpInfo
     {
 
-        public int? current_tp;
-        public int? max_tp;
-        public int? max_recovery_time;
+        public int current_tp;
+        public int max_tp;
+        public int max_recovery_time;
 
 
 
@@ -2762,12 +2784,12 @@
     public class UserInfoAtFriend
     {
 
-        public int? viewer_id;
+        public int viewer_id;
         public string name;
         public int? honor_id;
         public string last_login_time;
         public int? leader_chara_id;
-        public int? support_card_id;
+        public int support_card_id;
         public string comment;
         public ulong fan;
         public int? directory_level;
@@ -2833,12 +2855,12 @@
     public class UserSupportCard
     {
 
-        public int? viewer_id;
-        public int? support_card_id;
-        public int? exp;
-        public int? limit_break_count;
-        public int? favorite_flag;
-        public int? stock;
+        public int viewer_id;
+        public int support_card_id;
+        public int exp;
+        public int limit_break_count;
+        public int favorite_flag;
+        public int stock;
         public string possess_time;
 
 
@@ -2892,8 +2914,8 @@
     public class UserTrainedCharaAtFriend
     {
 
-        public int? viewer_id;
-        public int? trained_chara_id;
+        public int viewer_id;
+        public int trained_chara_id;
         public int? card_id;
         public int? rank_score;
         public int? rank;
