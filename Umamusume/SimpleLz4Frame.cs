@@ -20,7 +20,7 @@ namespace Umamusume
         private readonly int id;
         private readonly bool crypt;
 
-        private static readonly bool dbg = UmamusumeClient.dbg;
+        private static readonly bool dbg = false;
 
         public SimpleLz4Frame(int id, bool crypt = true)
         {

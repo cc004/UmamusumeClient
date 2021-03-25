@@ -6,6 +6,7 @@ using Umamusume;
 using Umamusume.Model;
 using System.Linq;
 using System.Threading;
+/*
 namespace UmamusumeFriendPoint
 {
     class Program
@@ -37,7 +38,7 @@ namespace UmamusumeFriendPoint
                 Log("未找到用户文件，将自动创建并退出程序");
                 return;
             }
-            for (int i = 0; i < 32; i++)
+            for(int i = 0; i < 32; i++)
             {
                 TaskFlag[i] = false;
             }
@@ -58,13 +59,13 @@ namespace UmamusumeFriendPoint
             while (true)
             {
                 Thread.Sleep(10000);
-                int notFinishCount = 0;
+                int notFinishCount =  0;
                 lock (UserStatusLock)
                 {
-                    foreach (var status in UserStatus)
+                    foreach(var status in UserStatus)
                     {
                         if (status.Value == false)
-                            notFinishCount++;
+                            notFinishCount ++;
                     }
                     if (notFinishCount == 0)
                     {
@@ -79,8 +80,8 @@ namespace UmamusumeFriendPoint
             }
             Console.ReadLine();
         }
-
-        static void StartFarmTask(int viewer_id, int target_point, int max_thread = 1)
+        
+        static void StartFarmTask(int viewer_id, int target_point,int max_thread = 1)
         {
             int currentNeedThread = max_thread;
             while (currentNeedThread != 0)
@@ -340,14 +341,14 @@ namespace UmamusumeFriendPoint
                         choice_number = 0,
                         current_turn = 1
                     });
-                    if (singleModeCheckEventResp.data == null)
+                    if(singleModeCheckEventResp.data == null)
                     {
 
                     }
                     Thread.Sleep(GlobalRequestInterval);
                     while (singleModeCheckEventResp.data.unchecked_event_array != null && singleModeCheckEventResp.data.unchecked_event_array.Length > 0)
                     {
-                        foreach (var ev in singleModeCheckEventResp.data.unchecked_event_array)
+                        foreach(var ev in singleModeCheckEventResp.data.unchecked_event_array)
                         {
                             Thread.Sleep(GlobalRequestInterval);
                             singleModeCheckEventResp = client.RetryRequest(new SingleModeCheckEventRequest
@@ -426,7 +427,7 @@ namespace UmamusumeFriendPoint
 
     class FarmAccount
     {
-        public Dictionary<string, FarmAccountData> viewer_id_list = new Dictionary<string, FarmAccountData>();
+        public Dictionary<string,FarmAccountData> viewer_id_list = new Dictionary<string, FarmAccountData>();
     }
     class FarmData
     {
@@ -434,3 +435,4 @@ namespace UmamusumeFriendPoint
         public int crown_point_count = 0;
     }
 }
+*/

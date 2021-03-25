@@ -75,7 +75,7 @@ namespace Umamusume
             compressor = handler;
             Account = account;
             client.DefaultRequestHeaders.Clear();
-            client.Timeout = new TimeSpan(0, 0, 10);
+            client.Timeout = new TimeSpan(0, 0, 30);
             AddCommonHeaders(client);
             ResVer = "10000010";
         }
@@ -112,7 +112,7 @@ namespace Umamusume
 
             if (Account.Authkey != null) head = head.Concat(Convert.FromBase64String(Account.Authkey));
             request.UpdateInfo(env, Account);
-            //Console.WriteLine(JsonConvert.SerializeObject(request, Formatting.None));
+            if (dbg) Console.WriteLine(JsonConvert.SerializeObject(request, Formatting.None));
             byte[] content = Utils.Pack(JToken.FromObject(request));
             byte[] counthead = BitConverter.GetBytes(head.Count());
             string crypted = compressor.Compress(counthead.Concat(head.Concat(content)).ToArray());
@@ -140,9 +140,6 @@ namespace Umamusume
 
             TResult obj = Utils.Unpack(compressor.Decompress(res)).ToObject<TResult>();
 
-            if (obj.data_headers.result_code != GallopResultCode.RESULT_CODE_OK)
-                Console.WriteLine($"{LogPrefix} api {apiurl} ret: result code = {obj.data_headers.result_code}");
-
             if (obj.data_headers.result_code == GallopResultCode.BOT_ACCESS_ATTACK_ERROR)
             {
                 Type headertype = typeof(HttpClient).Assembly.GetType("System.Net.Http.Headers.HttpHeaderType");
@@ -167,10 +164,26 @@ namespace Umamusume
             if (!string.IsNullOrEmpty(obj.data_headers.sid))
             {
                 session_id = Utils.Bin2Hex(Utils.MakeMd5(obj.data_headers.sid));
-                if (dbg) Console.WriteLine($"sid changed into {session_id}");
+                if (dbg) Console.WriteLine($"{LogPrefix} sid changed into {session_id}");
             }
-            if (dbg) Console.WriteLine($"api ret:\n {obj}");
+
+            if (obj.data_headers.result_code != GallopResultCode.RESULT_CODE_OK)
+            {
+                Console.WriteLine($"{LogPrefix} api {apiurl} ret: result code = {obj.data_headers.result_code}");
+                return obj;
+            }
+
+            Console.WriteLine($"{LogPrefix} api {apiurl} ret: {obj.data_headers.result_code}");
             if (dbg) Console.WriteLine(JsonConvert.SerializeObject(obj, Formatting.Indented));
+
+            var commonResp = typeof(TResult).GetField("data").GetValue(obj);
+            var tpfield = commonResp.GetType().GetField("tp_info");
+            var coinfield = commonResp.GetType().GetField("coin_info");
+
+            if (tpfield != null) tpInfo = tpfield.GetValue(commonResp) as TpInfo;
+            if (coinfield != null) FCoin = (coinfield.GetValue(commonResp) as CoinInfo)?.fcoin ?? 0;
+            if (obj is IMoneyChange money) current_money = money.current_money;
+
             return obj;
         }
 
@@ -213,12 +226,6 @@ namespace Umamusume
         {
             LoginResponse resp = RetryRequest(new LoginRequest());
             LoginResp = resp;
-            if (resp.data.coin_info != null)
-            {
-                FCoin = resp.data.coin_info.fcoin;
-                current_money = GetMoneyFromIndexResp(resp);
-                tpInfo = resp.data.tp_info;
-            }
         }
 
         public PresentReceiveAllResponse.CommonResponse ReceivePresents()
@@ -230,6 +237,7 @@ namespace Umamusume
                 time_filter_type = 0
             });
             FCoin += resp.data.reward_summary_info.add_fcoin;
+            current_money += resp.data.reward_summary_info.add_item_list.CalcMoney();
             return resp.data;
         }
         public void Gacha(int gachaId, int draw_num = 10, int item_id = 0, int current_num = 0)
@@ -251,18 +259,6 @@ namespace Umamusume
                         Account.extra.support_cards[card.support_card_id] = 0;
                     ++Account.extra.support_cards[card.support_card_id];
                 }
-        }
-
-        private int GetMoneyFromIndexResp(LoginResponse resp)
-        {
-            foreach (var item_list in resp.data.item_list)
-            {
-                if (item_list.item_id == 59)
-                {
-                    return item_list.number;
-                }
-            }
-            return 0;
         }
 
         public void ResetAccount()

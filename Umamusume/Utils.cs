@@ -6,11 +6,17 @@ using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using Umamusume.Model;
 
 namespace Umamusume
 {
     public static class Utils
     {
+        public static int CalcMoney(this UserItem[] items)
+        {
+            return items == null ? 0 : items.Where(item => item.item_id == 59).Sum(item => item.number);
+        }
+
         public static byte[] Pack(JToken token)
         {
             Func<JToken, object> mapper = null;

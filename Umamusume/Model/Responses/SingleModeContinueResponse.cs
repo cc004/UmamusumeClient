@@ -39,8 +39,6 @@ namespace Umamusume.Model
 
         public CommonResponse data;
 
-
-
         public SingleModeContinueResponse()
         {
         }
