@@ -2357,28 +2357,17 @@
         public RaceHorseData[] race_horse_data_array;
         public int? self_evaluate;
         public int? opponent_evaluate;
-
-
-
-
-
     }
 
 
     public class TeamStadiumRandomInfo
     {
-
         public int? viewer_id;
         public int? member_id;
         public int? trained_chara_id;
         public int? running_style;
         public int? frame_order;
         public int? motivation;
-
-
-
-
-
     }
 
 
@@ -2390,155 +2379,90 @@
         public int? team_class;
         public int? best_point;
         public int? rank;
-
-
-
-
-
     }
 
 
     public class TeamStadiumResultBonusData
     {
-
         public int? score_bonus_id;
         public int? bonus_score;
         public int? condition_type;
         public int? condition_value_1;
         public int? condition_value_2;
         public int? score_rate;
-
-
-
-
-
     }
 
 
     public class TeamStadiumResultHorseScore
     {
-
         public TeamStadiumScoreData[] score_array;
-
-
-
-
-
     }
 
 
     public class TeamStadiumResultScoreData
     {
-
         public int? raw_score_id;
         public int? num;
         public int? score;
         public TeamStadiumResultBonusData[] bonus_array;
-
-
-
-
-
     }
 
 
     public class TeamStadiumResultTeam
     {
-
         public int? team_id;
         public TeamStadiumScoreData[] team_score_array;
         public int? team_total_score;
-
-
-
-
-
     }
 
 
     public class TeamStadiumScoreData
     {
-
         public int? raw_score_id;
         public int? num;
         public int? score;
         public TeamStadiumBonusData[] bonus_array;
-
-
-
-
-
     }
 
 
     public class TeamStadiumTeamData
     {
-
         public int? distance_type;
         public int? member_id;
         public int? trained_chara_id;
         public int? running_style;
-
-
-
-
-
     }
 
 
     public class TeamStadiumTotalScoreInfo
     {
-
         public int? final_total_score;
         public int? all_race_result_score_bonus;
-
-
-
-
-
     }
 
 
     public class TeamStadiumUser
     {
-
         public int? team_class;
         public int? best_team_class;
         public int? best_point;
-
-
-
-
-
     }
 
 
     public class TeamStadiumWinningRewardContent
     {
-
         public int? round;
         public int? item_category;
         public int? item_id;
         public int? item_num;
         public int? box_color_type;
-
-
-
-
-
     }
 
 
     public class TeamStadiumWinningRewardInfo
     {
-
         public int? round;
         public int? box_color_type;
-
-
-
-
-
     }
 
 
@@ -2786,10 +2710,6 @@
         public string follow_time;
         public string follower_time;
 
-
-
-
-
     }
 
 
@@ -2874,7 +2794,7 @@
     {
 
         public int? item_id;
-        public int? number;
+        public int number;
 
 
 

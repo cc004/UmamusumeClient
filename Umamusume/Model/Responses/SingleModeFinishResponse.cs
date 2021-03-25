@@ -54,7 +54,7 @@ namespace Umamusume.Model
 
 
 
-            public ulong circle_point;
+            public ulong? circle_point;
 
 
 

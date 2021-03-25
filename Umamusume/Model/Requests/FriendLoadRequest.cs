@@ -5,7 +5,7 @@ namespace Umamusume.Model
     {
 
 
-
+        protected override string Url => "/friend/index";
 
 
         public FriendLoadRequest()
