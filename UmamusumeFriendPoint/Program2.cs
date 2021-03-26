@@ -151,8 +151,6 @@ namespace UmamusumeFriendPoint
                         Thread.Sleep(interval);
                         var support = infoCache[vid].user_support_card;
 
-                        client.Request(new LoginRequest());
-
                         var resp = client.RetryRequest(new SingleModeStartRequest
                         {
                             start_chara = new SingleModeStartChara(do_support_chara ? infoCache[vid2] : null)
@@ -229,7 +227,7 @@ namespace UmamusumeFriendPoint
         {
             Load();
 
-            for (int i = 0; i < 16; ++i)
+            for (int i = 0; i < 32; ++i)
             {
                 int  j = i;
                 new Thread(new ThreadStart(() => FarmTask(j))).Start();
