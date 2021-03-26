@@ -16,8 +16,8 @@ namespace Umamusume
     public class UmamusumeClient
     {
         public const bool dbg = false;
-        private const string header = "ayDiq2wxEzD3Ydc3zj8wJXUIUGZe6li2Ny+NL1dQHrMQ7UybMbU1V7NpLpiI3sr2l9V4ZA==";
-        private const string appver = "1.2.5";
+        private const string header = "ayDiq2wxEzD3Ydc3zj8wJXUIUGZe6li2Ny+NL1dQHrMSPs9iXuLrJ/WPSNobcJIMw8uazw==";
+        private const string appver = "1.2.8";
         private const string apiroot = "https://api-umamusume.cygames.jp/umamusume";
         private const string proxy_server = "127.0.0.1:1080";
 
@@ -101,6 +101,28 @@ namespace Umamusume
             }
             return result;
         }
+
+        private void ResetConnection()
+        {
+            Type headertype = typeof(HttpClient).Assembly.GetType("System.Net.Http.Headers.HttpHeaderType");
+            HttpClient client = new HttpClient(new HttpClientHandler
+            {
+                UseProxy = true,
+                Proxy = new WebProxy("127.0.0.1:1080")
+            });
+
+
+            typeof(HttpHeaders).GetField("_allowedHeaderTypes", bindingAttr: BindingFlags.NonPublic | BindingFlags.Instance)
+                .SetValue(client.DefaultRequestHeaders, Enum.Parse(headertype, "All"));
+
+            client.DefaultRequestHeaders.Clear();
+
+            foreach (KeyValuePair<string, IEnumerable<string>> header in this.client.DefaultRequestHeaders)
+                client.DefaultRequestHeaders.TryAddWithoutValidation(header.Key, header.Value);
+            this.client.Dispose();
+            this.client = client;
+        }
+
         public TResult Request<TResult>(RequestBase<TResult> request) where TResult : ResponseCommon
         {
             //var arr = CommonHeader.Concat(Utils.Hex2bin(Account.SessionId)).Concat(Account.udid.ToString())
@@ -133,6 +155,8 @@ namespace Umamusume
             string res = resp.Content.ReadAsStringAsync().Result;
             if (resp.StatusCode != HttpStatusCode.OK)
             {
+                if (resp.StatusCode == HttpStatusCode.Forbidden) ResetConnection();
+
                 Console.WriteLine($"{LogPrefix} api {apiurl} ret: {resp.StatusCode}");
                 return null;
             }
@@ -141,24 +165,9 @@ namespace Umamusume
 
             if (obj.data_headers.result_code == GallopResultCode.BOT_ACCESS_ATTACK_ERROR)
             {
-                Type headertype = typeof(HttpClient).Assembly.GetType("System.Net.Http.Headers.HttpHeaderType");
-                HttpClient client = new HttpClient(new HttpClientHandler
-                {
-                    UseProxy = true,
-                    Proxy = new WebProxy("127.0.0.1:1080")
-                });
-
-
-                typeof(HttpHeaders).GetField("_allowedHeaderTypes", bindingAttr: BindingFlags.NonPublic | BindingFlags.Instance)
-                    .SetValue(client.DefaultRequestHeaders, Enum.Parse(headertype, "All"));
-
-                client.DefaultRequestHeaders.Clear();
-
-                foreach (KeyValuePair<string, IEnumerable<string>> header in this.client.DefaultRequestHeaders)
-                    client.DefaultRequestHeaders.TryAddWithoutValidation(header.Key, header.Value);
-                this.client.Dispose();
-                this.client = client;
+                ResetConnection();
             }
+
             Account.ViewerId = obj.data_headers.viewer_id;
             if (!string.IsNullOrEmpty(obj.data_headers.sid))
             {
