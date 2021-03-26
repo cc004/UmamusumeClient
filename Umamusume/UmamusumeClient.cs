@@ -13,6 +13,15 @@ using Umamusume.Model;
 
 namespace Umamusume
 {
+    public class ApiException : Exception
+    {
+        public ApiException(HttpStatusCode code) : base(code.ToString())
+        {
+        }
+        public ApiException(GallopResultCode code) : base(code.ToString())
+        {
+        }
+    }
     public class UmamusumeClient
     {
         public const bool dbg = false;
@@ -92,14 +101,18 @@ namespace Umamusume
 
         public TResult RetryRequest<TResult>(RequestBase<TResult> request, int count = 3, int interval = 1000) where TResult : ResponseCommon
         {
-            TResult result = null;
-            for (int i = 0; i < count; ++i)
+            while (true)
             {
-                result = Request(request);
-                if (result != null) return result;
+                try
+                {
+                    return Request(request);
+                }
+                catch
+                {
+                    if (--count == 0) throw;
+                }
                 Thread.Sleep(interval);
             }
-            return result;
         }
 
         private void ResetConnection()
@@ -149,7 +162,7 @@ namespace Umamusume
             catch (Exception e)
             {
                 if (dbg) Console.WriteLine($"{LogPrefix} {e}");
-                return null;
+                throw;
             }
             PostRequestHeaders();
             string res = resp.Content.ReadAsStringAsync().Result;
@@ -158,7 +171,7 @@ namespace Umamusume
                 if (resp.StatusCode == HttpStatusCode.Forbidden) ResetConnection();
 
                 Console.WriteLine($"{LogPrefix} api {apiurl} ret: {resp.StatusCode}");
-                return null;
+                throw new ApiException(resp.StatusCode);
             }
 
             TResult obj = Utils.Unpack(compressor.Decompress(res)).ToObject<TResult>();
@@ -178,15 +191,15 @@ namespace Umamusume
             if (obj.data_headers.result_code != GallopResultCode.RESULT_CODE_OK)
             {
                 Console.WriteLine($"{LogPrefix} api {apiurl} ret: result code = {obj.data_headers.result_code}");
-                return obj;
+                throw new ApiException(obj.data_headers.result_code);
             }
 
             if (dbg) Console.WriteLine($"{LogPrefix} api {apiurl} ret: {obj.data_headers.result_code}");
             if (dbg) Console.WriteLine(JsonConvert.SerializeObject(obj, Formatting.Indented));
 
             var commonResp = typeof(TResult).GetField("data").GetValue(obj);
-            var tpfield = commonResp.GetType().GetField("tp_info");
-            var coinfield = commonResp.GetType().GetField("coin_info");
+            var tpfield = commonResp?.GetType()?.GetField("tp_info");
+            var coinfield = commonResp?.GetType()?.GetField("coin_info");
 
             if (tpfield != null) tpInfo = tpfield.GetValue(commonResp) as TpInfo;
             if (coinfield != null) FCoin = (coinfield.GetValue(commonResp) as CoinInfo)?.fcoin ?? 0;
