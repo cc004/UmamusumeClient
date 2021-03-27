@@ -15,13 +15,23 @@ namespace Umamusume
 {
     public class ApiException : Exception
     {
-        public ApiException(HttpStatusCode code) : base(code.ToString())
+        public GallopResultCode ResultCode;
+        public Tuple<string, string> pair;
+
+        public ApiException(string req, string res, string msg) : base(msg)
+        {
+            pair = new Tuple<string, string>(req, res);
+        }
+
+        public ApiException(string req, string res, HttpStatusCode code) : this(req, res, code.ToString())
         {
         }
-        public ApiException(GallopResultCode code) : base(code.ToString())
+        public ApiException(string req, string res, GallopResultCode code) : this(req, res, code.ToString())
         {
+            ResultCode = code;
         }
     }
+
     public class UmamusumeClient
     {
         public const bool dbg = false;
@@ -107,7 +117,11 @@ namespace Umamusume
                 {
                     return Request(request);
                 }
-                catch
+                catch (ApiException)
+                {
+                    throw;
+                }
+                catch (Exception e)
                 {
                     if (--count == 0) throw;
                 }
@@ -171,12 +185,12 @@ namespace Umamusume
                 if (resp.StatusCode == HttpStatusCode.Forbidden) ResetConnection();
 
                 Console.WriteLine($"{LogPrefix} api {apiurl} ret: {resp.StatusCode}");
-                throw new ApiException(resp.StatusCode);
+                throw new Exception();
             }
 
             TResult obj = Utils.Unpack(compressor.Decompress(res)).ToObject<TResult>();
 
-            if (obj.data_headers.result_code == GallopResultCode.BOT_ACCESS_ATTACK_ERROR)
+            if (obj.data_headers.result_code == GallopResultCode.BOT_ACCESS_ATTACK_ERROR || obj.data_headers.result_code == GallopResultCode.SESSION_ERROR)
             {
                 ResetConnection();
             }
@@ -190,8 +204,8 @@ namespace Umamusume
 
             if (obj.data_headers.result_code != GallopResultCode.RESULT_CODE_OK)
             {
-                Console.WriteLine($"{LogPrefix} api {apiurl} ret: result code = {obj.data_headers.result_code}");
-                throw new ApiException(obj.data_headers.result_code);
+                Console.WriteLine($"{LogPrefix} api {apiurl} ret: result code = {obj.data_headers.result_code}:\n{JsonConvert.SerializeObject(request, Formatting.None)}");
+                throw new ApiException(JsonConvert.SerializeObject(request, Formatting.None), JsonConvert.SerializeObject(obj, Formatting.None), obj.data_headers.result_code);
             }
 
             if (dbg) Console.WriteLine($"{LogPrefix} api {apiurl} ret: {obj.data_headers.result_code}");
