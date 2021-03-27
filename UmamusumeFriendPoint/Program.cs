@@ -122,16 +122,19 @@ namespace UmamusumeFriendPoint
                         if (!curfriend.Contains(vid))
                         {
                             Thread.Sleep(interval);
-                            var resp0 = client.Request(new FriendFollowRequest
+                            try
                             {
-                                friend_viewer_id = vid
-                            });
-                            if (resp0?.data?.friend_data == null)
+                                client.Request(new FriendFollowRequest
+                                {
+                                    friend_viewer_id = vid
+                                });
+                            }
+                            catch (ApiException e) when e.ResultCode == GallopResultCode.FRIEND_FOLLOW_USER_FOLLOW_COUNT_OVER_ERROR
                             {
                                 Log($"error when trying to follow {vid}");
                                 ForceRemove(vid);
                                 vid = 0;
-                                continue;
+                                throw;
                             }
                             curfriend.Enqueue(vid);
                         }
@@ -139,16 +142,19 @@ namespace UmamusumeFriendPoint
                         if (do_support_chara && !curfriend.Contains(vid2))
                         {
                             Thread.Sleep(interval);
-                            var resp0 = client.Request(new FriendFollowRequest
+                            try
                             {
-                                friend_viewer_id = vid2
-                            });
-                            if (resp0?.data?.friend_data == null)
+                                client.Request(new FriendFollowRequest
+                                {
+                                    friend_viewer_id = vid2
+                                });
+                            }
+                            catch (ApiException e) when e.ResultCode == GallopResultCode.FRIEND_FOLLOW_USER_FOLLOW_COUNT_OVER_ERROR
                             {
-                                Log($"error when trying to follow {vid2}");
-                                ForceRemove(vid2);
-                                vid2 = 0;
-                                continue;
+                                Log($"error when trying to follow {vid}");
+                                ForceRemove(vid);
+                                vid = 0;
+                                throw;
                             }
                             curfriend.Enqueue(vid2);
                         }
