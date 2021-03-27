@@ -182,7 +182,7 @@ namespace UmamusumeFriendPoint
                         if (support.support_card_id == 0)
                         {
                             Log($"error when getting support card for {vid}, force removing");
-                            ForceRemove(vid);
+                            ForceRemove1(vid);
                             vid = 0;
                             continue;
                         }
@@ -190,7 +190,7 @@ namespace UmamusumeFriendPoint
                         if (do_support_chara && infoCache[vid2].user_trained_chara.trained_chara_id == 0)
                         {
                             Log($"error when getting support chara for {vid2}, force removing");
-                            ForceRemove(vid2);
+                            ForceRemove2(vid2);
                             vid2 = 0;
                             continue;
                         }
@@ -218,14 +218,14 @@ namespace UmamusumeFriendPoint
                         catch (ApiException e) when (e.ResultCode == GallopResultCode.PARAM_ERROR)
                         {
                             Log($"error when getting support card for {vid}, force removing");
-                            ForceRemove(vid);
+                            ForceRemove1(vid);
                             vid = 0;
                             throw;
                         }
                         catch (ApiException e) when (e.ResultCode == GallopResultCode.FRIEND_RENTAL_SUCCESSION)
                         {
                             Log($"error when getting chara for {vid2}, force removing");
-                            ForceRemove(vid2);
+                            ForceRemove2(vid2);
                             vid2 = 0;
                             throw;
                         }
@@ -286,10 +286,20 @@ namespace UmamusumeFriendPoint
             }
         }
 
-        private static void ForceRemove(int vid)
+        private static void ForceRemove1(int vid)
         {
             lock (vidlock) viewer_ids = new Queue<Job>(viewer_ids.Where(j => !(j.viewer_id == vid)));
+        }
+
+        private static void ForceRemove2(int vid)
+        {
             lock (vidlock) viewer_ids2 = new Queue<Job>(viewer_ids2.Where(j => !(j.viewer_id == vid)));
+        }
+
+        private static void ForceRemove(int vid)
+        {
+            ForceRemove1(vid);
+            ForceRemove2(vid);
         }
 
         private static void Load()
