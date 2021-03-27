@@ -288,12 +288,20 @@ namespace UmamusumeFriendPoint
 
         private static void ForceRemove1(int vid)
         {
-            lock (vidlock) viewer_ids = new Queue<Job>(viewer_ids.Where(j => !(j.viewer_id == vid)));
+            lock (vidlock)
+            {
+                Log($"ForceRemove1: removing {viewer_ids.Where(j => j.viewer_id == vid).Sum(j => j.times)} times for {vid}");
+                viewer_ids = new Queue<Job>(viewer_ids.Where(j => !(j.viewer_id == vid)));
+            }
         }
 
         private static void ForceRemove2(int vid)
         {
-            lock (vidlock) viewer_ids2 = new Queue<Job>(viewer_ids2.Where(j => !(j.viewer_id == vid)));
+            lock (vidlock)
+            {
+                Log($"ForceRemove2: removing {viewer_ids2.Where(j => j.viewer_id == vid).Sum(j => j.times)} times for {vid}");
+                viewer_ids2 = new Queue<Job>(viewer_ids2.Where(j => !(j.viewer_id == vid)));
+            }
         }
 
         private static void ForceRemove(int vid)
