@@ -21,6 +21,7 @@ namespace UmamusumeFriendPoint
     {
         private static Queue<Job> viewer_ids = new Queue<Job>();
         private static Queue<Job> viewer_ids2 = new Queue<Job>();
+        private static readonly object vidlock = new object();
 
         private static readonly int[] support_cards = new int[]
         {
@@ -31,6 +32,13 @@ namespace UmamusumeFriendPoint
             10010
         };
         private const int interval = 800;
+
+        private static readonly object loglock = new object();
+
+        private static void Log(string message)
+        {
+            lock (loglock) File.WriteAllText("log.txt", message + "\n");
+        }
 
         private static void FarmTask(int id)
         {
@@ -80,7 +88,7 @@ namespace UmamusumeFriendPoint
                         {
                             while (true)
                             {
-                                lock (viewer_ids)
+                                lock (vidlock)
                                 {
                                     if (viewer_ids.Count > 0)
                                     {
@@ -96,7 +104,7 @@ namespace UmamusumeFriendPoint
                         }
                         if (vid2 == 0 && times > 0)
                         {
-                            lock (viewer_ids2)
+                            lock (vidlock)
                             {
                                 if (do_support_chara = viewer_ids2.Count > 0)
                                 {
@@ -114,27 +122,41 @@ namespace UmamusumeFriendPoint
                         if (!curfriend.Contains(vid))
                         {
                             Thread.Sleep(interval);
-                            client.Request(new FriendFollowRequest
+                            var resp0 = client.Request(new FriendFollowRequest
                             {
                                 friend_viewer_id = vid
                             });
+                            if (resp0?.data?.friend_data == null)
+                            {
+                                Log($"error when trying to follow {vid}");
+                                ForceRemove(vid);
+                                vid = 0;
+                                continue;
+                            }
                             curfriend.Enqueue(vid);
                         }
 
                         if (do_support_chara && !curfriend.Contains(vid2))
                         {
                             Thread.Sleep(interval);
-                            client.Request(new FriendFollowRequest
+                            var resp0 = client.Request(new FriendFollowRequest
                             {
                                 friend_viewer_id = vid2
                             });
+                            if (resp0?.data?.friend_data == null)
+                            {
+                                Log($"error when trying to follow {vid2}");
+                                ForceRemove(vid2);
+                                vid2 = 0;
+                                continue;
+                            }
                             curfriend.Enqueue(vid2);
                         }
 
                         while (curfriend.Count > friend_max)
                         {
                             Thread.Sleep(interval);
-                            client.Request(new FriendUnFollowerRequest
+                            client.Request(new FriendUnFollowRequest
                             {
                                 friend_viewer_id = curfriend.Dequeue()
                             });
@@ -150,6 +172,22 @@ namespace UmamusumeFriendPoint
 
                         Thread.Sleep(interval);
                         var support = infoCache[vid].user_support_card;
+
+                        if (support.support_card_id == 0)
+                        {
+                            Log($"error when getting support card for {vid}, force removing");
+                            ForceRemove(vid);
+                            vid = 0;
+                            continue;
+                        }
+
+                        if (do_support_chara && infoCache[vid2].user_trained_chara.trained_chara_id == 0)
+                        {
+                            Log($"error when getting support chara for {vid2}, force removing");
+                            ForceRemove(vid2);
+                            vid2 = 0;
+                            continue;
+                        }
 
                         var resp = client.RetryRequest(new SingleModeStartRequest
                         {
@@ -194,6 +232,22 @@ namespace UmamusumeFriendPoint
                     }
 
                 }
+                catch (ApiException apie)
+                {
+                    Console.WriteLine($"[Thread #{id}] ApiException: {apie.ResultCode}");
+                    if (apie.ResultCode == GallopResultCode.PARAM_ERROR)
+                    {
+                        Log($"error when getting support card for {vid} or support chara for {vid2}, force removing");
+                        ForceRemove(vid);
+                        ForceRemove(vid2);
+                        vid = 0;
+                        vid2 = 0;
+                        continue;
+                    }
+
+                    client.ResetAccount();
+                    continue;
+                }
                 catch (Exception e)
                 {
                     Console.WriteLine($"[Thread #{id}] {e}");
@@ -204,7 +258,7 @@ namespace UmamusumeFriendPoint
                     int vid22 = curfriend.Dequeue();
                     try
                     {
-                        client.Request(new FriendUnFollowerRequest
+                        client.Request(new FriendUnFollowRequest
                         {
                             friend_viewer_id = vid22
                         });
@@ -216,6 +270,12 @@ namespace UmamusumeFriendPoint
                 }
                 client.ResetAccount();
             }
+        }
+
+        private static void ForceRemove(int vid)
+        {
+            lock (vidlock) viewer_ids = new Queue<Job>(viewer_ids.Where(j => !(j.viewer_id == vid)));
+            lock (vidlock) viewer_ids2 = new Queue<Job>(viewer_ids2.Where(j => !(j.viewer_id == vid)));
         }
 
         private static void Load()
@@ -267,18 +327,25 @@ namespace UmamusumeFriendPoint
 
             while (true)
             {
-                var splits = Console.ReadLine().Split(' ');
-                Console.WriteLine($"adding job for viewer_id = {splits[0]}, times = {splits[1]}");
-                lock (viewer_ids) viewer_ids.Enqueue(new Job
+                try
                 {
-                    viewer_id = int.Parse(splits[0]),
-                    times = int.Parse(splits[1])
-                });
-                lock (viewer_ids2) viewer_ids2.Enqueue(new Job
+                    var splits = Console.ReadLine().Split(' ');
+                    Console.WriteLine($"adding job for viewer_id = {splits[0]}, times = {splits[1]}");
+                    lock (viewer_ids) viewer_ids.Enqueue(new Job
+                    {
+                        viewer_id = int.Parse(splits[0]),
+                        times = int.Parse(splits[1])
+                    });
+                    lock (viewer_ids2) viewer_ids2.Enqueue(new Job
+                    {
+                        viewer_id = int.Parse(splits[0]),
+                        times = 10
+                    });
+                }
+                catch (Exception e)
                 {
-                    viewer_id = int.Parse(splits[0]),
-                    times = 10
-                });
+                    Console.WriteLine(e.ToString());
+                }
             }
         }
 
