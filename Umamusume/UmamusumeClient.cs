@@ -129,7 +129,7 @@ namespace Umamusume
             }
         }
 
-        private void ResetConnection()
+        public void ResetConnection()
         {
             Type headertype = typeof(HttpClient).Assembly.GetType("System.Net.Http.Headers.HttpHeaderType");
             HttpClient client = new HttpClient(new HttpClientHandler

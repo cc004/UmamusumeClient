@@ -129,7 +129,7 @@ namespace UmamusumeFriendPoint
                                     friend_viewer_id = vid
                                 });
                             }
-                            catch (ApiException e) when e.ResultCode == GallopResultCode.FRIEND_FOLLOW_USER_FOLLOW_COUNT_OVER_ERROR
+                            catch (ApiException e) when (e.ResultCode == GallopResultCode.FRIEND_FOLLOW_USER_FOLLOW_COUNT_OVER_ERROR)
                             {
                                 Log($"error when trying to follow {vid}");
                                 ForceRemove(vid);
@@ -149,7 +149,7 @@ namespace UmamusumeFriendPoint
                                     friend_viewer_id = vid2
                                 });
                             }
-                            catch (ApiException e) when e.ResultCode == GallopResultCode.FRIEND_FOLLOW_USER_FOLLOW_COUNT_OVER_ERROR
+                            catch (ApiException e) when (e.ResultCode == GallopResultCode.FRIEND_FOLLOW_USER_FOLLOW_COUNT_OVER_ERROR)
                             {
                                 Log($"error when trying to follow {vid}");
                                 ForceRemove(vid);
@@ -195,22 +195,40 @@ namespace UmamusumeFriendPoint
                             continue;
                         }
 
-                        var resp = client.RetryRequest(new SingleModeStartRequest
+                        SingleModeStartResponse resp;
+                        try
                         {
-                            start_chara = new SingleModeStartChara(do_support_chara ? infoCache[vid2] : null)
+                            resp = client.RetryRequest(new SingleModeStartRequest
                             {
-                                card_id = 100701,
-                                support_card_ids = support_cards,
-                                friend_support_card_info = new SingleModeFriendSupportCardInfo
+                                start_chara = new SingleModeStartChara(do_support_chara ? infoCache[vid2] : null)
                                 {
-                                    support_card_id = support.support_card_id,
-                                    viewer_id = vid
+                                    card_id = 100701,
+                                    support_card_ids = support_cards,
+                                    friend_support_card_info = new SingleModeFriendSupportCardInfo
+                                    {
+                                        support_card_id = support.support_card_id,
+                                        viewer_id = vid
+                                    },
+                                    scenario_id = 1,
                                 },
-                                scenario_id = 1,
-                            },
-                            tp_info = client.tpInfo,
-                            current_money = client.current_money
-                        });
+                                tp_info = client.tpInfo,
+                                current_money = client.current_money
+                            });
+                        }
+                        catch (ApiException e) when (e.ResultCode == GallopResultCode.PARAM_ERROR)
+                        {
+                            Log($"error when getting support card for {vid}, force removing");
+                            ForceRemove(vid);
+                            vid = 0;
+                            throw;
+                        }
+                        catch (ApiException e) when (e.ResultCode == GallopResultCode.FRIEND_RENTAL_SUCCESSION)
+                        {
+                            Log($"error when getting chara for {vid2}, force removing");
+                            ForceRemove(vid2);
+                            vid2 = 0;
+                            throw;
+                        }
 
                         var @unchecked = resp.data.unchecked_event_array?.FirstOrDefault();
 
@@ -241,16 +259,6 @@ namespace UmamusumeFriendPoint
                 catch (ApiException apie)
                 {
                     Console.WriteLine($"[Thread #{id}] ApiException: {apie.ResultCode}");
-                    if (apie.ResultCode == GallopResultCode.PARAM_ERROR)
-                    {
-                        Log($"error when getting support card for {vid} or support chara for {vid2}, force removing");
-                        ForceRemove(vid);
-                        ForceRemove(vid2);
-                        vid = 0;
-                        vid2 = 0;
-                        continue;
-                    }
-
                     client.ResetAccount();
                     continue;
                 }
