@@ -187,6 +187,14 @@ namespace UmamusumeFriendPoint
                             continue;
                         }
 
+                        if (support.support_card_id == 30024)
+                        {
+                            Log($"force removing support card for {vid} due to 小栗帽");
+                            ForceRemove1(vid);
+                            vid = 0;
+                            continue;
+                        }
+
                         if (do_support_chara && infoCache[vid2].user_trained_chara.trained_chara_id == 0)
                         {
                             Log($"error when getting support chara for {vid2}, force removing");
@@ -272,6 +280,7 @@ namespace UmamusumeFriendPoint
                     int vid22 = curfriend.Dequeue();
                     try
                     {
+                        Thread.Sleep(interval);
                         client.Request(new FriendUnFollowRequest
                         {
                             friend_viewer_id = vid22
