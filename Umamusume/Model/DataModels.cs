@@ -2916,7 +2916,7 @@
 
         public int viewer_id;
         public int trained_chara_id;
-        public int? card_id;
+        public int card_id;
         public int? rank_score;
         public int? rank;
         public int? proper_distance_short;
