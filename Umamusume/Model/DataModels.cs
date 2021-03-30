@@ -1973,37 +1973,10 @@
         public int card_id;
         public int[] support_card_ids;
         public SingleModeFriendSupportCardInfo friend_support_card_info;
-        public readonly int succession_trained_chara_id_1;
-        public readonly int succession_trained_chara_id_2;
-        public readonly SingleModeRentalSuccessionChara rental_succession_trained_chara;
+        public int succession_trained_chara_id_1;
+        public int succession_trained_chara_id_2;
+        public SingleModeRentalSuccessionChara rental_succession_trained_chara;
         public int scenario_id;
-
-        public SingleModeStartChara(UserInfoAtFriend info = null)
-        {
-            if (info == null)
-            {
-                succession_trained_chara_id_1 = 4;
-                succession_trained_chara_id_2 = 1;
-                rental_succession_trained_chara = new SingleModeRentalSuccessionChara
-                {
-                    is_circle_member = false,
-                    trained_chara_id = 0,
-                    viewer_id = 0
-                };
-            }
-            else
-            {
-                succession_trained_chara_id_1 = 4;
-                succession_trained_chara_id_2 = 0;
-                rental_succession_trained_chara = new SingleModeRentalSuccessionChara
-                {
-                    is_circle_member = false,
-                    trained_chara_id = info.user_trained_chara.trained_chara_id,
-                    viewer_id = info.user_trained_chara.viewer_id
-                };
-            }
-        }
-
     }
 
 
@@ -2506,9 +2479,9 @@
     {
 
         public int? viewer_id;
-        public int? trained_chara_id;
+        public int trained_chara_id;
         public int? owner_viewer_id;
-        public int? card_id;
+        public int card_id;
         public string name;
         public int? stamina;
         public int? speed;

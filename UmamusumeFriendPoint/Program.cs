@@ -31,7 +31,7 @@ namespace UmamusumeFriendPoint
 
         private static void Log(string message)
         {
-            lock (loglock) File.WriteAllText("log.txt", message + "\n");
+            lock (loglock) File.AppendAllText("log.txt", message + "\n");
         }
 
         private static void FarmTask(int id)
@@ -88,7 +88,11 @@ namespace UmamusumeFriendPoint
                                         var job = viewer_ids.Peek();
                                         vid = job.viewer_id;
                                         --job.times;
-                                        if (job.times == 0) viewer_ids.Dequeue();
+                                        if (job.times == 0)
+                                        {
+                                            Log($"done 1 for {viewer_ids.Peek().viewer_id}");
+                                            viewer_ids.Dequeue();
+                                        }
                                         break;
                                     }
                                 }
@@ -104,7 +108,11 @@ namespace UmamusumeFriendPoint
                                     var job = viewer_ids2.Peek();
                                     vid2 = job.viewer_id;
                                     --job.times;
-                                    if (job.times == 0) viewer_ids2.Dequeue();
+                                    if (job.times == 0)
+                                    {
+                                        Log($"done 2 for {viewer_ids2.Peek().viewer_id}");
+                                        viewer_ids2.Dequeue();
+                                    }
                                 }
                             }
                         }
@@ -187,48 +195,89 @@ namespace UmamusumeFriendPoint
                         var exclude_chara = do_support_chara ? infoCache[vid2].user_trained_chara.card_id / 100 : 0;
                         var card_id = login.data.card_list.First(c => c.card_id / 100 != exclude_chara).card_id;
 
-                        var support_cards = new HashSet<int>();
+                        var support_cards = new List<int>();
+                        var exclude_charas = new HashSet<long>();
+                        var cards = new List<TrainedChara>();
+
                         long exclude_support = 0;
                         if (support_dict.TryGetValue(support.support_card_id, out var val))
                             exclude_support = val;
                         else
                             Console.WriteLine($"[Thread #{id}] support card {support.support_card_id} for {vid} not present in database, error may occured.");
 
-                        var exclude_charas = new HashSet<long>();
                         if (do_support_chara)
+                        {
                             exclude_charas.Add(exclude_chara);
+                            cards.Add(null);
+                        }
                         exclude_charas.Add(exclude_support);
-                        exclude_charas.Add(card_id / 100);
+
+                        while (cards.Count < 3)
+                        {
+                            var card = login.data.trained_chara.First(c => !exclude_charas.Contains(c.card_id / 100));
+                            exclude_charas.Add(card.card_id / 100);
+                            cards.Add(card);
+                        }
 
                         while (support_cards.Count < 5)
                         {
                             var scard = login.data.support_card_list.First(c => !exclude_charas.Contains(support_dict[c.support_card_id])).support_card_id;
                             exclude_charas.Add(support_dict[scard]);
                             support_cards.Add(scard);
-                        }    
+                        }
 
                         SingleModeStartResponse resp;
                         try
                         {
                             resp = client.RetryRequest(new SingleModeStartRequest
                             {
-                                start_chara = new SingleModeStartChara(do_support_chara ? infoCache[vid2] : null)
-                                {
-                                    card_id = card_id,
-                                    support_card_ids = support_cards.ToArray(),
-                                    friend_support_card_info = new SingleModeFriendSupportCardInfo
+                                start_chara = do_support_chara ?
+                                    new SingleModeStartChara
                                     {
-                                        support_card_id = support.support_card_id,
-                                        viewer_id = vid
+                                        succession_trained_chara_id_1 = cards[1].trained_chara_id,
+                                        succession_trained_chara_id_2 = 0,
+                                        rental_succession_trained_chara = new SingleModeRentalSuccessionChara
+                                        {
+                                            is_circle_member = false,
+                                            trained_chara_id = infoCache[vid2].user_trained_chara.trained_chara_id,
+                                            viewer_id = vid2
+                                        },
+                                        card_id = cards[2].card_id,
+                                        support_card_ids = support_cards.ToArray(),
+                                        friend_support_card_info = new SingleModeFriendSupportCardInfo
+                                        {
+                                            support_card_id = support.support_card_id,
+                                            viewer_id = vid
+                                        },
+                                        scenario_id = 1,
+                                    } :
+                                    new SingleModeStartChara
+                                    {
+                                        succession_trained_chara_id_1 = cards[1].trained_chara_id,
+                                        succession_trained_chara_id_2 = cards[0].trained_chara_id,
+                                        rental_succession_trained_chara = new SingleModeRentalSuccessionChara
+                                        {
+                                            is_circle_member = false,
+                                            trained_chara_id = 0,
+                                            viewer_id = 0
+                                        },
+                                        card_id = cards[2].card_id,
+                                        support_card_ids = support_cards.ToArray(),
+                                        friend_support_card_info = new SingleModeFriendSupportCardInfo
+                                        {
+                                            support_card_id = support.support_card_id,
+                                            viewer_id = vid
+                                        },
+                                        scenario_id = 1,
                                     },
-                                    scenario_id = 1,
-                                },
                                 tp_info = client.tpInfo,
                                 current_money = client.current_money
                             });
                         }
                         catch (ApiException e) when (e.ResultCode == GallopResultCode.PARAM_ERROR)
                         {
+                            Console.WriteLine($"error for support card {support.support_card_id} for {vid} or support chara {infoCache[vid2].user_trained_chara.card_id} of {vid2}");
+
                             if (exclude_support == 0)
                             {
                                 Log($"param error when unknown support card {support.support_card_id} for {vid}, force removing");
@@ -237,17 +286,15 @@ namespace UmamusumeFriendPoint
                             }
                             else if (vid2 != 0)
                             {
-                                Log($"unknown error for support chara {infoCache[vid2].user_trained_chara.card_id} of {vid2}, force removing");
+                                Log($"unknown error for support card {support.support_card_id} for {vid} or support chara {infoCache[vid2].user_trained_chara.card_id} of {vid2}, force removing");
                                 ForceRemove2(vid2);
                                 vid2 = 0;
                             }
                             else
                             {
-                                Log($"unknown error for support card {support.support_card_id} for {vid} or support chara {infoCache[vid2].user_trained_chara.card_id} of {vid2}, force removing");
+                                Log($"unknown error for support card {support.support_card_id} for {vid}, force removing");
                                 ForceRemove1(vid);
-                                vid = 0; 
-                                ForceRemove2(vid2);
-                                vid2 = 0;
+                                vid = 0;
                             }
                             throw;
                         }
@@ -370,13 +417,6 @@ namespace UmamusumeFriendPoint
             Load();
             var rnd = new Random();
 
-            for (int i = 0; i < 32; ++i)
-            {
-                Thread.Sleep(rnd.Next(0, 1000));
-                int  j = i;
-                new Thread(new ThreadStart(() => FarmTask(j))).Start();
-            }
-
             new Thread(new ThreadStart(() =>
             {
                 while (true)
@@ -392,6 +432,13 @@ namespace UmamusumeFriendPoint
                     }
                 }
             })).Start();
+
+            for (int i = 0; i < 1; ++i)
+            {
+                Thread.Sleep(rnd.Next(0, 1000));
+                int j = i;
+                new Thread(new ThreadStart(() => FarmTask(j))).Start();
+            }
 
             while (true)
             {
