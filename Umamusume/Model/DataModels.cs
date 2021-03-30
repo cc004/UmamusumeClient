@@ -2685,9 +2685,9 @@
     public class UserCard
     {
 
-        public int? card_id;
-        public int? rarity;
-        public int? talent_level;
+        public int card_id;
+        public int rarity;
+        public int talent_level;
         public string create_time;
 
 
@@ -2873,9 +2873,9 @@
     public class UserSupportCardAtFriend
     {
 
-        public int? support_card_id;
-        public int? exp;
-        public int? limit_break_count;
+        public int support_card_id;
+        public int exp;
+        public int limit_break_count;
 
 
 

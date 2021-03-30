@@ -115,6 +115,7 @@ namespace Umamusume
             {
                 try
                 {
+                    Thread.Sleep(interval);
                     return Request(request);
                 }
                 catch (ApiException)
@@ -125,7 +126,6 @@ namespace Umamusume
                 {
                     if (--count == 0) throw;
                 }
-                Thread.Sleep(interval);
             }
         }
 
@@ -261,9 +261,9 @@ namespace Umamusume
             ResVer = resp.data.resource_version;
         }
 
-        public void Login()
+        public LoginResponse Login()
         {
-            RetryRequest(new LoginRequest());
+            return RetryRequest(new LoginRequest());
         }
 
         public PresentReceiveAllResponse.CommonResponse ReceivePresents()
