@@ -226,13 +226,13 @@ namespace UmamusumeFriendPoint
                         {
                             if (exclude_support == 0)
                             {
-                                Log($"param error when unknown support card for {vid}, force removing");
+                                Log($"param error when unknown support card {support.support_card_id} for {vid}, force removing");
                                 ForceRemove1(vid);
                                 vid = 0;
                             }
                             else if (vid2 != 0)
                             {
-                                Log($"unknown error for support chara of {vid2}, force removing");
+                                Log($"unknown error for support chara {infoCache[vid2].user_trained_chara.card_id} of {vid2}, force removing");
                                 ForceRemove2(vid2);
                                 vid2 = 0;
                             }
@@ -357,7 +357,7 @@ namespace UmamusumeFriendPoint
             Load();
             var rnd = new Random();
 
-            for (int i = 0; i < 1; ++i)
+            for (int i = 0; i < 32; ++i)
             {
                 Thread.Sleep(rnd.Next(0, 1000));
                 int  j = i;
