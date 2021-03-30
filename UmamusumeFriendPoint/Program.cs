@@ -185,6 +185,8 @@ namespace UmamusumeFriendPoint
                         }
 
                         var exclude_chara = do_support_chara ? infoCache[vid2].user_trained_chara.card_id / 100 : 0;
+                        var card_id = login.data.card_list.First(c => c.card_id / 100 != exclude_chara).card_id;
+
                         var support_cards = new HashSet<int>();
                         long exclude_support = 0;
                         if (support_dict.TryGetValue(support.support_card_id, out var val))
@@ -193,7 +195,10 @@ namespace UmamusumeFriendPoint
                             Console.WriteLine($"[Thread #{id}] support card {support.support_card_id} for {vid} not present in database, error may occured.");
 
                         var exclude_charas = new HashSet<long>();
+                        if (do_support_chara)
+                            exclude_charas.Add(exclude_chara);
                         exclude_charas.Add(exclude_support);
+                        exclude_charas.Add(card_id / 100);
 
                         while (support_cards.Count < 5)
                         {
@@ -209,7 +214,7 @@ namespace UmamusumeFriendPoint
                             {
                                 start_chara = new SingleModeStartChara(do_support_chara ? infoCache[vid2] : null)
                                 {
-                                    card_id = login.data.card_list.First(c => c.card_id / 100 != exclude_chara).card_id,
+                                    card_id = card_id,
                                     support_card_ids = support_cards.ToArray(),
                                     friend_support_card_info = new SingleModeFriendSupportCardInfo
                                     {
@@ -233,6 +238,14 @@ namespace UmamusumeFriendPoint
                             else if (vid2 != 0)
                             {
                                 Log($"unknown error for support chara {infoCache[vid2].user_trained_chara.card_id} of {vid2}, force removing");
+                                ForceRemove2(vid2);
+                                vid2 = 0;
+                            }
+                            else
+                            {
+                                Log($"unknown error for support card {support.support_card_id} for {vid} or support chara {infoCache[vid2].user_trained_chara.card_id} of {vid2}, force removing");
+                                ForceRemove1(vid);
+                                vid = 0; 
                                 ForceRemove2(vid2);
                                 vid2 = 0;
                             }
