@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Umamusume;
 using Umamusume.Model;
+using Umamusume.Model.Master;
 
 namespace UmamusumeFriendPoint
 {
@@ -23,17 +24,10 @@ namespace UmamusumeFriendPoint
         private static Queue<Job> viewer_ids2 = new Queue<Job>();
         private static readonly object vidlock = new object();
 
-        private static readonly int[] support_cards = new int[]
-        {
-            10027,
-            10032,
-            10005,
-            10009,
-            10010
-        };
-        private const int interval = 800;
-
         private static readonly object loglock = new object();
+
+        private static readonly Dictionary<long, long> support_dict = MasterContext.Instance.SupportCardData
+            .ToDictionary(card => card.Id, card => card.CharaId);
 
         private static void Log(string message)
         {
@@ -62,10 +56,10 @@ namespace UmamusumeFriendPoint
                     //File.WriteAllText("account.json", JsonConvert.SerializeObject(client.Account));
                     client.StartSession();
                     client.Login();
-                    client.Request(new TutorialSkipRequest());
+                    client.RetryRequest(new TutorialSkipRequest());
 
                     client.StartSession();
-                    client.Login();
+                    var login = client.Login();
                     var presents = client.ReceivePresents().reward_summary_info.add_item_list;
 
                     const int friend_max = 20;
@@ -76,7 +70,6 @@ namespace UmamusumeFriendPoint
                         {
                             if (client.FCoin < 100) break;
                             Console.WriteLine($"[Thread #{id}] recovering tp");
-                            Thread.Sleep(interval);
                             client.RetryRequest(new RecoveryTrainerPointRequest
                             {
                                 count = 10,
@@ -121,10 +114,9 @@ namespace UmamusumeFriendPoint
 
                         if (!curfriend.Contains(vid))
                         {
-                            Thread.Sleep(interval);
                             try
                             {
-                                client.Request(new FriendFollowRequest
+                                client.RetryRequest(new FriendFollowRequest
                                 {
                                     friend_viewer_id = vid
                                 });
@@ -141,10 +133,9 @@ namespace UmamusumeFriendPoint
 
                         if (do_support_chara && !curfriend.Contains(vid2))
                         {
-                            Thread.Sleep(interval);
                             try
                             {
-                                client.Request(new FriendFollowRequest
+                                client.RetryRequest(new FriendFollowRequest
                                 {
                                     friend_viewer_id = vid2
                                 });
@@ -161,8 +152,7 @@ namespace UmamusumeFriendPoint
 
                         while (curfriend.Count > friend_max)
                         {
-                            Thread.Sleep(interval);
-                            client.Request(new FriendUnFollowRequest
+                            client.RetryRequest(new FriendUnFollowRequest
                             {
                                 friend_viewer_id = curfriend.Dequeue()
                             });
@@ -176,20 +166,11 @@ namespace UmamusumeFriendPoint
                                     infoCache.Add(info.viewer_id, info);
                         }
 
-                        Thread.Sleep(interval);
                         var support = infoCache[vid].user_support_card;
 
                         if (support.support_card_id == 0)
                         {
-                            Log($"error when getting support card for {vid}, force removing");
-                            ForceRemove1(vid);
-                            vid = 0;
-                            continue;
-                        }
-
-                        if (support.support_card_id == 30024)
-                        {
-                            Log($"force removing support card for {vid} due to 小栗帽");
+                            Log($"support card for {vid} is none, force removing");
                             ForceRemove1(vid);
                             vid = 0;
                             continue;
@@ -197,11 +178,29 @@ namespace UmamusumeFriendPoint
 
                         if (do_support_chara && infoCache[vid2].user_trained_chara.trained_chara_id == 0)
                         {
-                            Log($"error when getting support chara for {vid2}, force removing");
+                            Log($"support chara for {vid2} is none, force removing");
                             ForceRemove2(vid2);
                             vid2 = 0;
                             continue;
                         }
+
+                        var exclude_chara = do_support_chara ? infoCache[vid2].user_trained_chara.card_id / 100 : 0;
+                        var support_cards = new HashSet<int>();
+                        long exclude_support = 0;
+                        if (support_dict.TryGetValue(support.support_card_id, out var val))
+                            exclude_support = val;
+                        else
+                            Console.WriteLine($"[Thread #{id}] support card {support.support_card_id} for {vid} not present in database, error may occured.");
+
+                        var exclude_charas = new HashSet<long>();
+                        exclude_charas.Add(exclude_support);
+
+                        while (support_cards.Count < 5)
+                        {
+                            var scard = login.data.support_card_list.First(c => !exclude_charas.Contains(support_dict[c.support_card_id])).support_card_id;
+                            exclude_charas.Add(support_dict[scard]);
+                            support_cards.Add(scard);
+                        }    
 
                         SingleModeStartResponse resp;
                         try
@@ -210,8 +209,8 @@ namespace UmamusumeFriendPoint
                             {
                                 start_chara = new SingleModeStartChara(do_support_chara ? infoCache[vid2] : null)
                                 {
-                                    card_id = 100701,
-                                    support_card_ids = support_cards,
+                                    card_id = login.data.card_list.First(c => c.card_id / 100 != exclude_chara).card_id,
+                                    support_card_ids = support_cards.ToArray(),
                                     friend_support_card_info = new SingleModeFriendSupportCardInfo
                                     {
                                         support_card_id = support.support_card_id,
@@ -225,9 +224,18 @@ namespace UmamusumeFriendPoint
                         }
                         catch (ApiException e) when (e.ResultCode == GallopResultCode.PARAM_ERROR)
                         {
-                            Log($"error when getting support card for {vid}, force removing");
-                            ForceRemove1(vid);
-                            vid = 0;
+                            if (exclude_support == 0)
+                            {
+                                Log($"param error when unknown support card for {vid}, force removing");
+                                ForceRemove1(vid);
+                                vid = 0;
+                            }
+                            else if (vid2 != 0)
+                            {
+                                Log($"unknown error for support chara of {vid2}, force removing");
+                                ForceRemove2(vid2);
+                                vid2 = 0;
+                            }
                             throw;
                         }
                         catch (ApiException e) when (e.ResultCode == GallopResultCode.FRIEND_RENTAL_SUCCESSION)
@@ -242,7 +250,6 @@ namespace UmamusumeFriendPoint
 
                         while (@unchecked != null)
                         {
-                            Thread.Sleep(interval);
                             @unchecked = client.RetryRequest(new SingleModeCheckEventRequest
                             {
                                 event_id = @unchecked.event_id,
@@ -252,7 +259,6 @@ namespace UmamusumeFriendPoint
                             }).data.unchecked_event_array?.FirstOrDefault();
                         }
 
-                        Thread.Sleep(interval);
                         client.RetryRequest(new SingleModeFinishRequest
                         {
                             is_force_delete = true,
@@ -263,6 +269,13 @@ namespace UmamusumeFriendPoint
                         vid = 0; vid2 = 0;
                     }
 
+                }
+                catch (ApiException apie) when (apie.ResultCode == GallopResultCode.SESSION_ERROR)
+                {
+                    Console.WriteLine($"[Thread #{id}] Session Error, re-logining in");
+                    client.StartSession();
+                    client.Login();
+                    continue;
                 }
                 catch (ApiException apie)
                 {
@@ -280,8 +293,7 @@ namespace UmamusumeFriendPoint
                     int vid22 = curfriend.Dequeue();
                     try
                     {
-                        Thread.Sleep(interval);
-                        client.Request(new FriendUnFollowRequest
+                        client.RetryRequest(new FriendUnFollowRequest
                         {
                             friend_viewer_id = vid22
                         });
@@ -343,9 +355,11 @@ namespace UmamusumeFriendPoint
         public static void Main(string[] args)
         {
             Load();
+            var rnd = new Random();
 
-            for (int i = 0; i < 32; ++i)
+            for (int i = 0; i < 1; ++i)
             {
+                Thread.Sleep(rnd.Next(0, 1000));
                 int  j = i;
                 new Thread(new ThreadStart(() => FarmTask(j))).Start();
             }
