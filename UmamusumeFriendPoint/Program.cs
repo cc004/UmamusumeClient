@@ -433,7 +433,7 @@ namespace UmamusumeFriendPoint
                 }
             })).Start();
 
-            for (int i = 0; i < 1; ++i)
+            for (int i = 0; i < 32; ++i)
             {
                 Thread.Sleep(rnd.Next(0, 1000));
                 int j = i;
