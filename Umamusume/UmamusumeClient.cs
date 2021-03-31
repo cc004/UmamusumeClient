@@ -18,6 +18,7 @@ namespace Umamusume
         public GallopResultCode ResultCode;
         public Tuple<string, string> pair;
 
+
         public ApiException(string req, string res, string msg) : base(msg)
         {
             pair = new Tuple<string, string>(req, res);
@@ -39,6 +40,10 @@ namespace Umamusume
         private const string appver = "1.2.8";
         private const string apiroot = "https://api-umamusume.cygames.jp/umamusume";
         private const string proxy_server = "127.0.0.1:1080";
+
+        public static int _reqnum = 0;
+
+        public static int Reqnum => Interlocked.Exchange(ref _reqnum, 0);
 
         public Account Account { get; private set; }
         private HttpClient client = new HttpClient(new HttpClientHandler
@@ -222,6 +227,8 @@ namespace Umamusume
                 var money2 = money.current_money;
                 if (money2 != null) current_money = (int)money2;
             }
+
+            Interlocked.Increment(ref _reqnum);
 
             return obj;
         }
