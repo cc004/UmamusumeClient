@@ -20,6 +20,8 @@ namespace UmamusumeFriendPoint
 
     class Program
     {
+        private static int finish_count = 0;
+
         private static Queue<Job> viewer_ids = new Queue<Job>();
         private static Queue<Job> viewer_ids2 = new Queue<Job>();
         private static readonly object vidlock = new object();
@@ -327,6 +329,7 @@ namespace UmamusumeFriendPoint
 
                         Console.WriteLine($"[Thread #{id}] done for ({vid}, {vid2})");
                         vid = 0; vid2 = 0;
+                        Interlocked.Increment(ref finish_count);
                     }
 
                 }
@@ -428,7 +431,44 @@ namespace UmamusumeFriendPoint
                     {
                         if (viewer_ids.Count == 0) Console.WriteLine($"[Watchdog] current job: None");
                         else Console.WriteLine($"[Watchdog] current job: {viewer_ids.Peek().times} times for {viewer_ids.Peek().viewer_id}");
-                        Console.WriteLine($"[Watchdog] remaining jobs {viewer_ids.Sum(j => j.times)} for vid = {string.Join(',', viewer_ids.Select(j => j.viewer_id))}");
+                        var count = viewer_ids.Sum(j => j.times);
+                        Console.WriteLine($"[Watchdog] remaining jobs {count} for vid = {string.Join(',', viewer_ids.Select(j => j.viewer_id))}");
+                        var speed = Interlocked.Exchange(ref finish_count, 0);
+                        var req_speed = UmamusumeClient.Reqnum / 10.0;
+                        Console.WriteLine($"[Watchdog] current speed {speed * 0.36:f1} wpt/h, {req_speed:f1} req/s");
+                        if (speed != 0)
+                        {
+                            var timeneed = new TimeSpan(0, 0, count * 10 / speed);
+                            Console.WriteLine($"[Watchdog] etc {timeneed}, finished in {DateTime.Now + timeneed}");
+                        }
+                        else
+                            Console.WriteLine($"[Watchdog] etc --, finished in --");
+                    }
+                }
+            })).Start();
+
+            new Thread(new ThreadStart(() =>
+            {
+                while (true)
+                {
+                    try
+                    {
+                        var splits = Console.ReadLine().Split(' ');
+                        Console.WriteLine($"adding job for viewer_id = {splits[0]}, times = {splits[1]}");
+                        lock (viewer_ids) viewer_ids.Enqueue(new Job
+                        {
+                            viewer_id = int.Parse(splits[0]),
+                            times = int.Parse(splits[1])
+                        });
+                        lock (viewer_ids2) viewer_ids2.Enqueue(new Job
+                        {
+                            viewer_id = int.Parse(splits[0]),
+                            times = 10
+                        });
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.ToString());
                     }
                 }
             })).Start();
@@ -440,28 +480,6 @@ namespace UmamusumeFriendPoint
                 new Thread(new ThreadStart(() => FarmTask(j))).Start();
             }
 
-            while (true)
-            {
-                try
-                {
-                    var splits = Console.ReadLine().Split(' ');
-                    Console.WriteLine($"adding job for viewer_id = {splits[0]}, times = {splits[1]}");
-                    lock (viewer_ids) viewer_ids.Enqueue(new Job
-                    {
-                        viewer_id = int.Parse(splits[0]),
-                        times = int.Parse(splits[1])
-                    });
-                    lock (viewer_ids2) viewer_ids2.Enqueue(new Job
-                    {
-                        viewer_id = int.Parse(splits[0]),
-                        times = 10
-                    });
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.ToString());
-                }
-            }
         }
 
     }
