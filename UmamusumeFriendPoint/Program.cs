@@ -153,9 +153,9 @@ namespace UmamusumeFriendPoint
                             }
                             catch (ApiException e) when (e.ResultCode == GallopResultCode.FRIEND_FOLLOW_USER_FOLLOW_COUNT_OVER_ERROR)
                             {
-                                Log($"error when trying to follow {vid}");
-                                ForceRemove(vid);
-                                vid = 0;
+                                Log($"error when trying to follow {vid2}");
+                                ForceRemove(vid2);
+                                vid2 = 0;
                                 throw;
                             }
                             curfriend.Enqueue(vid2);
