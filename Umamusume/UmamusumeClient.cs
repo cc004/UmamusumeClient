@@ -114,7 +114,7 @@ namespace Umamusume
             client.DefaultRequestHeaders.Remove("ViewerID");
         }
 
-        public TResult RetryRequest<TResult>(RequestBase<TResult> request, int count = 3, int interval = 1000) where TResult : ResponseCommon
+        public TResult RetryRequest<TResult>(RequestBase<TResult> request, int count = 3, int interval = 800) where TResult : ResponseCommon
         {
             while (true)
             {
