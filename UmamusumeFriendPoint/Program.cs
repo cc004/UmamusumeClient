@@ -33,7 +33,8 @@ namespace UmamusumeFriendPoint
 
         private static void Log(string message)
         {
-            lock (loglock) File.AppendAllText("log.txt", message + "\n");
+            var now = DateTime.Now;
+            lock (loglock) File.AppendAllText($"log-{now:MM-dd}.txt", $"{now}] {message}\n");
         }
 
         private static void FarmTask(int id)
