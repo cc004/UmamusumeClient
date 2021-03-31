@@ -279,7 +279,7 @@ namespace UmamusumeFriendPoint
                         }
                         catch (ApiException e) when (e.ResultCode == GallopResultCode.PARAM_ERROR)
                         {
-                            Console.WriteLine($"error for support card {support.support_card_id} for {vid} or support chara {infoCache[vid2].user_trained_chara.card_id} of {vid2}");
+                            Console.WriteLine($"error for support card {support.support_card_id} for {vid} or support chara {(vid2 == 0 ? null : infoCache[vid2].user_trained_chara.card_id)} of {vid2}");
 
                             if (exclude_support == 0)
                             {
