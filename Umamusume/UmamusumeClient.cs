@@ -155,7 +155,7 @@ namespace Umamusume
             this.client = client;
         }
 
-        public TResult Request<TResult>(RequestBase<TResult> request) where TResult : ResponseCommon
+        private TResult Request<TResult>(RequestBase<TResult> request) where TResult : ResponseCommon
         {
             //var arr = CommonHeader.Concat(Utils.Hex2bin(Account.SessionId)).Concat(Account.udid.ToString())
             IEnumerable<byte> head = Convert.FromBase64String(header)
