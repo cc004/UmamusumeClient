@@ -44,6 +44,7 @@ namespace Umamusume
             [30022] = "[『エース』として]",
             [30023] = "[『幸せ』が舞う時]",
             [30024] = "[『愛してもらうんだぞ』]オグリキャップ",
+            [30025] = "[某张卡]",
             [30026] = "[ターボエンジン全開宣言!]ツインターボ",
             [30027] = "[バ力と笑え]メジロパーマー",
             [30028] = "[迫る熱に押されて]",
@@ -53,7 +54,7 @@ namespace Umamusume
         private static void SaveTo(UmamusumeClient client, SQLiteConnection conn)
         {
             string pwd = Utils.GenRandomPassword();
-            client.Request(new ChangeNameRequest
+            client.RetryRequest(new ChangeNameRequest
             {
                 name = "init"
             });
@@ -79,6 +80,9 @@ namespace Umamusume
                 Console.WriteLine($"{client.LogPrefix}未知的id{invalid.Key}，请尝试更新版本。");
             }
         }
+
+        private static int gachaid = 0;
+        private static readonly object gachaidlock = new object();
         private static void RegisterTask(int id)
         {
             UmamusumeClient client = new UmamusumeClient(new SimpleLz4Frame(id))
@@ -94,28 +98,30 @@ namespace Umamusume
                     //File.WriteAllText("account.json", JsonConvert.SerializeObject(client.Account));
                     client.StartSession();
                     client.Login();
-                    client.Request(new TutorialSkipRequest());
+                    client.RetryRequest(new TutorialSkipRequest());
 
                     client.StartSession();
                     client.Login();
                     var presents = client.ReceivePresents().reward_summary_info.add_item_list;
+                    int _gachaid;
 
-                    GachaInfoList[] gachas = client.Request(new GachaLoadRequest()).data.gacha_info_list;
-                    int gachaid = gachas.Where(gachas => gachas.id / 10000 == 3).Select(gachas => gachas.id).Max();
+                    lock (gachaidlock)
+                    {
+                        if (gachaid == 0)
+                        {
+                            GachaInfoList[] gachas = client.RetryRequest(new GachaLoadRequest()).data.gacha_info_list;
+                            gachaid = gachas.Where(gachas => gachas.id / 10000 == 3).Select(gachas => gachas.id).Max();
+                        }
+                        _gachaid = gachaid;
+                    }
 
                     while (client.FCoin >= 1500)
-                    {
-                        client.Gacha(gachaid);
-                        Thread.Sleep(700);
-                    }
+                        client.Gacha(_gachaid);
 
                     const int ssrticket_id = 114;
 
                     for (int i = presents.SingleOrDefault(i => i.item_id == ssrticket_id)?.number ?? 0; i >0; --i)
-                    {
                         client.Gacha(20002, 1, ssrticket_id, i);
-                        Thread.Sleep(700);
-                    }
 
                     Console.WriteLine($"[Thread #{id}] gacha get = {client.Account.extra.support_cards.Count}");
                     int count = client.Account.extra.support_cards.Sum(p => p.Value);
@@ -153,18 +159,13 @@ namespace Umamusume
             */
             client.StartSession();
             client.Login();
-
-            client.Request(new FriendSearchRequest
-            {
-                friend_viewer_id = 510080728
-            });
         }
 
         private static void Main(string[] args)
         {
             //Test();
             ThreadPool.SetMaxThreads(512, 512);
-            ThreadPool.SetMaxThreads(128, 128);
+            ThreadPool.SetMinThreads(128, 128);
             conn = new SQLiteConnection("data source=accounts.db");
             conn.Open();
             conn2 = new SQLiteConnection("data source=accounts2.db");
@@ -204,11 +205,11 @@ namespace Umamusume
 
             }
 
-            for (int i = 0; i < 16; ++i)
+            for (int i = 0; i < 64; ++i)
             {
                 int j = i;
                 new Thread(new ThreadStart(() => RegisterTask(j))).Start();
-                Thread.Sleep(2000);
+                Thread.Sleep(500);
             }
         }
     }
