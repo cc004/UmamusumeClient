@@ -11,6 +11,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using Umamusume.Model;
+using Umamusume.Model.Master;
 
 namespace Umamusume
 {
@@ -18,38 +19,9 @@ namespace Umamusume
     {
         private static SQLiteConnection conn;
         private static SQLiteConnection conn2;
-        private static readonly SortedDictionary<int, string> cards = new SortedDictionary<int, string>
-        {
-            [30001] = "[日本一のステージを]",
-            [30002] = "[輝く景色の、その先に]",
-            [30003] = "[夢は掲げるものなのだっ！]",
-            [30004] = "[不沈艦の進撃]",
-            [30005] = "[ロード・オブ・ウオッカ]",
-            [30006] = "[千紫万紅にまぎれぬ一凛]",
-            [30007] = "[パッションチャンピオーナ！]",
-            [30008] = "[待望の大謀]",
-            [30009] = "[天をも切り裂くイナズマ娘！]",
-            [30010] = "[感謝は指先まで込めて]",
-            [30011] = "[飛び出せ、キラメケ]",
-            [30012] = "[B・N・Winner!!]",
-            [30013] = "[7センチの先へ]",
-            [30014] = "[Run(my)way]",
-            [30015] = "[はやい！うまい！はやい！]",
-            [30016] = "[一粒の安らぎ]",
-            [30017] = "[これが私のウマドル道☆]",
-            [30018] = "[まだ小さな蕾でも]",
-            [30019] = "[うらら～な休日]",
-            [30020] = "[必殺！Wキャロットパンチ！]",
-            [30021] = "[ようこそ、トレセン学園へ！]",
-            [30022] = "[『エース』として]",
-            [30023] = "[『幸せ』が舞う時]",
-            [30024] = "[『愛してもらうんだぞ』]オグリキャップ",
-            [30025] = "[某张卡]",
-            [30026] = "[ターボエンジン全開宣言!]ツインターボ",
-            [30027] = "[バ力と笑え]メジロパーマー",
-            [30028] = "[迫る熱に押されて]",
-            [30029] = "[その背中を越えて]"
-        };
+        private static readonly SortedDictionary<int, string> cards = new SortedDictionary<int, string>(MasterContext.Instance
+            .TextData.Where(c => c.Category == 75 && c.Index > 30000)
+            .ToDictionary(c => (int)c.Index, c => c.Text));
 
         private static void SaveTo(UmamusumeClient client, SQLiteConnection conn)
         {
