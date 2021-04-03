@@ -337,8 +337,15 @@ namespace UmamusumeFriendPoint
                 catch (ApiException apie) when (apie.ResultCode == GallopResultCode.SESSION_ERROR)
                 {
                     Console.WriteLine($"[Thread #{id}] Session Error, re-logining in");
-                    client.StartSession();
-                    client.Login();
+                    try
+                    {
+                        client.StartSession();
+                        client.Login();
+                    }
+                    catch
+                    {
+                        client.ResetAccount();
+                    }
                     continue;
                 }
                 catch (ApiException apie)
