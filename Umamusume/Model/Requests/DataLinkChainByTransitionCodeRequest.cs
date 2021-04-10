@@ -14,6 +14,7 @@ namespace Umamusume.Model
 
 
 
+        protected override string Url => "/account/chain_by_transition_code";
 
 
         public DataLinkChainByTransitionCodeRequest()
