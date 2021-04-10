@@ -117,9 +117,9 @@ namespace Umamusume
 
         private static void Test()
         {
-            UmamusumeClient client = new UmamusumeClient(JsonConvert.DeserializeObject<Account>(File.ReadAllText("account.json")), new SimpleLz4Frame(0))
+            UmamusumeClient client = new UmamusumeClient(new SimpleLz4Frame(0))
             {
-                LogPrefix = ""
+                LogPrefix = string.Empty
             };
             /*
             client.Signup();
@@ -129,13 +129,22 @@ namespace Umamusume
             client.Login();
             client.Request(new TutorialSkipRequest());
             */
+            //client.StartSession();
+            var pwd = client.RetryRequest(new DataLinkChainByTransitionCodeRequest()
+            {
+                input_viewer_id = 934663949,
+                password = Utils.Bin2Hex(Utils.MakeMd5("Aa123456"))
+            }).data.auth_key;
+            client.Account.ViewerId = 934663949;
+            client.Account.Authkey = pwd;
             client.StartSession();
             client.Login();
+
         }
 
         private static void Main(string[] args)
         {
-            //Test();
+            Test();
             ThreadPool.SetMaxThreads(512, 512);
             ThreadPool.SetMinThreads(128, 128);
             conn = new SQLiteConnection("data source=accounts.db");
