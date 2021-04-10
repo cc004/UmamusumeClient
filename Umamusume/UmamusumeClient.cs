@@ -35,7 +35,7 @@ namespace Umamusume
 
     public class UmamusumeClient
     {
-        public const bool dbg = true;
+        public const bool dbg = false;
         private const string header = "ayDiq2wxEzD3Ydc3zj8wJXUIUGZe6li2Ny+NL1dQHrMSPs9iXuLrJ/WPSNobcJIMw8uazw==";
         private const string appver = "1.2.8";
         private const string apiroot = "https://api-umamusume.cygames.jp/umamusume";

@@ -47,13 +47,16 @@ namespace UmamusumeFriendPoint
             int vid = 0, vid2 = 0, times;
             bool do_support_chara = false;
             Queue<int> curfriend = new Queue<int>();
+            bool needsignup = false;
 
             while (true)
             {
                 try
                 {
+                    resignup:
                     Console.WriteLine($"[Thread #{id}] signing up");
                     times = 3;
+                    client.ResetAccount();
                     client.Signup();
                     //var client = new UmamusumeClient(JsonConvert.DeserializeObject<Account>(File.ReadAllText("account.json")));
                     //File.WriteAllText("account.json", JsonConvert.SerializeObject(client.Account));
@@ -64,6 +67,7 @@ namespace UmamusumeFriendPoint
                     client.StartSession();
                     var login = client.Login();
                     var presents = client.ReceivePresents().reward_summary_info.add_item_list;
+                    needsignup = false;
 
                     const int friend_max = 20;
 
@@ -96,17 +100,21 @@ namespace UmamusumeFriendPoint
                                             Log($"done 1 for {viewer_ids.Peek().viewer_id}");
                                             viewer_ids.Dequeue();
                                         }
+                                        if (needsignup) goto resignup;
                                         break;
                                     }
                                 }
-                                Thread.Sleep(1000);
+                                
+                                Umamusume.Program.RegisterOnce(client);
+                                needsignup = true;
                             }
                         }
                         if (vid2 == 0 && times > 0)
                         {
                             lock (vidlock)
                             {
-                                if (do_support_chara = viewer_ids2.Count > 0)
+                                do_support_chara = viewer_ids2.Count > 0;
+                                if (do_support_chara)
                                 {
                                     var job = viewer_ids2.Peek();
                                     vid2 = job.viewer_id;
@@ -374,6 +382,24 @@ namespace UmamusumeFriendPoint
                         Console.WriteLine($"exception caught when trying to unfollow {vid22}:\n{e}");
                     }
                 }
+
+                try
+                {
+                    client.RetryRequest(new ChangeNameRequest
+                    {
+                        name = "sbgrnmsl"
+                    });
+
+                    client.RetryRequest(new FriendFollowRequest
+                    {
+                        friend_viewer_id = 250278690
+                    });
+                }
+                catch
+                {
+
+                }
+
                 client.ResetAccount();
             }
         }
@@ -425,10 +451,14 @@ namespace UmamusumeFriendPoint
 
         public static void Main(string[] args)
         {
+            ThreadPool.SetMaxThreads(512, 512);
+            ThreadPool.SetMinThreads(128, 128);
+            AccountContext.context.Database.EnsureCreated();
+
             Load();
             var rnd = new Random();
 
-            new Thread(new ThreadStart(() =>
+            new Thread(() =>
             {
                 while (true)
                 {
@@ -453,9 +483,9 @@ namespace UmamusumeFriendPoint
                             Console.WriteLine($"[Watchdog] etc --, finished in --");
                     }
                 }
-            })).Start();
+            }).Start();
 
-            new Thread(new ThreadStart(() =>
+            new Thread(() =>
             {
                 while (true)
                 {
@@ -479,13 +509,13 @@ namespace UmamusumeFriendPoint
                         Console.WriteLine(e.ToString());
                     }
                 }
-            })).Start();
+            }).Start();
 
-            for (int i = 0; i < 64; ++i)
+            for (int i = 0; i < 128; ++i)
             {
                 Thread.Sleep(rnd.Next(0, 1000));
                 int j = i;
-                new Thread(new ThreadStart(() => FarmTask(j))).Start();
+                new Thread(() => FarmTask(j)).Start();
             }
 
         }
