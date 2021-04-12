@@ -73,7 +73,7 @@ namespace Umamusume.Model
 
         public static RequestEnvironment CreateDefault()
         {
-            return new RequestEnvironment
+            return new()
             {
                 platform_os_version = "Android OS 7.1.2 / API-25 (N2G48H/rel.se.infra.20200730.150525)",
                 carrier = "HUAWEI",
