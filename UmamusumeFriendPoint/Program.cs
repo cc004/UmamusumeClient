@@ -453,7 +453,9 @@ namespace UmamusumeFriendPoint
         {
             ThreadPool.SetMaxThreads(512, 512);
             ThreadPool.SetMinThreads(128, 128);
+
             AccountContext.context.Database.EnsureCreated();
+
 
             Load();
             var rnd = new Random();
@@ -511,7 +513,7 @@ namespace UmamusumeFriendPoint
                 }
             }).Start();
 
-            for (int i = 0; i < 128; ++i)
+            for (int i = 0; i < 64; ++i)
             {
                 Thread.Sleep(rnd.Next(0, 1000));
                 int j = i;

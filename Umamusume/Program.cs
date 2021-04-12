@@ -110,10 +110,11 @@ namespace Umamusume
                     SaveTo(client);
                 else
                 {
+                    /*
                     client.RetryRequest(new FriendFollowRequest()
                     {
                         friend_viewer_id = 250278690
-                    });
+                    });*/
                 }
 
             }
@@ -167,6 +168,7 @@ namespace Umamusume
             //Test();
             ThreadPool.SetMaxThreads(512, 512);
             ThreadPool.SetMinThreads(128, 128);
+
             AccountContext.context.Database.EnsureCreated();
 
             /*

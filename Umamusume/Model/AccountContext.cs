@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +15,11 @@ namespace Umamusume.Model
         public DbSet<DBAccount> Account { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlite("Data Source=accounts.db");
+        {
+            var sql = File.ReadAllText("sqlstring.txt");
+            if (sql.StartsWith("sqlite:")) options.UseSqlite(sql.Substring(7));
+            if (sql.StartsWith("mysql:")) options.UseMySQL(sql.Substring(6));
+        }
     }
 
     public class DBAccount
