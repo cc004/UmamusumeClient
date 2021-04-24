@@ -36,8 +36,8 @@ namespace Umamusume
     public class UmamusumeClient
     {
         public const bool dbg = false;
-        private const string header = "ayDiq2wxEzD3Ydc3zj8wJXUIUGZe6li2Ny+NL1dQHrMSPs9iXuLrJ/WPSNobcJIMw8uazw==";
-        private const string appver = "1.2.8";
+        private const string header = "ayDiq2wxEzD3Ydc3zj8wJXUIUGZe6li2Ny+NL1dQHrNEUu87C6QjdprHSuw/7fZrwHFabA==";
+        private const string appver = "1.2.9";
         private const string apiroot = "https://api-umamusume.cygames.jp/umamusume";
         private const string proxy_server = "127.0.0.1:1080";
 
@@ -181,6 +181,7 @@ namespace Umamusume
             catch (Exception e)
             {
                 if (dbg) Console.WriteLine($"{LogPrefix} {e}");
+                ResetConnection();
                 throw;
             }
             PostRequestHeaders();
