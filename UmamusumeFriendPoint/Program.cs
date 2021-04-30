@@ -31,7 +31,7 @@ namespace UmamusumeFriendPoint
         private static readonly Dictionary<long, long> support_dict = MasterContext.Instance.SupportCardData
             .ToDictionary(card => card.Id, card => card.CharaId);
 
-        private static readonly InteractServer interact = new (1081);
+        private static readonly InteractServer interact = new (23456);
 
         private static void Log(string message)
         {
@@ -189,9 +189,9 @@ namespace UmamusumeFriendPoint
                                     infoCache.Add(info.viewer_id, info);
                         }
 
-                        var support = infoCache[vid].user_support_card;
+                        var support = infoCache[vid]?.user_support_card?.support_card_id ?? 0;
 
-                        if (support.support_card_id == 0)
+                        if (support == 0)
                         {
                             Log($"support card for {vid} is none, force removing");
                             ForceRemove1(vid);
@@ -215,10 +215,10 @@ namespace UmamusumeFriendPoint
                         var cards = new List<TrainedChara>();
 
                         long exclude_support = 0;
-                        if (support_dict.TryGetValue(support.support_card_id, out var val))
+                        if (support_dict.TryGetValue(support, out var val))
                             exclude_support = val;
                         else
-                            Console.WriteLine($"[Thread #{id}] support card {support.support_card_id} for {vid} not present in database, error may occured.");
+                            Console.WriteLine($"[Thread #{id}] support card {support} for {vid} not present in database, error may occured.");
 
                         if (do_support_chara)
                         {
@@ -261,10 +261,15 @@ namespace UmamusumeFriendPoint
                                         support_card_ids = support_cards.ToArray(),
                                         friend_support_card_info = new SingleModeFriendSupportCardInfo
                                         {
-                                            support_card_id = support.support_card_id,
+                                            support_card_id = support,
                                             viewer_id = vid
                                         },
                                         scenario_id = 1,
+                                        selected_difficulty_info = new SingleModeSelectedDifficultyInfo
+                                        {
+                                            difficulty_id = 0,
+                                            difficulty  = 200
+                                        }
                                     } :
                                     new SingleModeStartChara
                                     {
@@ -280,10 +285,15 @@ namespace UmamusumeFriendPoint
                                         support_card_ids = support_cards.ToArray(),
                                         friend_support_card_info = new SingleModeFriendSupportCardInfo
                                         {
-                                            support_card_id = support.support_card_id,
+                                            support_card_id = support,
                                             viewer_id = vid
                                         },
                                         scenario_id = 1,
+                                        selected_difficulty_info = new SingleModeSelectedDifficultyInfo
+                                        {
+                                            difficulty_id = 0,
+                                            difficulty = 200
+                                        }
                                     },
                                 tp_info = client.tpInfo,
                                 current_money = client.current_money
@@ -291,23 +301,23 @@ namespace UmamusumeFriendPoint
                         }
                         catch (ApiException e) when (e.ResultCode == GallopResultCode.PARAM_ERROR)
                         {
-                            Console.WriteLine($"error for support card {support.support_card_id} for {vid} or support chara {(vid2 == 0 ? null : infoCache[vid2].user_trained_chara.card_id)} of {vid2}");
+                            Console.WriteLine($"error for support card {support} for {vid} or support chara {(vid2 == 0 ? null : infoCache[vid2].user_trained_chara.card_id)} of {vid2}");
 
                             if (exclude_support == 0)
                             {
-                                Log($"param error when unknown support card {support.support_card_id} for {vid}, force removing");
+                                Log($"param error when unknown support card {support} for {vid}, force removing");
                                 ForceRemove1(vid);
                                 vid = 0;
                             }
                             else if (vid2 != 0)
                             {
-                                Log($"unknown error for support card {support.support_card_id} for {vid} or support chara {infoCache[vid2].user_trained_chara.card_id} of {vid2}, force removing");
+                                Log($"unknown error for support card {support} for {vid} or support chara {infoCache[vid2].user_trained_chara.card_id} of {vid2}, force removing");
                                 ForceRemove2(vid2);
                                 vid2 = 0;
                             }
                             else
                             {
-                                Log($"unknown error for support card {support.support_card_id} for {vid}, force removing");
+                                Log($"unknown error for support card {support} for {vid}, force removing");
                                 ForceRemove1(vid);
                                 vid = 0;
                             }
@@ -343,6 +353,7 @@ namespace UmamusumeFriendPoint
                         Console.WriteLine($"[Thread #{id}] done for ({vid}, {vid2})");
                         vid = 0; vid2 = 0;
                         Interlocked.Increment(ref finish_count);
+                        if (times == 0) throw new Exception("resign for crown point");
                     }
 
                 }
@@ -376,7 +387,6 @@ namespace UmamusumeFriendPoint
                     catch (Exception e)
                     {
                         Console.WriteLine($"exception caught when trying to unfollow {vid22}:\n{e}");
-                        break;
                     }
                 }
 
@@ -396,7 +406,9 @@ namespace UmamusumeFriendPoint
         {
             lock (vidlock)
             {
-                Log($"ForceRemove1: removing {viewer_ids.Where(j => j.viewer_id == vid).Sum(j => j.times)} times for {vid}");
+                var count = viewer_ids.Where(j => j.viewer_id == vid).Sum(j => j.times);
+                if (count > 0)
+                    Log($"ForceRemove1: removing {count} times for {vid}");
                 viewer_ids = new Queue<Job>(viewer_ids.Where(j => !(j.viewer_id == vid)));
             }
         }
@@ -405,7 +417,9 @@ namespace UmamusumeFriendPoint
         {
             lock (vidlock)
             {
-                Log($"ForceRemove2: removing {viewer_ids2.Where(j => j.viewer_id == vid).Sum(j => j.times)} times for {vid}");
+                var count = viewer_ids2.Where(j => j.viewer_id == vid).Sum(j => j.times);
+                if (count > 0)
+                    Log($"ForceRemove2: removing {count} times for {vid}");
                 viewer_ids2 = new Queue<Job>(viewer_ids2.Where(j => !(j.viewer_id == vid)));
             }
         }
@@ -463,7 +477,7 @@ namespace UmamusumeFriendPoint
                         if (viewer_ids.Count == 0) Console.WriteLine($"[Watchdog] current job: None");
                         else Console.WriteLine($"[Watchdog] current job: {viewer_ids.Peek().times} times for {viewer_ids.Peek().viewer_id}");
                         var count = viewer_ids.Sum(j => j.times);
-                        Console.WriteLine($"[Watchdog] remaining jobs {count} for vid = {string.Join(',', viewer_ids.Select(j => j.viewer_id))}");
+                        Console.WriteLine($"[Watchdog] remaining jobs {count} for vid = ");
                         speed = Interlocked.Exchange(ref finish_count, 0);
                         req_speed = UmamusumeClient.Reqnum / 10.0;
                         Console.WriteLine($"[Watchdog] current speed {speed * 0.36:f1} wpt/h, {req_speed:f1} req/s");
@@ -513,7 +527,7 @@ namespace UmamusumeFriendPoint
                             ? $"[Watchdog] current job: None"
                             : $"[Watchdog] current job: {viewer_ids.Peek().times} times for {viewer_ids.Peek().viewer_id}");
                         var count = viewer_ids.Sum(j => j.times);
-                        sb.AppendLine($"[Watchdog] remaining jobs {count} for vid = {string.Join(',', viewer_ids.Select(j => j.viewer_id))}");
+                        sb.AppendLine($"[Watchdog] remaining jobs {count} for vid =");
                         sb.AppendLine($"[Watchdog] current speed {speed * 0.36:f1} wpt/h, {req_speed:f1} req/s");
                         if (speed != 0)
                         {
@@ -544,7 +558,7 @@ namespace UmamusumeFriendPoint
                 lock (viewer_ids2) viewer_ids2.Enqueue(new Job
                 {
                     viewer_id = int.Parse(splits[0]),
-                    times = 10
+                    times = 15
                 });
             }
             catch (Exception e)
