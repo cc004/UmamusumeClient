@@ -18,11 +18,19 @@ namespace UmamusumeFriendPoint
 
         public void Output(string msg)
         {
-            writer?.Write(msg);
-            writer?.Flush();
+            try
+            {
+                writer?.Write(msg);
+                writer?.Flush();
+            }
+            catch
+            {
+                client.Dispose();
+            }
         }
 
         private readonly TcpListener server;
+        private TcpClient client;
         private BinaryReader reader;
         private BinaryWriter writer;
         public InteractServer(int port)
@@ -52,8 +60,10 @@ namespace UmamusumeFriendPoint
         {
             while (true)
             {
-                var client = server.AcceptTcpClient();
-                
+                client = server.AcceptTcpClient();
+                client.ReceiveTimeout = 10000;
+                client.SendTimeout = 10000;
+
                 try
                 {
                     reader = new BinaryReader(client.GetStream());

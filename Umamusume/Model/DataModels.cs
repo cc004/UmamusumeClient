@@ -1967,6 +1967,18 @@
     }
 
 
+    // Namespace: Gallop
+    public class SingleModeSelectedDifficultyInfo // TypeDefIndex: 14900
+    {
+        // Fields
+        public int difficulty_id; // 0x10
+        public int difficulty; // 0x14
+
+        // Methods
+
+        // RVA: 0x1765300 Offset: 0x1765300 VA: 0x1765300
+    }
+
     public class SingleModeStartChara
     {
 
@@ -1977,6 +1989,7 @@
         public int succession_trained_chara_id_2;
         public SingleModeRentalSuccessionChara rental_succession_trained_chara;
         public int scenario_id;
+        public SingleModeSelectedDifficultyInfo selected_difficulty_info;
     }
 
 
