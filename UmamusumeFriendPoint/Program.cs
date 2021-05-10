@@ -51,7 +51,6 @@ namespace UmamusumeFriendPoint
             int vid = 0, vid2 = 0, times;
             bool do_support_chara = false;
             Queue<int> curfriend = new Queue<int>();
-            bool needsignup = false;
 
             while (true)
             {
@@ -60,6 +59,8 @@ namespace UmamusumeFriendPoint
                     resignup:
                     Console.WriteLine($"[Thread #{id}] signing up");
                     times = 3;
+                    curfriend.Clear();
+                    infoCache.Clear();
                     client.ResetAccount();
                     client.Signup();
                     //var client = new UmamusumeClient(JsonConvert.DeserializeObject<Account>(File.ReadAllText("account.json")));
@@ -71,7 +72,6 @@ namespace UmamusumeFriendPoint
                     client.StartSession();
                     var login = client.Login();
                     var presents = client.ReceivePresents().reward_summary_info.add_item_list;
-                    needsignup = false;
 
                     const int friend_max = 20;
 
@@ -104,16 +104,13 @@ namespace UmamusumeFriendPoint
                                             Log($"done 1 for {viewer_ids.Peek().viewer_id}");
                                             viewer_ids.Dequeue();
                                         }
-                                        if (needsignup) goto resignup;
                                         break;
                                     }
                                 }
-                                
-                                Umamusume.Program.RegisterOnce(client);
-                                needsignup = true;
+                                Thread.Sleep(1000);
                             }
                         }
-                        if (vid2 == 0 && times > 0)
+                        if (vid2 == 0)
                         {
                             lock (vidlock)
                             {
@@ -131,9 +128,9 @@ namespace UmamusumeFriendPoint
                                 }
                             }
                         }
-                        else do_support_chara = false;
+                        else do_support_chara = true;
 
-                        if (do_support_chara) --times; else vid2 = 0;
+                        if (do_support_chara) --times;
 
                         if (!curfriend.Contains(vid))
                         {
