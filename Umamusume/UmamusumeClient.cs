@@ -269,6 +269,12 @@ namespace Umamusume
             ResVer = resp.data.resource_version;
         }
 
+        public void ChangeAccount(Account account)
+        {
+            Account = account;
+            session_id = null;
+        }
+
         public LoginResponse Login()
         {
             return RetryRequest(new LoginRequest());
@@ -282,8 +288,8 @@ namespace Umamusume
                 is_asc = true,
                 time_filter_type = 0
             });
-            FCoin += resp.data.reward_summary_info.add_fcoin;
-            current_money += resp.data.reward_summary_info.add_item_list.CalcMoney() ?? 0;
+            FCoin += resp.data.reward_summary_info?.add_fcoin ?? 0;
+            current_money += resp.data.reward_summary_info?.add_item_list?.CalcMoney() ?? 0;
             return resp.data;
         }
         public void Gacha(int gachaId, int draw_num = 10, int item_id = 0, int current_num = 0)
