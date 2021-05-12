@@ -31,10 +31,14 @@ namespace UmamusumeFriendPoint
         private static readonly Dictionary<long, long> support_dict = MasterContext.Instance.SupportCardData
             .ToDictionary(card => card.Id, card => card.CharaId);
 
+        private static readonly InteractServer interact = new (23456);
+
         private static void Log(string message)
         {
             var now = DateTime.Now;
-            lock (loglock) File.AppendAllText($"log-{now:MM-dd}.txt", $"{now}] {message}\n");
+            var msg = $"{now}] {message}\n";
+            lock (interact) interact.Output(msg);
+            lock (loglock) File.AppendAllText($"log-{now:MM-dd}.txt", msg);
         }
 
         private static void FarmTask(int id)
@@ -52,8 +56,12 @@ namespace UmamusumeFriendPoint
             {
                 try
                 {
+                    resignup:
                     Console.WriteLine($"[Thread #{id}] signing up");
                     times = 3;
+                    curfriend.Clear();
+                    infoCache.Clear();
+                    client.ResetAccount();
                     client.Signup();
                     //var client = new UmamusumeClient(JsonConvert.DeserializeObject<Account>(File.ReadAllText("account.json")));
                     //File.WriteAllText("account.json", JsonConvert.SerializeObject(client.Account));
@@ -71,11 +79,11 @@ namespace UmamusumeFriendPoint
                     {
                         if (client.tpInfo.current_tp < 30)
                         {
-                            if (client.FCoin < 100) break;
+                            if (client.FCoin < 200) break;
                             Console.WriteLine($"[Thread #{id}] recovering tp");
                             client.RetryRequest(new RecoveryTrainerPointRequest
                             {
-                                count = 10,
+                                count = 20,
                                 client_own_num = client.FCoin
                             });
                         }
@@ -91,7 +99,7 @@ namespace UmamusumeFriendPoint
                                         var job = viewer_ids.Peek();
                                         vid = job.viewer_id;
                                         --job.times;
-                                        if (job.times == 0)
+                                        if (job.times <= 0)
                                         {
                                             Log($"done 1 for {viewer_ids.Peek().viewer_id}");
                                             viewer_ids.Dequeue();
@@ -102,11 +110,12 @@ namespace UmamusumeFriendPoint
                                 Thread.Sleep(1000);
                             }
                         }
-                        if (vid2 == 0 && times > 0)
+                        if (vid2 == 0)
                         {
                             lock (vidlock)
                             {
-                                if (do_support_chara = viewer_ids2.Count > 0)
+                                do_support_chara = viewer_ids2.Count > 0;
+                                if (do_support_chara)
                                 {
                                     var job = viewer_ids2.Peek();
                                     vid2 = job.viewer_id;
@@ -119,9 +128,9 @@ namespace UmamusumeFriendPoint
                                 }
                             }
                         }
-                        else do_support_chara = false;
+                        else do_support_chara = true;
 
-                        if (do_support_chara) --times; else vid2 = 0;
+                        if (do_support_chara) --times;
 
                         if (!curfriend.Contains(vid))
                         {
@@ -132,7 +141,7 @@ namespace UmamusumeFriendPoint
                                     friend_viewer_id = vid
                                 });
                             }
-                            catch (ApiException e) when (e.ResultCode == GallopResultCode.FRIEND_FOLLOW_USER_FOLLOW_COUNT_OVER_ERROR)
+                            catch (ApiException e) when (e.ResultCode == GallopResultCode.FRIEND_FOLLOW_USER_FOLLOW_COUNT_OVER_ERROR || e.ResultCode == GallopResultCode.DB_ERROR)
                             {
                                 Log($"error when trying to follow {vid}");
                                 ForceRemove(vid);
@@ -151,7 +160,7 @@ namespace UmamusumeFriendPoint
                                     friend_viewer_id = vid2
                                 });
                             }
-                            catch (ApiException e) when (e.ResultCode == GallopResultCode.FRIEND_FOLLOW_USER_FOLLOW_COUNT_OVER_ERROR)
+                            catch (ApiException e) when (e.ResultCode == GallopResultCode.FRIEND_FOLLOW_USER_FOLLOW_COUNT_OVER_ERROR || e.ResultCode == GallopResultCode.DB_ERROR)
                             {
                                 Log($"error when trying to follow {vid2}");
                                 ForceRemove(vid2);
@@ -177,9 +186,9 @@ namespace UmamusumeFriendPoint
                                     infoCache.Add(info.viewer_id, info);
                         }
 
-                        var support = infoCache[vid].user_support_card;
+                        var support = infoCache[vid]?.user_support_card?.support_card_id ?? 0;
 
-                        if (support.support_card_id == 0)
+                        if (support == 0)
                         {
                             Log($"support card for {vid} is none, force removing");
                             ForceRemove1(vid);
@@ -203,10 +212,10 @@ namespace UmamusumeFriendPoint
                         var cards = new List<TrainedChara>();
 
                         long exclude_support = 0;
-                        if (support_dict.TryGetValue(support.support_card_id, out var val))
+                        if (support_dict.TryGetValue(support, out var val))
                             exclude_support = val;
                         else
-                            Console.WriteLine($"[Thread #{id}] support card {support.support_card_id} for {vid} not present in database, error may occured.");
+                            Console.WriteLine($"[Thread #{id}] support card {support} for {vid} not present in database, error may occured.");
 
                         if (do_support_chara)
                         {
@@ -249,10 +258,15 @@ namespace UmamusumeFriendPoint
                                         support_card_ids = support_cards.ToArray(),
                                         friend_support_card_info = new SingleModeFriendSupportCardInfo
                                         {
-                                            support_card_id = support.support_card_id,
+                                            support_card_id = support,
                                             viewer_id = vid
                                         },
                                         scenario_id = 1,
+                                        selected_difficulty_info = new SingleModeSelectedDifficultyInfo
+                                        {
+                                            difficulty_id = 0,
+                                            difficulty  = 200
+                                        }
                                     } :
                                     new SingleModeStartChara
                                     {
@@ -268,10 +282,15 @@ namespace UmamusumeFriendPoint
                                         support_card_ids = support_cards.ToArray(),
                                         friend_support_card_info = new SingleModeFriendSupportCardInfo
                                         {
-                                            support_card_id = support.support_card_id,
+                                            support_card_id = support,
                                             viewer_id = vid
                                         },
                                         scenario_id = 1,
+                                        selected_difficulty_info = new SingleModeSelectedDifficultyInfo
+                                        {
+                                            difficulty_id = 0,
+                                            difficulty = 200
+                                        }
                                     },
                                 tp_info = client.tpInfo,
                                 current_money = client.current_money
@@ -279,23 +298,23 @@ namespace UmamusumeFriendPoint
                         }
                         catch (ApiException e) when (e.ResultCode == GallopResultCode.PARAM_ERROR)
                         {
-                            Console.WriteLine($"error for support card {support.support_card_id} for {vid} or support chara {(vid2 == 0 ? null : infoCache[vid2].user_trained_chara.card_id)} of {vid2}");
+                            Console.WriteLine($"error for support card {support} for {vid} or support chara {(vid2 == 0 ? null : infoCache[vid2].user_trained_chara.card_id)} of {vid2}");
 
                             if (exclude_support == 0)
                             {
-                                Log($"param error when unknown support card {support.support_card_id} for {vid}, force removing");
+                                Log($"param error when unknown support card {support} for {vid}, force removing");
                                 ForceRemove1(vid);
                                 vid = 0;
                             }
                             else if (vid2 != 0)
                             {
-                                Log($"unknown error for support card {support.support_card_id} for {vid} or support chara {infoCache[vid2].user_trained_chara.card_id} of {vid2}, force removing");
+                                Log($"unknown error for support card {support} for {vid} or support chara {infoCache[vid2].user_trained_chara.card_id} of {vid2}, force removing");
                                 ForceRemove2(vid2);
                                 vid2 = 0;
                             }
                             else
                             {
-                                Log($"unknown error for support card {support.support_card_id} for {vid}, force removing");
+                                Log($"unknown error for support card {support} for {vid}, force removing");
                                 ForceRemove1(vid);
                                 vid = 0;
                             }
@@ -331,21 +350,14 @@ namespace UmamusumeFriendPoint
                         Console.WriteLine($"[Thread #{id}] done for ({vid}, {vid2})");
                         vid = 0; vid2 = 0;
                         Interlocked.Increment(ref finish_count);
+                        if (times == 0) throw new Exception("resign for crown point");
                     }
 
                 }
                 catch (ApiException apie) when (apie.ResultCode == GallopResultCode.SESSION_ERROR)
                 {
-                    Console.WriteLine($"[Thread #{id}] Session Error, re-logining in");
-                    try
-                    {
-                        client.StartSession();
-                        client.Login();
-                    }
-                    catch
-                    {
-                        client.ResetAccount();
-                    }
+                    Console.WriteLine($"[Thread #{id}] Session Error");
+                    client.ResetAccount();
                     continue;
                 }
                 catch (ApiException apie)
@@ -374,6 +386,15 @@ namespace UmamusumeFriendPoint
                         Console.WriteLine($"exception caught when trying to unfollow {vid22}:\n{e}");
                     }
                 }
+
+                try
+                {
+                }
+                catch
+                {
+
+                }
+
                 client.ResetAccount();
             }
         }
@@ -382,7 +403,9 @@ namespace UmamusumeFriendPoint
         {
             lock (vidlock)
             {
-                Log($"ForceRemove1: removing {viewer_ids.Where(j => j.viewer_id == vid).Sum(j => j.times)} times for {vid}");
+                var count = viewer_ids.Where(j => j.viewer_id == vid).Sum(j => j.times);
+                if (count > 0)
+                    Log($"ForceRemove1: removing {count} times for {vid}");
                 viewer_ids = new Queue<Job>(viewer_ids.Where(j => !(j.viewer_id == vid)));
             }
         }
@@ -391,7 +414,9 @@ namespace UmamusumeFriendPoint
         {
             lock (vidlock)
             {
-                Log($"ForceRemove2: removing {viewer_ids2.Where(j => j.viewer_id == vid).Sum(j => j.times)} times for {vid}");
+                var count = viewer_ids2.Where(j => j.viewer_id == vid).Sum(j => j.times);
+                if (count > 0)
+                    Log($"ForceRemove2: removing {count} times for {vid}");
                 viewer_ids2 = new Queue<Job>(viewer_ids2.Where(j => !(j.viewer_id == vid)));
             }
         }
@@ -423,12 +448,21 @@ namespace UmamusumeFriendPoint
                 File.WriteAllText("jobs2.json", JsonConvert.SerializeObject(viewer_ids2.ToArray()));
         }
 
+        private static int speed;
+        private static double req_speed;
+
         public static void Main(string[] args)
         {
+            ThreadPool.SetMaxThreads(1024, 1024);
+            ThreadPool.SetMinThreads(256, 256);
+
+            AccountContext.context.Database.EnsureCreated();
+
+
             Load();
             var rnd = new Random();
 
-            new Thread(new ThreadStart(() =>
+            new Thread(() =>
             {
                 while (true)
                 {
@@ -440,9 +474,9 @@ namespace UmamusumeFriendPoint
                         if (viewer_ids.Count == 0) Console.WriteLine($"[Watchdog] current job: None");
                         else Console.WriteLine($"[Watchdog] current job: {viewer_ids.Peek().times} times for {viewer_ids.Peek().viewer_id}");
                         var count = viewer_ids.Sum(j => j.times);
-                        Console.WriteLine($"[Watchdog] remaining jobs {count} for vid = {string.Join(',', viewer_ids.Select(j => j.viewer_id))}");
-                        var speed = Interlocked.Exchange(ref finish_count, 0);
-                        var req_speed = UmamusumeClient.Reqnum / 10.0;
+                        Console.WriteLine($"[Watchdog] remaining jobs {count} for vid = ");
+                        speed = Interlocked.Exchange(ref finish_count, 0);
+                        req_speed = UmamusumeClient.Reqnum / 10.0;
                         Console.WriteLine($"[Watchdog] current speed {speed * 0.36:f1} wpt/h, {req_speed:f1} req/s");
                         if (speed != 0)
                         {
@@ -453,42 +487,83 @@ namespace UmamusumeFriendPoint
                             Console.WriteLine($"[Watchdog] etc --, finished in --");
                     }
                 }
-            })).Start();
+            }).Start();
 
-            new Thread(new ThreadStart(() =>
+            new Thread(() =>
             {
                 while (true)
                 {
-                    try
-                    {
-                        var splits = Console.ReadLine().Split(' ');
-                        Console.WriteLine($"adding job for viewer_id = {splits[0]}, times = {splits[1]}");
-                        lock (viewer_ids) viewer_ids.Enqueue(new Job
-                        {
-                            viewer_id = int.Parse(splits[0]),
-                            times = int.Parse(splits[1])
-                        });
-                        lock (viewer_ids2) viewer_ids2.Enqueue(new Job
-                        {
-                            viewer_id = int.Parse(splits[0]),
-                            times = 10
-                        });
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e.ToString());
-                    }
+                    DoText(Console.ReadLine());
                 }
-            })).Start();
+            }).Start();
 
-            for (int i = 0; i < 64; ++i)
+            interact.Input += s =>
+            {
+                foreach (var x in s.Split("\n")) DoText(x);
+            };
+
+            for (int i = 0; i < 96; ++i)
             {
                 Thread.Sleep(rnd.Next(0, 1000));
                 int j = i;
-                new Thread(new ThreadStart(() => FarmTask(j))).Start();
+                new Thread(() => FarmTask(j)).Start();
             }
 
         }
 
+        private static void DoText(string msg)
+        {
+            try
+            {
+                if (msg == "status")
+                {
+                    var sb = new StringBuilder();
+                    lock (viewer_ids)
+                    {
+                        sb.AppendLine(viewer_ids.Count == 0
+                            ? $"[Watchdog] current job: None"
+                            : $"[Watchdog] current job: {viewer_ids.Peek().times} times for {viewer_ids.Peek().viewer_id}");
+                        var count = viewer_ids.Sum(j => j.times);
+                        sb.AppendLine($"[Watchdog] remaining jobs {count} for vid =");
+                        sb.AppendLine($"[Watchdog] current speed {speed * 0.36:f1} wpt/h, {req_speed:f1} req/s");
+                        if (speed != 0)
+                        {
+                            var timeneed = new TimeSpan(0, 0, count * 10 / speed);
+                            sb.AppendLine($"[Watchdog] etc {timeneed}, finished in {DateTime.Now + timeneed}");
+                        }
+                        else
+                            sb.AppendLine($"[Watchdog] etc --, finished in --");
+                    }
+
+                    Log(sb.ToString());
+                    return;
+                }
+                if (msg.StartsWith("del"))
+                {
+                    var vid = int.Parse(msg.Substring(3));
+                    ForceRemove(vid);
+                    return;
+                }
+                var splits = msg.Split(' ');
+                Console.WriteLine($"adding job for viewer_id = {splits[0]}, times = {splits[1]}");
+                Log($"adding job for viewer_id = {splits[0]}, times = {splits[1]}");
+                lock (viewer_ids) viewer_ids.Enqueue(new Job
+                {
+                    viewer_id = int.Parse(splits[0]),
+                    times = int.Parse(splits[1])
+                });
+                lock (viewer_ids2) viewer_ids2.Enqueue(new Job
+                {
+                    viewer_id = int.Parse(splits[0]),
+                    times = 15
+                });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                Log(e.ToString());
+            }
+        }
     }
+
 }

@@ -36,8 +36,8 @@ namespace Umamusume
     public class UmamusumeClient
     {
         public const bool dbg = false;
-        private const string header = "ayDiq2wxEzD3Ydc3zj8wJXUIUGZe6li2Ny+NL1dQHrMSPs9iXuLrJ/WPSNobcJIMw8uazw==";
-        private const string appver = "1.2.8";
+        private const string header = "ayDiq2wxEzD3Ydc3zj8wJXUIUGZe6li2Ny+NL1dQHrOkm+SczQccvfO8S1xFXOpCL3d2Og==";
+        private const string appver = "1.2.10";
         private const string apiroot = "https://api-umamusume.cygames.jp/umamusume";
         private const string proxy_server = "127.0.0.1:1080";
 
@@ -181,6 +181,7 @@ namespace Umamusume
             catch (Exception e)
             {
                 if (dbg) Console.WriteLine($"{LogPrefix} {e}");
+                ResetConnection();
                 throw;
             }
             PostRequestHeaders();
@@ -268,6 +269,12 @@ namespace Umamusume
             ResVer = resp.data.resource_version;
         }
 
+        public void ChangeAccount(Account account)
+        {
+            Account = account;
+            session_id = null;
+        }
+
         public LoginResponse Login()
         {
             return RetryRequest(new LoginRequest());
@@ -281,8 +288,8 @@ namespace Umamusume
                 is_asc = true,
                 time_filter_type = 0
             });
-            FCoin += resp.data.reward_summary_info.add_fcoin;
-            current_money += resp.data.reward_summary_info.add_item_list.CalcMoney() ?? 0;
+            FCoin += resp.data.reward_summary_info?.add_fcoin ?? 0;
+            current_money += resp.data.reward_summary_info?.add_item_list?.CalcMoney() ?? 0;
             return resp.data;
         }
         public void Gacha(int gachaId, int draw_num = 10, int item_id = 0, int current_num = 0)

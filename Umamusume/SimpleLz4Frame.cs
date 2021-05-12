@@ -11,7 +11,7 @@ namespace Umamusume
 
     public class SimpleLz4Frame : ICryptHandler
     {
-        private readonly HttpClient client = new HttpClient(new HttpClientHandler()
+        private readonly HttpClient client = new (new HttpClientHandler()
         {
             Proxy = null,
             UseProxy = false
