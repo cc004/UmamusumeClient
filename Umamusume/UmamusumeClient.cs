@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -36,8 +37,15 @@ namespace Umamusume
     public class UmamusumeClient
     {
         public const bool dbg = false;
-        private const string header = "ayDiq2wxEzD3Ydc3zj8wJXUIUGZe6li2Ny+NL1dQHrOkm+SczQccvfO8S1xFXOpCL3d2Og==";
-        private const string appver = "1.2.10";
+        private static string header;// = "ayDiq2wxEzD3Ydc3zj8wJXUIUGZe6li2Ny+NL1dQHrOkm+SczQccvfO8S1xFXOpCL3d2Og==";
+        private static string appver;// = "1.2.10";
+        static UmamusumeClient()
+        {
+            var json = JObject.Parse(File.ReadAllText("env.json"));
+            header = json.Value<string>("header");
+            appver = json.Value<string>("appver");
+        }
+
         private const string apiroot = "https://api-umamusume.cygames.jp/umamusume";
         private const string proxy_server = "127.0.0.1:1080";
 
