@@ -88,7 +88,7 @@
     {
 
         public int? post_id;
-        public int? viewer_id;
+        public long? viewer_id;
         public int? message_type;
         public int? message_id;
         public string message_data;
@@ -104,7 +104,7 @@
     public class CircleChatUser
     {
 
-        public int? viewer_id;
+        public long? viewer_id;
         public string name;
         public int? leader_chara_id;
         public int? leader_chara_dress_id;
@@ -120,7 +120,7 @@
     {
 
         public int? circle_id;
-        public int? leader_viewer_id;
+        public long? leader_viewer_id;
         public string name;
         public string comment;
         public int? member_num;
@@ -154,7 +154,7 @@
 
         public int? donate_id;
         public int? request_id;
-        public int? viewer_id;
+        public long? viewer_id;
         public int? item_num;
         public int? state;
         public string create_time;
@@ -185,7 +185,7 @@
     {
 
         public int? circle_id;
-        public int? viewer_id;
+        public long? viewer_id;
 
 
 
@@ -197,7 +197,7 @@
     public class CircleUser
     {
 
-        public int? viewer_id;
+        public long? viewer_id;
         public int? circle_id;
         public int? membership;
         public string join_time;
@@ -291,7 +291,7 @@
     public class DataHeader
     {
 
-        public int viewer_id;
+        public long viewer_id;
         public string sid;
         public long servertime;
         public GallopResultCode result_code;
@@ -641,7 +641,7 @@
 
         public int? circle_id;
         public int? room_id;
-        public int? viewer_id;
+        public long? viewer_id;
         public int? race_type;
         public string create_time;
 
@@ -1239,8 +1239,8 @@
     public class RaceHorseData
     {
 
-        public int? viewer_id;
-        public int? owner_viewer_id;
+        public long? viewer_id;
+        public long? owner_viewer_id;
         public string trainer_name;
         public string owner_trainer_name;
         public int? single_mode_chara_id;
@@ -1320,7 +1320,7 @@
     public class RaceResultData
     {
 
-        public int? viewer_id;
+        public long? viewer_id;
         public int? finish_order;
         public int? finish_time;
         public int? finish_time_raw;
@@ -1365,7 +1365,7 @@
     public class RaceSimulateResult
     {
 
-        public int? viewer_id;
+        public long? viewer_id;
         public int? single_mode_chara_id;
         public int? finish_order;
         public int? time;
@@ -1781,7 +1781,7 @@
     public class SingleModeFriendSupportCardInfo
     {
 
-        public int? viewer_id;
+        public long? viewer_id;
         public int? support_card_id;
 
 
@@ -1928,7 +1928,7 @@
     public class SingleModeRentalSuccessionChara
     {
 
-        public int viewer_id;
+        public long viewer_id;
         public int trained_chara_id;
         public bool is_circle_member;
 
@@ -2026,7 +2026,7 @@
         public int? limit_break_count;
         public int? exp;
         public int? training_partner_state;
-        public int? owner_viewer_id;
+        public long? owner_viewer_id;
 
 
 
@@ -2153,7 +2153,7 @@
         public int? talent_level;
         public int[] factor_id_array;
         public int[] win_saddle_id_array;
-        public int? owner_viewer_id;
+        public long? owner_viewer_id;
         public UserInfoAtFriend user_info_summary;
 
 
@@ -2180,7 +2180,7 @@
     {
 
         public int? id;
-        public int? viewer_id;
+        public long? viewer_id;
         public int? trained_chara_id;
         public int? hisotry_type;
         public int? succession_card_id;
@@ -2269,7 +2269,7 @@
     {
 
         public int? strength;
-        public int? opponent_viewer_id;
+        public long? opponent_viewer_id;
         public int? evaluation_point;
         public UserInfoAtFriend user_info;
         public TeamStadiumTeamData[] team_data_array;
@@ -2286,7 +2286,7 @@
     public class TeamStadiumRaceCharaResult
     {
 
-        public int? viewer_id;
+        public long? viewer_id;
         public int? frame_order;
         public int? trained_chara_id;
         public int? team_id;
@@ -2324,7 +2324,7 @@
     public class TeamStadiumRaceSimulateCharaResult
     {
 
-        public int? viewer_id;
+        public long? viewer_id;
         public int? single_mode_chara_id;
         public int? finish_order;
         public int? finish_time;
@@ -2370,7 +2370,7 @@
 
     public class TeamStadiumRandomInfo
     {
-        public int? viewer_id;
+        public long? viewer_id;
         public int? member_id;
         public int? trained_chara_id;
         public int? running_style;
@@ -2383,7 +2383,7 @@
     {
 
         public int? term_id;
-        public int? viewer_id;
+        public long? viewer_id;
         public int? team_class;
         public int? best_point;
         public int? rank;
@@ -2491,9 +2491,9 @@
     public class TrainedChara
     {
 
-        public int? viewer_id;
+        public long? viewer_id;
         public int trained_chara_id;
-        public int? owner_viewer_id;
+        public long? owner_viewer_id;
         public int card_id;
         public string name;
         public int? stamina;
@@ -2713,7 +2713,7 @@
     public class UserFriend
     {
 
-        public int? friend_viewer_id;
+        public long? friend_viewer_id;
         public int? state;
         public string follow_time;
         public string follower_time;
@@ -2724,7 +2724,7 @@
     public class UserInfo
     {
 
-        public int viewer_id;
+        public long viewer_id;
         public string name;
         public int? honor_id;
         public int? sex;
@@ -2753,7 +2753,7 @@
     public class UserInfoAtFollower
     {
 
-        public int? viewer_id;
+        public long? viewer_id;
         public string name;
         public int? honor_id;
         public string last_login_time;
@@ -2770,7 +2770,7 @@
     public class UserInfoAtFriend
     {
 
-        public int viewer_id;
+        public long viewer_id;
         public string name;
         public int? honor_id;
         public string last_login_time;
@@ -2841,7 +2841,7 @@
     public class UserSupportCard
     {
 
-        public int viewer_id;
+        public long viewer_id;
         public int support_card_id;
         public int exp;
         public int limit_break_count;
@@ -2900,7 +2900,7 @@
     public class UserTrainedCharaAtFriend
     {
 
-        public int viewer_id;
+        public long viewer_id;
         public int trained_chara_id;
         public int card_id;
         public int? rank_score;

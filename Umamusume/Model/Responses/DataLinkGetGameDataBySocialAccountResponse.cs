@@ -10,7 +10,7 @@ namespace Umamusume.Model
         {
 
 
-            public int? viewer_id;
+            public long? viewer_id;
 
 
 

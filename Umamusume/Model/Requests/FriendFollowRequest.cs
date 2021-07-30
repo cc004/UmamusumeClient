@@ -5,7 +5,7 @@ namespace Umamusume.Model
     {
         protected override string Url => "/friend/follow";
 
-        public int? friend_viewer_id;
+        public long? friend_viewer_id;
 
 
 

@@ -73,9 +73,9 @@ namespace Umamusume
             return Enumerable.Range(0, n).Select(_ => source[rand.Next(0, source.Length - 1)]).ToArray();
         }
 
-        public static string GenRandomPassword(int viewer_id)
+        public static string GenRandomPassword(long viewer_id)
         {
-            if (rand == null) rand = new Random(viewer_id);
+            if (rand == null) rand = new Random(viewer_id.GetHashCode());
             return new string(RandomChoices(part1, 4)) +
                 new string(RandomChoices(part2, 4)) +
                 new string(RandomChoices(part3, 4));

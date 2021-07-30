@@ -76,13 +76,13 @@ namespace Umamusume.Model
             return new()
             {
                 platform_os_version = "Android OS 7.1.2 / API-25 (N2G48H/rel.se.infra.20200730.150525)",
-                carrier = "HUAWEI",
+                carrier = "OnePlus",
                 keychain = 0,
                 locale = "JPN",
                 ip_address = "10.0.2.15",
                 device = 2,
-                device_id = "374b909de679462599a92f904d46ea7d",// Guid.NewGuid().ToString().Replace("-", ""),
-                device_name = "HUAWEI TAS-AN00",
+                device_id = "69a75cdfce0abf56d6531d3eb8e5ee60",// Guid.NewGuid().ToString().Replace("-", ""),
+                device_name = "OnePlus HD1910",
                 graphics_device_name = "Adreno (TM) 640"
             };
         }
@@ -92,7 +92,7 @@ namespace Umamusume.Model
     {
 
         [JsonProperty]
-        private int viewer_id;
+        private long viewer_id;
 
 
         public RequestCommon()

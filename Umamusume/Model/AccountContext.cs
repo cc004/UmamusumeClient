@@ -30,7 +30,7 @@ namespace Umamusume.Model
         public string password { get; set; }
         public string cards { get; set; }
         public int cardnum { get; set; }
-        public int viewer_id { get; set; }
+        public long viewer_id { get; set; }
 
     }
 }

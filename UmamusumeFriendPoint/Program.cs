@@ -15,7 +15,7 @@ namespace UmamusumeFriendPoint
 {
     public class Job
     {
-        public int viewer_id, times;
+        public long viewer_id, times;
     }
 
     class Program
@@ -43,14 +43,14 @@ namespace UmamusumeFriendPoint
 
         private static void FarmTask(int id)
         {
-            Dictionary<int, UserInfoAtFriend> infoCache = new Dictionary<int, UserInfoAtFriend>();
+            Dictionary<long, UserInfoAtFriend> infoCache = new Dictionary<long, UserInfoAtFriend>();
             UmamusumeClient client = new UmamusumeClient(new SimpleLz4Frame(id))
             {
                 LogPrefix = $"[Thread #{id}]"
             };
-            int vid = 0, vid2 = 0, times;
+            long vid = 0, vid2 = 0, times;
             bool do_support_chara = false;
-            Queue<int> curfriend = new Queue<int>();
+            Queue<long> curfriend = new Queue<long>();
 
             while (true)
             {
@@ -373,7 +373,7 @@ namespace UmamusumeFriendPoint
 
                 while (curfriend.Count > 0)
                 {
-                    int vid22 = curfriend.Dequeue();
+                    long vid22 = curfriend.Dequeue();
                     try
                     {
                         client.RetryRequest(new FriendUnFollowRequest
@@ -399,7 +399,7 @@ namespace UmamusumeFriendPoint
             }
         }
 
-        private static void ForceRemove1(int vid)
+        private static void ForceRemove1(long vid)
         {
             lock (vidlock)
             {
@@ -410,7 +410,7 @@ namespace UmamusumeFriendPoint
             }
         }
 
-        private static void ForceRemove2(int vid)
+        private static void ForceRemove2(long vid)
         {
             lock (vidlock)
             {
@@ -421,7 +421,7 @@ namespace UmamusumeFriendPoint
             }
         }
 
-        private static void ForceRemove(int vid)
+        private static void ForceRemove(long vid)
         {
             ForceRemove1(vid);
             ForceRemove2(vid);
@@ -456,7 +456,7 @@ namespace UmamusumeFriendPoint
             ThreadPool.SetMaxThreads(1024, 1024);
             ThreadPool.SetMinThreads(256, 256);
 
-            AccountContext.context.Database.EnsureCreated();
+            //AccountContext.context.Database.EnsureCreated();
 
 
             Load();
@@ -480,7 +480,7 @@ namespace UmamusumeFriendPoint
                         Console.WriteLine($"[Watchdog] current speed {speed * 0.36:f1} wpt/h, {req_speed:f1} req/s");
                         if (speed != 0)
                         {
-                            var timeneed = new TimeSpan(0, 0, count * 10 / speed);
+                            var timeneed = new TimeSpan(0, 0, (int)(count * 10 / speed));
                             Console.WriteLine($"[Watchdog] etc {timeneed}, finished in {DateTime.Now + timeneed}");
                         }
                         else
@@ -502,7 +502,7 @@ namespace UmamusumeFriendPoint
                 foreach (var x in s.Split("\n")) DoText(x);
             };
 
-            for (int i = 0; i < 96; ++i)
+            for (int i = 0; i < 80; ++i)
             {
                 Thread.Sleep(rnd.Next(0, 1000));
                 int j = i;
@@ -528,7 +528,7 @@ namespace UmamusumeFriendPoint
                         sb.AppendLine($"[Watchdog] current speed {speed * 0.36:f1} wpt/h, {req_speed:f1} req/s");
                         if (speed != 0)
                         {
-                            var timeneed = new TimeSpan(0, 0, count * 10 / speed);
+                            var timeneed = new TimeSpan(0, 0, (int)(count * 10 / speed));
                             sb.AppendLine($"[Watchdog] etc {timeneed}, finished in {DateTime.Now + timeneed}");
                         }
                         else
@@ -540,7 +540,7 @@ namespace UmamusumeFriendPoint
                 }
                 if (msg.StartsWith("del"))
                 {
-                    var vid = int.Parse(msg.Substring(3));
+                    var vid = long.Parse(msg.Substring(3));
                     ForceRemove(vid);
                     return;
                 }
@@ -549,12 +549,12 @@ namespace UmamusumeFriendPoint
                 Log($"adding job for viewer_id = {splits[0]}, times = {splits[1]}");
                 lock (viewer_ids) viewer_ids.Enqueue(new Job
                 {
-                    viewer_id = int.Parse(splits[0]),
+                    viewer_id = long.Parse(splits[0]),
                     times = int.Parse(splits[1])
                 });
                 lock (viewer_ids2) viewer_ids2.Enqueue(new Job
                 {
-                    viewer_id = int.Parse(splits[0]),
+                    viewer_id = long.Parse(splits[0]),
                     times = 15
                 });
             }

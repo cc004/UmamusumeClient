@@ -68,7 +68,7 @@ namespace UmamusumeLogin
                 {
                     Authkey = reader.GetString(2),
                     Udid = Guid.Parse(reader.GetString(1)),
-                    ViewerId = reader.GetInt32(0)
+                    ViewerId = reader.GetInt64(0)
                 });
         }
 

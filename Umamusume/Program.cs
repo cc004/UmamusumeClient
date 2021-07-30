@@ -73,7 +73,6 @@ namespace Umamusume
 
         public static void RegisterOnce(UmamusumeClient client)
         {
-
             try
             {
                 client.ResetAccount();
@@ -134,7 +133,11 @@ namespace Umamusume
 
         private static void Test()
         {
-            UmamusumeClient client = new (new SimpleLz4Frame(0))
+            Console.WriteLine(Convert.ToBase64String("6b 20 e2 ab 6c 31 13 30 f7 61 d7 37 ce 3f 30 25 75 08 50 66 5e ea 58 b6 37 2f 8d 2f 57 50 1e b3 73 29 cb ca cd 42 3a a2 d5 97 b2 66 a7 48 9d 46 a8 73 72 b9".Split(" ").Select(i => byte.Parse(i, System.Globalization.NumberStyles.HexNumber)).ToArray()));
+            UmamusumeClient client = new (new Account
+            {
+                //Udid = Guid.Parse("f3ba2056-6d23-c848-6587-6dcabcd74f73")
+            }, new SimpleLz4Frame(0))
             {
                 LogPrefix = string.Empty
             };
@@ -147,6 +150,12 @@ namespace Umamusume
             client.Request(new TutorialSkipRequest());
             */
             //client.StartSession();
+            client.RetryRequest(new ToolSignupRequest()
+            {
+                credential = "",
+                error_code = 0,
+                error_message = ""
+            });
             var pwd = client.RetryRequest(new DataLinkChainByTransitionCodeRequest()
             {
                 input_viewer_id = 934663949,
@@ -164,7 +173,6 @@ namespace Umamusume
             Console.Write("线程数:");
             var tcount = int.Parse(Console.ReadLine());
 
-            //Test();
             ThreadPool.SetMaxThreads(512, 512);
             ThreadPool.SetMinThreads(128, 128);
 
