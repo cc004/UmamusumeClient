@@ -20,8 +20,7 @@ namespace Umamusume.Model
         public int? current_num;
 
 
-
-
+        protected override string Url => "/gacha/limit_exchange";
 
 
         public GachaLimitExchangeRequest()

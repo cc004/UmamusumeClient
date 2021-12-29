@@ -2,7 +2,6 @@
 
 namespace Umamusume.Model
 {
-
     public sealed class CircleCheckJoinResponse : ResponseCommon
     {
 

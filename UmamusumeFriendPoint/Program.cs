@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Org.BouncyCastle.Utilities;
 using Umamusume;
 using Umamusume.Model;
 using Umamusume.Model.Master;
@@ -101,7 +102,7 @@ namespace UmamusumeFriendPoint
                                         --job.times;
                                         if (job.times <= 0)
                                         {
-                                            Log($"done 1 for {viewer_ids.Peek().viewer_id}");
+                                            //Log($"done 1 for {viewer_ids.Peek().viewer_id}");
                                             viewer_ids.Dequeue();
                                         }
                                         break;
@@ -122,7 +123,7 @@ namespace UmamusumeFriendPoint
                                     --job.times;
                                     if (job.times == 0)
                                     {
-                                        Log($"done 2 for {viewer_ids2.Peek().viewer_id}");
+                                        //Log($"done 2 for {viewer_ids2.Peek().viewer_id}");
                                         viewer_ids2.Dequeue();
                                     }
                                 }
@@ -180,7 +181,7 @@ namespace UmamusumeFriendPoint
 
                         if (!infoCache.ContainsKey(vid) || do_support_chara && !infoCache.ContainsKey(vid2))
                         {
-                            foreach (var info in client.RetryRequest(new SingleModeRentalInfoRequest())
+                            foreach (var info in client.RetryRequest(new PreSingleModeIndexRequest())
                                 .data.friend_support_card_data.summary_user_info_array)
                                 if (!infoCache.ContainsKey(info.viewer_id))
                                     infoCache.Add(info.viewer_id, info);
@@ -243,6 +244,7 @@ namespace UmamusumeFriendPoint
                         {
                             resp = client.RetryRequest(new SingleModeStartRequest
                             {
+                                use_tp = 30,
                                 start_chara = do_support_chara ?
                                     new SingleModeStartChara
                                     {
@@ -510,7 +512,6 @@ namespace UmamusumeFriendPoint
             }
 
         }
-
         private static void DoText(string msg)
         {
             try

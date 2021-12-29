@@ -9,7 +9,7 @@ namespace Umamusume.Model
 
 
 
-        public int input_viewer_id;
+        public long input_viewer_id;
 
 
 

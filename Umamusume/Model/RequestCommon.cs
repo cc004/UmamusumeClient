@@ -81,8 +81,8 @@ namespace Umamusume.Model
                 locale = "JPN",
                 ip_address = "10.0.2.15",
                 device = 2,
-                device_id = "69a75cdfce0abf56d6531d3eb8e5ee60",// Guid.NewGuid().ToString().Replace("-", ""),
-                device_name = "OnePlus HD1910",
+                device_id = Guid.NewGuid().ToString().Replace("-", ""),
+                device_name = "OnePlus HD" + new Random().Next(1000, 9999),
                 graphics_device_name = "Adreno (TM) 640"
             };
         }

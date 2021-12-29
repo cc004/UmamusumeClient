@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using Umamusume.Model;
 using Umamusume.Model.Master;
 
@@ -150,26 +151,29 @@ namespace Umamusume
             client.Request(new TutorialSkipRequest());
             */
             //client.StartSession();
-            client.RetryRequest(new ToolSignupRequest()
-            {
-                credential = "",
-                error_code = 0,
-                error_message = ""
-            });
             var pwd = client.RetryRequest(new DataLinkChainByTransitionCodeRequest()
             {
-                input_viewer_id = 934663949,
-                password = Utils.Bin2Hex(Utils.MakeMd5("Aa123456"))
-            }).data.auth_key;
-            client.Account.ViewerId = 934663949;
-            client.Account.Authkey = pwd;
+                input_viewer_id = 187899023,
+                password = Utils.Bin2Hex(Utils.MakeMd5("Pf437318"))
+            }).data;
+            client.Account.ViewerId = pwd.chained_viewer_id.Value;
+            client.Account.Authkey = pwd.auth_key;
             client.StartSession();
-            client.Login();
+            var resp = client.Login();
+            var gachainfo = client.RetryRequest(new GachaLoadRequest());
 
+            var resp2 = client.RetryRequest(new GachaLimitExchangeRequest
+            {
+                card_id = 30015,
+                card_type = 2,
+                current_num = 200,
+                gacha_id = 30041
+            });
         }
 
         private static void Main(string[] args)
         {
+            Test();
             Console.Write("线程数:");
             var tcount = int.Parse(Console.ReadLine());
 

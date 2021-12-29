@@ -44,7 +44,7 @@ namespace UmamusumeFriendPoint
                 {
                     try
                     {
-                        //writer.Write("");
+                        writer.Write("");
                     }
                     catch
                     {

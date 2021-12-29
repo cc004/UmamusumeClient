@@ -473,7 +473,7 @@
     {
 
         public int? gacha_id;
-        public int? num;
+        public int num;
         public int? converted_item_num;
 
 
@@ -1990,6 +1990,8 @@
         public SingleModeRentalSuccessionChara rental_succession_trained_chara;
         public int scenario_id;
         public SingleModeSelectedDifficultyInfo selected_difficulty_info;
+        public int select_deck_id;
+        public int boost_story_event_id;
     }
 
 

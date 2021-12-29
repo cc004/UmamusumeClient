@@ -315,7 +315,7 @@ namespace Umamusume
             current_money += resp.data.reward_summary_info?.add_item_list?.CalcMoney() ?? 0;
             return resp.data;
         }
-        public void Gacha(int gachaId, int draw_num = 10, int item_id = 0, int current_num = 0)
+        public int Gacha(int gachaId, int draw_num = 10, int item_id = 0, int current_num = 0)
         {
             GachaExecResponse resp = RetryRequest(new GachaExecRequest
             {
@@ -334,6 +334,8 @@ namespace Umamusume
                         Account.extra.support_cards[card.support_card_id] = 0;
                     ++Account.extra.support_cards[card.support_card_id];
                 }
+
+            return resp.data.limit_item_info.num;
         }
 
         public void ResetAccount()
