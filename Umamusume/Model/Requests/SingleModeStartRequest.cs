@@ -9,6 +9,7 @@ namespace Umamusume.Model
         public TpInfo tp_info;
         public int use_tp;
         public int? current_money;
+        public int? current_succession_rank_point;
         public SingleModeStartRequest()
         {
         }

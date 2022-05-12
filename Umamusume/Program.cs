@@ -142,33 +142,24 @@ namespace Umamusume
             {
                 LogPrefix = string.Empty
             };
-            /*
-            client.Signup();
 
-            File.WriteAllText("account.json", JsonConvert.SerializeObject(client.Account));
+
+            client.ResetAccount();
+            client.Signup();
+            //var client = new UmamusumeClient(JsonConvert.DeserializeObject<Account>(File.ReadAllText("account.json")));
+            //File.WriteAllText("account.json", JsonConvert.SerializeObject(client.Account));
             client.StartSession();
             client.Login();
-            client.Request(new TutorialSkipRequest());
-            */
-            //client.StartSession();
-            var pwd = client.RetryRequest(new DataLinkChainByTransitionCodeRequest()
+            client.RetryRequest(new ChangeNameRequest
             {
-                input_viewer_id = 187899023,
-                password = Utils.Bin2Hex(Utils.MakeMd5("Pf437318"))
-            }).data;
-            client.Account.ViewerId = pwd.chained_viewer_id.Value;
-            client.Account.Authkey = pwd.auth_key;
-            client.StartSession();
-            var resp = client.Login();
-            var gachainfo = client.RetryRequest(new GachaLoadRequest());
-
-            var resp2 = client.RetryRequest(new GachaLimitExchangeRequest
-            {
-                card_id = 30015,
-                card_type = 2,
-                current_num = 200,
-                gacha_id = 30041
+                name = Utils.GenRandomPassword(Environment.TickCount64)[..8]
             });
+            client.RetryRequest(new TutorialSkipRequest());
+
+            client.StartSession();
+            var login = client.Login();
+
+            Environment.Exit(0);
         }
 
         private static void Main(string[] args)

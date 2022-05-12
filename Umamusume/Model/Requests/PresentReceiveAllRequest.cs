@@ -14,6 +14,8 @@ namespace Umamusume.Model
 
 
         public bool is_asc;
+        
+	    public int current_rest_present_num; // 0x84
 
 
 

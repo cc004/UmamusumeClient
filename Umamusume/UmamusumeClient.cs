@@ -54,7 +54,7 @@ namespace Umamusume
         public static int Reqnum => Interlocked.Exchange(ref _reqnum, 0);
 
         public Account Account { get; private set; }
-        private HttpClient client = new HttpClient(new HttpClientHandler
+        private HttpClient client = new HttpClient(new HttpClientHandler()
         {
             UseProxy = true,
             Proxy = new WebProxy(proxy_server)
@@ -158,10 +158,10 @@ namespace Umamusume
         public void ResetConnection()
         {
             Type headertype = typeof(HttpClient).Assembly.GetType("System.Net.Http.Headers.HttpHeaderType");
-            HttpClient client = new HttpClient(new HttpClientHandler
+            HttpClient client = new HttpClient(new HttpClientHandler()
             {
                 UseProxy = true,
-                Proxy = new WebProxy("127.0.0.1:1080")
+                Proxy = new WebProxy(proxy_server)
             });
 
 
@@ -298,9 +298,11 @@ namespace Umamusume
             session_id = null;
         }
 
+
+        private LoginResponse userData;
         public LoginResponse Login()
         {
-            return RetryRequest(new LoginRequest());
+            return userData = RetryRequest(new LoginRequest());
         }
 
         public PresentReceiveAllResponse.CommonResponse ReceivePresents()
@@ -309,7 +311,8 @@ namespace Umamusume
             {
                 category_filter_type = new int[0],
                 is_asc = true,
-                time_filter_type = 0
+                time_filter_type = 0,
+                current_rest_present_num = userData.data.menu_badge_info.present_num ?? 0
             });
             FCoin += resp.data.reward_summary_info?.add_fcoin ?? 0;
             current_money += resp.data.reward_summary_info?.add_item_list?.CalcMoney() ?? 0;

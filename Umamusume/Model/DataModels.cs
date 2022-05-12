@@ -1992,6 +1992,7 @@
         public SingleModeSelectedDifficultyInfo selected_difficulty_info;
         public int select_deck_id;
         public int boost_story_event_id;
+        public bool is_play_training_challenge;
     }
 
 

@@ -32,13 +32,13 @@ namespace UmamusumeFriendPoint
         private static readonly Dictionary<long, long> support_dict = MasterContext.Instance.SupportCardData
             .ToDictionary(card => card.Id, card => card.CharaId);
 
-        private static readonly InteractServer interact = new (23456);
+        //private static readonly InteractServer interact = new (23456);
 
         private static void Log(string message)
         {
             var now = DateTime.Now;
             var msg = $"{now}] {message}\n";
-            lock (interact) interact.Output(msg);
+            //lock (interact) interact.Output(msg);
             lock (loglock) File.AppendAllText($"log-{now:MM-dd}.txt", msg);
         }
 
@@ -68,6 +68,10 @@ namespace UmamusumeFriendPoint
                     //File.WriteAllText("account.json", JsonConvert.SerializeObject(client.Account));
                     client.StartSession();
                     client.Login();
+                    client.RetryRequest(new ChangeNameRequest
+                    {
+                        name = Utils.GenRandomPassword(Environment.TickCount64)[..8]
+                    });
                     client.RetryRequest(new TutorialSkipRequest());
 
                     client.StartSession();
@@ -498,15 +502,15 @@ namespace UmamusumeFriendPoint
                     DoText(Console.ReadLine());
                 }
             }).Start();
-
+            /*
             interact.Input += s =>
             {
                 foreach (var x in s.Split("\n")) DoText(x);
-            };
+            };*/
 
-            for (int i = 0; i < 80; ++i)
+            for (int i = 0; i < 1; ++i)
             {
-                Thread.Sleep(rnd.Next(0, 1000));
+                //Thread.Sleep(rnd.Next(0, 1000));
                 int j = i;
                 new Thread(() => FarmTask(j)).Start();
             }
