@@ -31,7 +31,7 @@ namespace UmamusumeLogin
 
         private static void FarmTask(int id)
         {
-            UmamusumeClient client = new UmamusumeClient(new SimpleLz4Frame(id))
+            UmamusumeClient client = new UmamusumeClient()
             {
                 LogPrefix = $"[Thread #{id}]"
             };

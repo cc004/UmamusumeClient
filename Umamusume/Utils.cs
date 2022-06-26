@@ -38,6 +38,14 @@ namespace Umamusume
         {
             return JToken.FromObject(new BoxingPacker().Unpack(content));
         }
+
+        public static byte[] FillTo(this byte[] origin, int length)
+        {
+            var result = new byte[length];
+            Array.Copy(origin, 0, result, length - origin.Length, origin.Length);
+            return origin;
+        }
+
         public static byte[] Hex2bin(string content)
         {
             return Enumerable.Range(0, content.Length / 2).Select(i => byte.Parse(content[(2 * i)..(2 * i + 2)], NumberStyles.AllowHexSpecifier)).ToArray();
@@ -50,7 +58,7 @@ namespace Umamusume
         public static byte[] MakeMd5(string content)
         {
             using MD5 md5 = MD5.Create();
-            return md5.ComputeHash(Encoding.UTF8.GetBytes(content + "r!I@mt8e5i="));
+            return md5.ComputeHash(Encoding.UTF8.GetBytes(content + "u1v72NHqkB"));
         }
 
         [ThreadStatic]

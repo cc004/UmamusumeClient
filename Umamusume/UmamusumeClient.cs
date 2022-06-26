@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using Umamusume.Model;
@@ -37,16 +38,19 @@ namespace Umamusume
     public class UmamusumeClient
     {
         public const bool dbg = false;
-        private static string header;// = "ayDiq2wxEzD3Ydc3zj8wJXUIUGZe6li2Ny+NL1dQHrOkm+SczQccvfO8S1xFXOpCL3d2Og==";
+        internal static string header;// = "ayDiq2wxEzD3Ydc3zj8wJXUIUGZe6li2Ny+NL1dQHrOkm+SczQccvfO8S1xFXOpCL3d2Og==";
         private static string appver;// = "1.2.10";
+        private static byte platform;
+
         static UmamusumeClient()
         {
             var json = JObject.Parse(File.ReadAllText("env.json"));
             header = json.Value<string>("header");
             appver = json.Value<string>("appver");
+            platform = json.Value<byte>("platform");
         }
 
-        private const string apiroot = "https://api-umamusume.cygames.jp/umamusume";
+        private const string apiroot = "https://l13-prod-all-gs-uma.komoejoy.com";
         private const string proxy_server = "127.0.0.1:1080";
 
         public static int _reqnum = 0;
@@ -54,11 +58,8 @@ namespace Umamusume
         public static int Reqnum => Interlocked.Exchange(ref _reqnum, 0);
 
         public Account Account { get; private set; }
-        private HttpClient client = new HttpClient(new HttpClientHandler()
-        {
-            UseProxy = true,
-            Proxy = new WebProxy(proxy_server)
-        });
+        private HttpClient client = CreateHttpClient();
+
         public RequestEnvironment env = RequestEnvironment.CreateDefault();
 
         private string resver;
@@ -81,21 +82,8 @@ namespace Umamusume
 
         private string session_id;
         private string SessionId => session_id ?? Account.SessionId;
-        private readonly ICryptHandler compressor;
-
-        private class Nothing : ICryptHandler
-        {
-            public string Compress(byte[] src)
-            {
-                return Convert.ToBase64String(src);
-            }
-
-            public byte[] Decompress(string src)
-            {
-                return Convert.FromBase64String(src);
-            }
-        }
-        public UmamusumeClient(ICryptHandler handler) : this(new Account(), handler) { }
+        
+        public UmamusumeClient() : this(new Account()) { }
 
         public string LogPrefix;
 
@@ -110,13 +98,12 @@ namespace Umamusume
             client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "UnityPlayer/2019.4.21f1 (UnityWebRequest/1.0, libcurl/7.52.0-DEV)");
             client.DefaultRequestHeaders.TryAddWithoutValidation("X-Unity-Version", "2019.4.21f1");
             client.DefaultRequestHeaders.TryAddWithoutValidation("APP-VER", appver);
-            client.DefaultRequestHeaders.TryAddWithoutValidation("RES-VER", "");
-            client.DefaultRequestHeaders.TryAddWithoutValidation("Device", "2");
+            client.DefaultRequestHeaders.TryAddWithoutValidation("RES-VER", "00000000");
+            client.DefaultRequestHeaders.TryAddWithoutValidation("BUMA-OPEN-ID", "0");
         }
 
-        public UmamusumeClient(Account account, ICryptHandler handler)
+        public UmamusumeClient(Account account)
         {
-            compressor = handler;
             Account = account;
             client.DefaultRequestHeaders.Clear();
             client.Timeout = new TimeSpan(0, 0, 30);
@@ -128,11 +115,20 @@ namespace Umamusume
         {
             client.DefaultRequestHeaders.TryAddWithoutValidation("SID", SessionId);
             client.DefaultRequestHeaders.TryAddWithoutValidation("ViewerID", Account.ViewerId.ToString());
+            client.DefaultRequestHeaders.TryAddWithoutValidation("BUMA-RID", 
+                Utils.Bin2Hex(Utils.MakeMd5(string.Concat(new object[]
+                {
+                    Account.Udid,
+                    Account.SessionId,
+                    DateTime.Now.ToUniversalTime().ToFileTimeUtc(),
+                    $"{Account.ViewerId:D12}"
+                }))));
         }
         private void PostRequestHeaders()
         {
             client.DefaultRequestHeaders.Remove("SID");
             client.DefaultRequestHeaders.Remove("ViewerID");
+            client.DefaultRequestHeaders.Remove("BUMA-RID");
         }
 
         public TResult RetryRequest<TResult>(RequestBase<TResult> request, int count = 3, int interval = 1000) where TResult : ResponseCommon
@@ -155,14 +151,16 @@ namespace Umamusume
             }
         }
 
+        private static HttpClient CreateHttpClient() => new HttpClient(new HttpClientHandler()
+        {
+            UseProxy = true,
+            Proxy = new WebProxy(proxy_server)
+        });
+
         public void ResetConnection()
         {
             Type headertype = typeof(HttpClient).Assembly.GetType("System.Net.Http.Headers.HttpHeaderType");
-            HttpClient client = new HttpClient(new HttpClientHandler()
-            {
-                UseProxy = true,
-                Proxy = new WebProxy(proxy_server)
-            });
+            HttpClient client = CreateHttpClient();
 
 
             typeof(HttpHeaders).GetField("_allowedHeaderTypes", bindingAttr: BindingFlags.NonPublic | BindingFlags.Instance)
@@ -178,24 +176,74 @@ namespace Umamusume
 
         private TResult Request<TResult>(RequestBase<TResult> request) where TResult : ResponseCommon
         {
-            //var arr = CommonHeader.Concat(Utils.Hex2bin(Account.SessionId)).Concat(Account.udid.ToString())
-            IEnumerable<byte> head = Convert.FromBase64String(header)
-                .Concat(Utils.Hex2bin(SessionId))
-                .Concat(Utils.Hex2bin(Account.Udid.ToString().Replace("-", "")))
-//                .Concat(Convert.FromBase64String("BWC0kRAsY0721Dsu5yG5xzlrCc4KikZRMKhOZTY8tDY="));
-                .Concat(Utils.GenRandomBytes(32));
-
-            if (Account.Authkey != null) head = head.Concat(Convert.FromBase64String(Account.Authkey));
             request.UpdateInfo(env, Account);
-            if (dbg) Console.WriteLine(JsonConvert.SerializeObject(request, Formatting.None));
-            byte[] content = Utils.Pack(JToken.FromObject(request));
-            byte[] counthead = BitConverter.GetBytes(head.Count());
-            //Console.WriteLine(string.Join(" ", counthead.Concat(head).Select(i => $"{i:x2}")));
-            string crypted = compressor.Compress(counthead.Concat(head.Concat(content)).ToArray());
-            //var crypted = SimpleLz4Frame.Compress(Convert.FromBase64String("XQEAAH50j/tMf5uTRScSC0+C/r4Q9DVfhNNeCVv6Q+boA5swND6hd6/f38nhf/W/vW3aAd9/3uyolZ2GaM1kbGPhWIFCn58eiHIqoH7ctoKMoHvGw2sL8ZtmvbVCbpryiAuTQgrK9R5Bgv3M52rZq+kt8UJf9UJGncP2ed9WQsM/tdQ5SFd+V1oFKV2BDoyxhT585T2RdZrUIBiwelK7MJf2m1VISYgMc8rbCUjOMdAzOo6WlKmuLPMg1+y1FF/gbWD8CczoloK94AeEU11AgFPTe2wSCnEjZmtRsKmDjdBkoePac6t7J7DZFqlpBcgZBimXACzgPIRCRDYph0paprwoYOM4d/LWvOwCkKNS5/6CRVT0opNoCEOTsN4MV/RE7xYf0qRPvz0QADAtLKH5i04baM681PRF45gIaVMnc+kx+7qMCSJvO3HaCcaAbrKp6N3W3IUKZXh1HVddfpp9+5U="));
+            var content = Utils.Pack(JToken.FromObject(request));
+            if (dbg) Console.WriteLine(JsonConvert.SerializeObject(request, Formatting.Indented));
+
+
+            var rnd = Utils.GenRandomBytes(32);
+            rnd[0] = 0; //platform id
+            var header = Convert.FromBase64String(UmamusumeClient.header);
+            var udid = Utils.Hex2bin(Account.Udid.ToString().Replace("-", "")).FillTo(16);
+            var sid = Utils.Hex2bin(SessionId).FillTo(16);
+
+            //udid = Utils.Hex2bin()
+
+            var head = sid
+                .Concat(udid)
+                .Concat(rnd);
+            if (Account.Authkey != null) head = head.Concat(Convert.FromBase64String(Account.Authkey));
+            var head2 = head.ToArray();
+            var headCount = BitConverter.GetBytes(head2.Length);
+            var fullHeader = headCount.Concat(head2).ToArray();
+
+            byte[] key, iv;
+
+            var temp = udid.Concat(header.TakeLast(20)).ToArray();
+            using (var md5 = MD5.Create("MD5"))
+            {
+                md5.TransformFinalBlock(temp, 0, temp.Length);
+                iv = md5.Hash;
+            }
+
+            temp = sid.Concat(header.TakeLast(20)).ToArray();
+            using (var md5 = MD5.Create("MD5"))
+            {
+                md5.TransformFinalBlock(temp, 0, temp.Length);
+                key = md5.Hash;
+            }
+
+            byte[] encryptedContent;
+
+            var aes = new RijndaelManaged();
+            aes.BlockSize = 128;
+            aes.Key = key;
+            aes.IV = iv;
+            aes.Mode = CipherMode.CBC;
+            aes.Padding = PaddingMode.PKCS7;
+            using (var ms = new MemoryStream())
+            {
+                var encryptor = aes.CreateEncryptor(key, iv);
+
+                using var stream = new CryptoStream(ms, encryptor, CryptoStreamMode.Write);
+                stream.Write(content, 0, content.Length);
+                stream.FlushFinalBlock();
+                encryptedContent = ms.ToArray();
+            }
+
+            var fullContent = fullHeader.Concat(encryptedContent).ToArray();
+
+            for (var i = 0; i < 32; ++i)
+            {
+                fullContent[i + 4] ^= rnd[i];
+                fullContent[i + 4] ^= header[i];
+            }
+            
+            var crypted = Convert.ToBase64String(fullContent);
+
             PreRequestHeaders();
             HttpResponseMessage resp;
-            string apiurl = request.GetFullUrl(apiroot);
+            var apiurl = request.GetFullUrl(apiroot);
             //Console.WriteLine(crypted);
             try
             {
@@ -208,7 +256,8 @@ namespace Umamusume
                 throw;
             }
             PostRequestHeaders();
-            string res = resp.Content.ReadAsStringAsync().Result;
+
+            var res = resp.Content.ReadAsStringAsync().Result;
             if (resp.StatusCode != HttpStatusCode.OK)
             {
                 if (resp.StatusCode == HttpStatusCode.Forbidden) ResetConnection();
@@ -216,13 +265,29 @@ namespace Umamusume
                 Console.WriteLine($"{LogPrefix} api {apiurl} ret: {resp.StatusCode}");
                 throw new Exception();
             }
+            
+            byte[] decryptedContent;
+            
+            using (var ms = new MemoryStream())
+            {
+                var bres = Convert.FromBase64String(res);
+                var encryptor = aes.CreateDecryptor(key, iv);
+                var content2 = bres[36..];
+                using var stream = new CryptoStream(ms, encryptor, CryptoStreamMode.Write);
+                stream.Write(content2, 0, content2.Length);
+                stream.FlushFinalBlock();
+                decryptedContent = ms.ToArray();
+            }
 
-            TResult obj = Utils.Unpack(compressor.Decompress(res)).ToObject<TResult>();
+            var obj = Utils.Unpack(decryptedContent).ToObject<TResult>();
 
             if (obj.data_headers.result_code == GallopResultCode.BOT_ACCESS_ATTACK_ERROR || obj.data_headers.result_code == GallopResultCode.SESSION_ERROR)
             {
                 ResetConnection();
             }
+
+            if (dbg) Console.WriteLine($"{LogPrefix} api {apiurl} ret: {obj.data_headers.result_code}");
+            if (dbg) Console.WriteLine(JsonConvert.SerializeObject(obj, Formatting.Indented));
 
             Account.ViewerId = obj.data_headers.viewer_id;
             if (!string.IsNullOrEmpty(obj.data_headers.sid))
@@ -231,14 +296,12 @@ namespace Umamusume
                 if (dbg) Console.WriteLine($"{LogPrefix} sid changed into {session_id}");
             }
 
-            if (obj.data_headers.result_code != GallopResultCode.RESULT_CODE_OK)
+            if (obj.data_headers.result_code != GallopResultCode.RESULT_CODE_OK &&
+                obj.data_headers.result_code != GallopResultCode.NOTIFY_PREPARATION_SERVICE)
             {
                 Console.WriteLine($"{LogPrefix} api {apiurl} ret: result code = {obj.data_headers.result_code}:\n{JsonConvert.SerializeObject(request, Formatting.None)}");
                 throw new ApiException(JsonConvert.SerializeObject(request, Formatting.None), JsonConvert.SerializeObject(obj, Formatting.None), obj.data_headers.result_code);
             }
-
-            if (dbg) Console.WriteLine($"{LogPrefix} api {apiurl} ret: {obj.data_headers.result_code}");
-            if (dbg) Console.WriteLine(JsonConvert.SerializeObject(obj, Formatting.Indented));
 
             var commonResp = typeof(TResult).GetField("data").GetValue(obj);
             var tpfield = commonResp?.GetType()?.GetField("tp_info");

@@ -45,7 +45,7 @@ namespace UmamusumeFriendPoint
         private static void FarmTask(int id)
         {
             Dictionary<long, UserInfoAtFriend> infoCache = new Dictionary<long, UserInfoAtFriend>();
-            UmamusumeClient client = new UmamusumeClient(new SimpleLz4Frame(id))
+            UmamusumeClient client = new UmamusumeClient()
             {
                 LogPrefix = $"[Thread #{id}]"
             };

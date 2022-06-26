@@ -208,7 +208,7 @@ namespace MsgPack
 			{
 				byte[] array2 = new byte[reader.Length];
 				reader.ReadValueRaw(array2, 0, array2.Length);
-				return array2;
+				return Encoding.UTF8.GetString(array2);
 			}
 			case TypePrefixes.FixArray:
 			case TypePrefixes.Array16:
