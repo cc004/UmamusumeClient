@@ -42,10 +42,11 @@ namespace UmamusumeFriendPoint
             lock (loglock) File.AppendAllText($"log-{now:MM-dd}.txt", msg);
         }
 
-        private static void FarmTask(int id)
+        private static void FarmTask(int id, BumaAccount account)
         {
             Dictionary<long, UserInfoAtFriend> infoCache = new Dictionary<long, UserInfoAtFriend>();
-            UmamusumeClient client = new UmamusumeClient()
+            
+            UmamusumeClient client = new UmamusumeClient(account)
             {
                 LogPrefix = $"[Thread #{id}]"
             };
@@ -55,14 +56,35 @@ namespace UmamusumeFriendPoint
 
             while (true)
             {
+                resignup:
                 try
                 {
-                    resignup:
                     Console.WriteLine($"[Thread #{id}] signing up");
-                    times = 3;
+                    times = 5;
                     curfriend.Clear();
                     infoCache.Clear();
-                    client.ResetAccount();
+                    for (;;)
+                    {
+                        try
+                        {
+                            client.Signup();
+                            client.StartSession();
+                            client.ResetAccount();
+                            break;
+                        }
+                        catch (ApiException e)
+                        {
+                            if (e.ResultCode == (GallopResultCode) 50022)
+                            {
+                                Thread.Sleep(3000);
+                            }
+                            else break;
+                        }
+                        catch
+                        {
+
+                        }
+                    }
                     client.Signup();
                     //var client = new UmamusumeClient(JsonConvert.DeserializeObject<Account>(File.ReadAllText("account.json")));
                     //File.WriteAllText("account.json", JsonConvert.SerializeObject(client.Account));
@@ -70,7 +92,7 @@ namespace UmamusumeFriendPoint
                     client.Login();
                     client.RetryRequest(new ChangeNameRequest
                     {
-                        name = Utils.GenRandomPassword(Environment.TickCount64)[..8]
+                        name = "三江书记"
                     });
                     client.RetryRequest(new TutorialSkipRequest());
 
@@ -185,8 +207,8 @@ namespace UmamusumeFriendPoint
 
                         if (!infoCache.ContainsKey(vid) || do_support_chara && !infoCache.ContainsKey(vid2))
                         {
-                            foreach (var info in client.RetryRequest(new PreSingleModeIndexRequest())
-                                .data.friend_support_card_data.summary_user_info_array)
+                            foreach (var info in client.RetryRequest(new SingleModeRentalInfoRequest())
+                                         .data.friend_support_card_data.summary_user_info_array)
                                 if (!infoCache.ContainsKey(info.viewer_id))
                                     infoCache.Add(info.viewer_id, info);
                         }
@@ -363,14 +385,12 @@ namespace UmamusumeFriendPoint
                 catch (ApiException apie) when (apie.ResultCode == GallopResultCode.SESSION_ERROR)
                 {
                     Console.WriteLine($"[Thread #{id}] Session Error");
-                    client.ResetAccount();
-                    continue;
+                    goto resignup;
                 }
                 catch (ApiException apie)
                 {
                     Console.WriteLine($"[Thread #{id}] ApiException: {apie.ResultCode}");
-                    client.ResetAccount();
-                    continue;
+                    goto resignup;
                 }
                 catch (Exception e)
                 {
@@ -392,16 +412,8 @@ namespace UmamusumeFriendPoint
                         Console.WriteLine($"exception caught when trying to unfollow {vid22}:\n{e}");
                     }
                 }
-
-                try
-                {
-                }
-                catch
-                {
-
-                }
-
-                client.ResetAccount();
+                
+                goto resignup;
             }
         }
 
@@ -456,14 +468,12 @@ namespace UmamusumeFriendPoint
 
         private static int speed;
         private static double req_speed;
-
+        private static BlockingCollection<BumaAccount> accounts;
         public static void Main(string[] args)
         {
             ThreadPool.SetMaxThreads(1024, 1024);
             ThreadPool.SetMinThreads(256, 256);
-
-            //AccountContext.context.Database.EnsureCreated();
-
+            
 
             Load();
             var rnd = new Random();
@@ -507,12 +517,13 @@ namespace UmamusumeFriendPoint
             {
                 foreach (var x in s.Split("\n")) DoText(x);
             };*/
-
-            for (int i = 0; i < 1; ++i)
+            int i = 0;
+            foreach (var account in JsonConvert.DeserializeObject<BumaAccount[]>(File.ReadAllText("buma_accounts.json")))
             {
                 //Thread.Sleep(rnd.Next(0, 1000));
                 int j = i;
-                new Thread(() => FarmTask(j)).Start();
+                new Thread(() => FarmTask(j, account)).Start();
+                ++i;
             }
 
         }
@@ -557,6 +568,7 @@ namespace UmamusumeFriendPoint
                     viewer_id = long.Parse(splits[0]),
                     times = int.Parse(splits[1])
                 });
+                
                 lock (viewer_ids2) viewer_ids2.Enqueue(new Job
                 {
                     viewer_id = long.Parse(splits[0]),

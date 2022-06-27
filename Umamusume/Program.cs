@@ -19,7 +19,7 @@ using Umamusume.Model.Master;
 namespace Umamusume
 {
     public class Program
-    {
+    {/*
         private static readonly SortedDictionary<int, string> cards = new (MasterContext.Instance
             .TextData.Where(c => c.Category == 75 && c.Index > 30000)
             .ToDictionary(c => (int)c.Index, c => c.Text));
@@ -62,7 +62,7 @@ namespace Umamusume
                 udid = client.Account.Udid.ToString(),
                 viewer_id = client.Account.ViewerId
             });
-            */
+            
 
             var invalid = client.Account.extra.support_cards.FirstOrDefault(p => !cards.ContainsKey(p.Key));
             if (invalid.Key > 30000)
@@ -124,6 +124,7 @@ namespace Umamusume
 
         private static void RegisterTask(int id)
         {
+            /*
             UmamusumeClient client = new ()
             {
                 LogPrefix = $"[Thread #{id}]",
@@ -133,30 +134,19 @@ namespace Umamusume
                 RegisterOnce(client);
             }
         }
-
-        private static void Test()
+        */
+        private static void unpack(string a, string b)
         {
-            var client = new UmamusumeClient();
-            //client.Signup();
-            /*
-            BumaClient client = new BumaClient("1.2.11", new HttpClient(new HttpClientHandler()
-            {
-                UseProxy = true,
-                Proxy = new WebProxy("127.0.0.1:8889")
-            }));
-            client.Signup();
-            */
-            
+
             var header = Convert.FromBase64String(UmamusumeClient.header);
             var encrypted = Convert.FromBase64String(
-                "QAAAAFOaOU0So2wLis3G+w3MxrFfC98NAuhCNxUu7cTUOLIvAt4K/VaRjyDr/JRkXH2g/c7h9wpfSWpdeaeiDdve60nWrcj3xofFC9LVBKDoz2aHOVsXk5aLUynxpbVkymNZpW66qdG4N4t2prcfInZva6b5WpHML+Q8uZSS8ETmfKBVz5pIlE9ydcJspbPxWdZB+gLGmgb1xXCg1szQNvn1fJ03LmH/joMvcjxeHkxUIntTdgfYl9rwA+UU8fy3XqRdH158qy5+selRg1P8XEb5X4iDSjRqtmjxjSLgbbApVrT3zFic54i9fmy/9jwKC6qh8lUfvgD+ROgCf2mQu6PDmCjWMjtogfLI9S7IZ6rNcsRIpueti1rrWu1LmDMraWoRIivjwJ28Ip5eR9Ekt/rqnLd8LB/U68qpbxNdkeUywBgXKY0Uyv+IPTXUEwD05nXIoGG9ydbuLbwBd7T7TalYFV+UGKHevqwaLD2Jm2MSgMTWOpkTYOrEejLvq80uI5AsCkKgEd99aysiaYDeOoFGv2sTlXK4ItB7Ryijgyq2jHIRhAvDA9giNy/75GZe+Z2LTcb4NA701ZtWHuJ0pJp7EIGKpqHbnJNXrpedezM8Irf/ut4/cYUz7hc9rOxpx32ICVLQc3v8ixm1GRczWbDmE6cnowScCSwBWYtDvRLqVS2b6gG3n0d7XJtlX/IuiGizOG5PK1AW+2ErTkTQ2fDUj/0=");
-            
+                a);
             for (int i = 0; i < 32; ++i)
             {
                 encrypted[i + 4] ^= header[i];
                 encrypted[i + 4] ^= encrypted[i + 36];
             }
-            
+
             var sid = encrypted[4..20];
             var udid = encrypted[20..36];
 
@@ -199,10 +189,9 @@ namespace Umamusume
             Console.WriteLine(Utils.Unpack(decryptedContent));
 
 
-            encrypted = Convert.FromBase64String(
-                "IAAAAABno2dbIBlOk0oARHXG4A+KzyVCKr2Q/AAKNGfrWjxVxNSkVEwinQveDPMkdyI6XpQRfIFEPVl0sKd6LqS+NULOQ1L4WU/Rew/bu29xDOkvixHgXyqT52MSxk2fM1Uauh91RqEhcLJ0nUre9gv/+yyqGFMH1adHC+26QM+pKSStKzZjhToUJNVGO5pS8C2QxYKNo+qVSlutgTe9Z6dufrgS9Zo/L0HpzspIpwevvPYMtHci7pdRnesyu55YCSdLyukROID0AuM0wr5BBXtZDS5MRq44RKbLdfsyVNQBRSdeZGgU1iuIGQwMwPjwH3jIle3MhBUyGZBDxMBED/dWaUHBXUOM8SHr37TInZ59B8zfWBcbtYLLpvhRTCD5bICtyg==");
+            encrypted = Convert.FromBase64String(b);
             content = encrypted[36..];
-            
+
             using (var ms = new MemoryStream())
             {
                 var encryptor = aes.CreateDecryptor(key, iv);
@@ -214,6 +203,44 @@ namespace Umamusume
             }
 
             Console.WriteLine(Utils.Unpack(decryptedContent));
+
+        }
+        private static void Test()
+        {
+            /*
+            unpack(@"
+QAAAAAWIvxojg+noHx/6UtuOI4H+Ou7E1XJUaTVEZKCVGHbDAsi2/XxCARZXdN7sl1GgRkGdX21E43gHcAFXyOyjGkqZY9XnQC+ngDq8KDmE/u7XzhzQuQ+lVto21G7DExEK4rNvuHjyYt76nVj3hbcdDO54yAtBGEl5VXcIb+iBbrzhxndLZE9E+2zCJzafRiR4UOxYOhaknD78s4EnBbS3cDM89I3ltP6VVP6mB/ztPEjaxruucsp2hqpFnOoMCMG6sHkALlFaB2vLcO1wm8XP7xJLkKo2ZOIiFoDx2ZGzGp35KFesJRYhrUpR2w1B3Hi517fboYbIXYaPmSYPfcCliF1Z9PN1i+SkPG6Sy2g1W00Hk4tzM1qsOyO4dihcipvnhZe+xKnae/aIUVQLdyQGF1qPXvOg6MY2jzdW0An+9rELlbAywFAoLeZ5I007cJeCPgAa5hkyuDoNMVggA6wkXapSd4/C926dhyLS+/hxCLWcuMFIg6KWbl7QZeaP7g9sqk8x4tbVJyS/u8rxqt2eqbDEt4wFmfcHIYcSQq3IDl+HNBvLDlRYebf85gK3WMfitbg0yXPpyLyHF99mqHkQo4WC94dLXEvpBPtUruHHFe7owjRfrix+0+oE+qpuxcobfG2fvP6u3dlxMKpS9b6X0Gnl5VRfPtV6ZUsCwYbR/6LsSrTL8Zm7u8nQxD2MgcwQPpIadlr1J0sJLbyfx0RoDNk=
+".Trim('\n'), @"
+IAAAAACdoGBM7lUjmUylnapfynxDuP9xIy4gViwa/nNx60/ZSgDL1iKTj7Rki8kHA9f0Bk/z1VhW0D22fg/8b2yofExLYAz7Beh61anz9NHcPl6hKkvECNs6I0N8gZ+bap4KGdkSseUtmHgynWlm5IXaTg5I7HrbdQicoqYkRNcBU6EwuJDYKPYoeDkFVRZxH6zwdyjXEa8ZzSdL8xRX89vH8dAyJndJu1px2aqVMWd2ceki/9SyUsY1qibcOs4o9anYlGdWVpAjKn1CFaxYELTBBg/Zh5ctR0QemtBmbTGRpgJlHmA/KZlzYzZ6n8U26UHsVfXyj+vctMxZc45J9WbI9uHq38/nNwgCSATlVcJRW7xNC+bhMFAWTqfRNxaUIK0+sg==
+".Trim('\n'));*/
+            var accounts = JsonConvert.DeserializeObject<BumaAccount[]>(File.ReadAllText("buma_accounts.json"));
+            var client = new UmamusumeClient(accounts[0]);
+
+            try
+            {
+                client.Signup();
+                client.StartSession();
+                client.ResetAccount();
+            }
+            catch
+            {
+
+            }
+            client.Signup();
+            //var client = new UmamusumeClient(JsonConvert.DeserializeObject<Account>(File.ReadAllText("account.json")));
+            //File.WriteAllText("account.json", JsonConvert.SerializeObject(client.Account));
+            client.StartSession();
+            client.Login();
+            client.RetryRequest(new ChangeNameRequest
+            {
+                name = Utils.GenRandomPassword(Environment.TickCount64)[..8]
+            });
+            client.RetryRequest(new TutorialSkipRequest());
+
+            client.StartSession();
+            var login = client.Login();
+
+            Console.WriteLine($"FCoin: {client.FCoin}");
 
             // Console.WriteLine(encrypted.Length); 
             //Console.WriteLine(string.Join(" ", encrypted.Select(b => $"{b:x2}")));
@@ -354,6 +381,7 @@ namespace Umamusume
         private static void Main(string[] args)
         {
             Test();
+            /*
             Console.Write("线程数:");
             var tcount = int.Parse(Console.ReadLine());
 
@@ -388,7 +416,7 @@ namespace Umamusume
                 int j = i;
                 new Thread(() => RegisterTask(j)).Start();
                 Thread.Sleep(500);
-            }
+            }*/
         }
     }
 }

@@ -15,6 +15,7 @@ using System.Web;
 using K4os.Compression.LZ4;
 using K4os.Compression.LZ4.Streams;
 using Umamusume.Model;
+using Umamusume.Model.Requests;
 
 namespace Umamusume
 {
@@ -38,7 +39,7 @@ namespace Umamusume
         }
     }
 
-    public class BumaClient
+    public sealed class BumaClient : IDisposable
     {
         public BumaAccount Account;
         private HttpClient client;
@@ -102,15 +103,20 @@ namespace Umamusume
             Account.access_token = result["data"]["access_key"].ToString();
             Account.uid = result["data"]["uid"].ToString();
         }
+
+        public void Dispose()
+        {
+            client?.Dispose();
+        }
     }
 
     public class UmamusumeClient
     {
         public const bool dbg = false;
         internal static string header;// = "ayDiq2wxEzD3Ydc3zj8wJXUIUGZe6li2Ny+NL1dQHrOkm+SczQccvfO8S1xFXOpCL3d2Og==";
-        private static string appver;// = "1.2.10";
+        public static readonly string appver;// = "1.2.10";
         private static byte platform;
-        private BumaClient bumaClient = new (appver, CreateHttpClient()); 
+
         static UmamusumeClient()
         {
             var json = JObject.Parse(File.ReadAllText("env.json"));
@@ -126,8 +132,8 @@ namespace Umamusume
 
         public static int Reqnum => Interlocked.Exchange(ref _reqnum, 0);
 
-        public Account Account { get; private set; }
-        public BumaAccount BumaAccount => bumaClient.Account;
+        private Account Account = new();
+        public BumaAccount bumaAccount;
 
         private HttpClient client = CreateHttpClient();
 
@@ -154,8 +160,6 @@ namespace Umamusume
         private string session_id;
         private string SessionId => session_id ?? Account.SessionId;
         
-        public UmamusumeClient() : this(new Account()) { }
-
         public string LogPrefix;
 
         private static void AddCommonHeaders(HttpClient client)
@@ -170,12 +174,11 @@ namespace Umamusume
             client.DefaultRequestHeaders.TryAddWithoutValidation("X-Unity-Version", "2019.4.21f1");
             client.DefaultRequestHeaders.TryAddWithoutValidation("APP-VER", appver);
             client.DefaultRequestHeaders.TryAddWithoutValidation("RES-VER", "00000000");
-            client.DefaultRequestHeaders.TryAddWithoutValidation("BUMA-OPEN-ID", "0");
         }
 
-        public UmamusumeClient(Account account)
+        public UmamusumeClient(BumaAccount account)
         {
-            Account = account;
+            bumaAccount = account;
             client.DefaultRequestHeaders.Clear();
             client.Timeout = new TimeSpan(0, 0, 30);
             AddCommonHeaders(client);
@@ -194,12 +197,14 @@ namespace Umamusume
                     DateTime.Now.ToUniversalTime().ToFileTimeUtc(),
                     $"{Account.ViewerId:D12}"
                 }))));
+            client.DefaultRequestHeaders.TryAddWithoutValidation("BUMA-OPEN-ID", bumaAccount.uid);
         }
         private void PostRequestHeaders()
         {
             client.DefaultRequestHeaders.Remove("SID");
             client.DefaultRequestHeaders.Remove("ViewerID");
             client.DefaultRequestHeaders.Remove("BUMA-RID");
+            client.DefaultRequestHeaders.Remove("BUMA-OPEN-ID");
         }
 
         public TResult RetryRequest<TResult>(RequestBase<TResult> request, int count = 3, int interval = 1000) where TResult : ResponseCommon
@@ -224,8 +229,8 @@ namespace Umamusume
 
         private static HttpClient CreateHttpClient() => new HttpClient(new HttpClientHandler()
         {
-            UseProxy = true,
-            Proxy = new WebProxy(proxy_server)
+            UseProxy = false,
+ //           Proxy = new WebProxy(proxy_server)
         });
 
         public void ResetConnection()
@@ -401,32 +406,22 @@ namespace Umamusume
             return obj;
         }
 
-        public void Signup(BumaAccount account)
+        public void Signup()
         {
-            ToolSignupResponse resp;
             RetryRequest(new ToolPreSignupRequest());
-            //account.udid = "NwVmAzcPPgk/Bj9cIFwg";
-            //account.uid = "1541269440073170944";
-            //account.access_token = "79401e8aff858ce7c30d49fb690a150d";
-            resp = RetryRequest(new ToolSignupRequest
+            var resp = RetryRequest(new ToolSignupRequest
             {
                 credential = "",
                 error_code = 0,
                 error_message = "",
-                buma_uid = account.uid,
-                buma_access_token = account.access_token,
-                buma_login_type = account.login_type,
-                buma_sdk_udid = account.udid
+                buma_uid = bumaAccount.uid,
+                buma_access_token = bumaAccount.access_token,
+                buma_login_type = bumaAccount.login_type,
+                buma_sdk_udid = bumaAccount.udid
             }, 100);
             Account.Authkey = resp.data.auth_key;
         }
-
-        public void Signup()
-        {
-            bumaClient.Signup();
-            Signup(bumaClient.Account);
-        }
-
+        
         public void StartSession()
         {
             ToolStartSessionResponse resp = RetryRequest(new ToolStartSessionRequest());
@@ -484,8 +479,15 @@ namespace Umamusume
 
         public void ResetAccount()
         {
-            Account = new Account();
-            session_id = null;
+            try
+            {
+                RetryRequest(new ToolBumaChainDisconnectRequest());
+            }
+            finally
+            {
+                session_id = null;
+                Account = new();
+            }
         }
 
         public void PublishTransition(string password)
