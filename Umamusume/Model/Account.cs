@@ -27,4 +27,19 @@ namespace Umamusume.Model
         public string Authkey { get; set; } = null;
         public ExtraData extra = new ExtraData();
     }
+
+    public class BumaAccount
+    {
+        public string uid, access_token, login_type, udid, adid;
+
+        public BumaAccount()
+        {
+            var rnd = new Random();
+            var buf = new byte[15];
+            rnd.NextBytes(buf);
+            udid = Convert.ToBase64String(buf);
+            adid = Guid.NewGuid().ToString();
+            login_type = "Guest";
+        }
+    }
 }

@@ -81,6 +81,10 @@ namespace Umamusume
             return Enumerable.Range(0, n).Select(_ => source[rand.Next(0, source.Length - 1)]).ToArray();
         }
 
+        public static long ToTimestamp(this DateTime time)
+        {
+            return (long)(time.ToUniversalTime() - new DateTime(1970, 1, 1, 0, 0, 0, 0)).TotalSeconds;
+        }
         public static string GenRandomPassword(long viewer_id)
         {
             if (rand == null) rand = new Random(viewer_id.GetHashCode());

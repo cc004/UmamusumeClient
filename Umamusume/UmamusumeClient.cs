@@ -11,6 +11,9 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
+using System.Web;
+using K4os.Compression.LZ4;
+using K4os.Compression.LZ4.Streams;
 using Umamusume.Model;
 
 namespace Umamusume
@@ -35,13 +38,79 @@ namespace Umamusume
         }
     }
 
+    public class BumaClient
+    {
+        public BumaAccount Account;
+        private HttpClient client;
+        private const string root = "line3-sdk-login.komoejoy.com";
+        private string appver;
+
+        public BumaClient(string appver, HttpClient client)
+        {
+            this.client = client;
+            client.DefaultRequestHeaders.TryAddWithoutValidation("user-agent", "Mozilla/5.0 BSGamesSDK");
+            client.DefaultRequestHeaders.TryAddWithoutValidation("api-version", "1");
+            this.appver = appver;
+        }
+
+        public JObject Request(string url, JObject content)
+        {
+            content["original_domain"] = $"https://{root}";
+            content["domain_switch_count"] = "0";
+            content["isRoot"] = "0";
+            content["merchant_id"] = "1650";
+            content["server_id"] = "5430";
+            content["dp"] = "1176*2206";
+            content["platform"] = "google";
+            content["pl_ver"] = "10";
+            content["platform_type"] = "3";
+            content["operators"] = "5";
+            content["ad_ext"] = "";
+            content["app_ver"] = appver;
+            content["model"] = "LIO-AN00";
+            content["sdk_log_type"] = 1;
+            content["sdk_ver"] = "2.7.4";
+            content["net"] = 4;
+            content["lang"] = "cn";
+            content["channel_id"] = 100;
+            content["web_code"] = 6;
+            content["game_id"] = 6274;
+            content["timestamp"] = DateTime.Now.ToTimestamp();
+            content["udid"] = Account.udid;
+            content["adid"] = Account.adid;
+            var form = string.Join('&',
+                content.Properties().OrderBy(p => p.Name)
+                    .Select(p => $"{p.Name}={HttpUtility.UrlEncode(p.Value.ToString())}"));
+            var temp = string.Concat(content.Properties().OrderBy(p => p.Name)
+                .Select(p => p.Value.ToString())) + "9ac4f0c17e6a4e7896d59a62ea0a2a68";
+            var t = Encoding.ASCII.GetBytes(temp);
+            using var md5 = MD5.Create("MD5");
+            md5!.TransformFinalBlock(t, 0, t.Length);
+            var sign = Utils.Bin2Hex(md5!.Hash);
+            form = $"{form}&sign={sign}";
+            var resp = client.PostAsync($"https://{root}{url}",
+                new StringContent(form, Encoding.UTF8, "application/x-www-form-urlencoded")).Result.Content;
+            var cont = resp
+                .ReadAsStringAsync().Result;
+            return JObject.Parse(cont);
+        }
+
+        public void Signup()
+        {
+            Account = new BumaAccount();
+            var result = Request("/gapi/client/tourist.login", new JObject());
+            Account.access_token = result["data"]["access_key"].ToString();
+            Account.uid = result["data"]["uid"].ToString();
+        }
+    }
+
     public class UmamusumeClient
     {
         public const bool dbg = false;
         internal static string header;// = "ayDiq2wxEzD3Ydc3zj8wJXUIUGZe6li2Ny+NL1dQHrOkm+SczQccvfO8S1xFXOpCL3d2Og==";
         private static string appver;// = "1.2.10";
         private static byte platform;
-
+        private BumaClient bumaClient = new (appver, CreateHttpClient()); 
         static UmamusumeClient()
         {
             var json = JObject.Parse(File.ReadAllText("env.json"));
@@ -51,13 +120,15 @@ namespace Umamusume
         }
 
         private const string apiroot = "https://l13-prod-all-gs-uma.komoejoy.com";
-        private const string proxy_server = "127.0.0.1:1080";
+        internal const string proxy_server = "127.0.0.1:8889";
 
         public static int _reqnum = 0;
 
         public static int Reqnum => Interlocked.Exchange(ref _reqnum, 0);
 
         public Account Account { get; private set; }
+        public BumaAccount BumaAccount => bumaClient.Account;
+
         private HttpClient client = CreateHttpClient();
 
         public RequestEnvironment env = RequestEnvironment.CreateDefault();
@@ -223,7 +294,7 @@ namespace Umamusume
             aes.Padding = PaddingMode.PKCS7;
             using (var ms = new MemoryStream())
             {
-                var encryptor = aes.CreateEncryptor(key, iv);
+                using var encryptor = aes.CreateEncryptor(key, iv);
 
                 using var stream = new CryptoStream(ms, encryptor, CryptoStreamMode.Write);
                 stream.Write(content, 0, content.Length);
@@ -267,16 +338,26 @@ namespace Umamusume
             }
             
             byte[] decryptedContent;
-            
+            var bres = Convert.FromBase64String(res);
+
             using (var ms = new MemoryStream())
             {
-                var bres = Convert.FromBase64String(res);
-                var encryptor = aes.CreateDecryptor(key, iv);
+                using var encryptor = aes.CreateDecryptor(key, iv);
                 var content2 = bres[36..];
                 using var stream = new CryptoStream(ms, encryptor, CryptoStreamMode.Write);
                 stream.Write(content2, 0, content2.Length);
                 stream.FlushFinalBlock();
                 decryptedContent = ms.ToArray();
+            }
+
+            if (bres[4] != 0)
+            {
+                LZ4Codec.Enforce32 = true;
+                using var ms = new MemoryStream(encryptedContent);
+                using var stream = LZ4Stream.Decode(ms);
+                using var ms2 = new MemoryStream();
+                stream.CopyTo(ms2);
+                decryptedContent = ms2.ToArray();
             }
 
             var obj = Utils.Unpack(decryptedContent).ToObject<TResult>();
@@ -320,33 +401,30 @@ namespace Umamusume
             return obj;
         }
 
-        public void Signup()
+        public void Signup(BumaAccount account)
         {
             ToolSignupResponse resp;
-            /*
-            do
-            {
-                try
-                {
-                    Account.Udid = Guid.NewGuid();
-                    if (resp != null && resp.data_headers.result_code == GallopResultCode.RESULT_CODE_OK) break;
-                    Thread.Sleep(2000);
-                    if (resp?.data_headers?.result_code == GallopResultCode.SAFETYNET_RETRY)
-                        Thread.Sleep(8000);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine($"{LogPrefix} {e}");
-                }
-            } while (true);
-            */
+            RetryRequest(new ToolPreSignupRequest());
+            //account.udid = "NwVmAzcPPgk/Bj9cIFwg";
+            //account.uid = "1541269440073170944";
+            //account.access_token = "79401e8aff858ce7c30d49fb690a150d";
             resp = RetryRequest(new ToolSignupRequest
             {
                 credential = "",
                 error_code = 0,
-                error_message = ""
+                error_message = "",
+                buma_uid = account.uid,
+                buma_access_token = account.access_token,
+                buma_login_type = account.login_type,
+                buma_sdk_udid = account.udid
             }, 100);
             Account.Authkey = resp.data.auth_key;
+        }
+
+        public void Signup()
+        {
+            bumaClient.Signup();
+            Signup(bumaClient.Account);
         }
 
         public void StartSession()

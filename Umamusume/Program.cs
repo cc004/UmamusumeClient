@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
@@ -124,7 +126,7 @@ namespace Umamusume
         {
             UmamusumeClient client = new ()
             {
-                LogPrefix = $"[Thread #{id}]"
+                LogPrefix = $"[Thread #{id}]",
             };
             while (true)
             {
@@ -134,19 +136,21 @@ namespace Umamusume
 
         private static void Test()
         {
-            
-            UmamusumeClient client = new()
+            var client = new UmamusumeClient();
+            //client.Signup();
+            /*
+            BumaClient client = new BumaClient("1.2.11", new HttpClient(new HttpClientHandler()
             {
-                LogPrefix = string.Empty
-            };
-            client.ResetAccount();
-            client.RetryRequest(new ToolPreSignupRequest());
-            client.RetryRequest(new ToolGetPreDownloadResourceVersionRequest());
-
+                UseProxy = true,
+                Proxy = new WebProxy("127.0.0.1:8889")
+            }));
+            client.Signup();
+            */
+            
             var header = Convert.FromBase64String(UmamusumeClient.header);
             var encrypted = Convert.FromBase64String(
-                "QAAAAEIuR8Xg0w0/rFynHZTHJnOBYURXo1ILa1k0PMbt2lgRAhDgNEuhBCsBQvObI6zsT0yiGgbMMy+yKg6IwqxbDAfT7flRmn/y8OGVXT6aPl1aDPy/1jgeo3ZBfRIcoMWE+6fY3iyYlfyfKDD9U7Zdu63GL9Ao496mugazZKuS8QFuyTvZxlu8fOn3Facs7NlNHcmf4DeMByulqihrVnCEzWZU9D82s2wM0pC887Az9ucAnKcgKeKswx1jTndFnOlJgJ+W2o9EnFlT++ljg+hRhs/eMlC8yJbzw28e7tg1hWxhFRxzLdwYMjx6QKAizK4k5caVtTpscRJCm/Ujjf/+Yqkht411zi/eaHCK9od13EJQb6O5prZz/djICRyO6Ee3OaQVfxJHDMe3CHja/bnMKyC56ZG5W2nsdeg5Rpr87ABszRZWI18417QWL1XM/WlRqvPicROqaxeWQa/oxJnHtsKXEnXFW0xwuGSdA1goaZXRN6ZydT5i54P6OvAJ1sxyShEt2w+Tl8JEcWqw0CaNd/cds40K1fj72biGr46JS35H4r/8QpFRDcektsJofbdYdXJjKj7df7w4/lcNjEywwjcYI/3VnfVKOuZ/A5LGXKpTt6djGXDh/ZMTghj2Mx/0mnX9lpWAqUmIZBqiRxCEeeXTSgrXStlxLYkt1Fw0d/bRZDJRX2a0b/j3xJPyO3ApVqnGSRGNGzJ2SsCrLdPJOEI=");
-
+                "QAAAAFOaOU0So2wLis3G+w3MxrFfC98NAuhCNxUu7cTUOLIvAt4K/VaRjyDr/JRkXH2g/c7h9wpfSWpdeaeiDdve60nWrcj3xofFC9LVBKDoz2aHOVsXk5aLUynxpbVkymNZpW66qdG4N4t2prcfInZva6b5WpHML+Q8uZSS8ETmfKBVz5pIlE9ydcJspbPxWdZB+gLGmgb1xXCg1szQNvn1fJ03LmH/joMvcjxeHkxUIntTdgfYl9rwA+UU8fy3XqRdH158qy5+selRg1P8XEb5X4iDSjRqtmjxjSLgbbApVrT3zFic54i9fmy/9jwKC6qh8lUfvgD+ROgCf2mQu6PDmCjWMjtogfLI9S7IZ6rNcsRIpueti1rrWu1LmDMraWoRIivjwJ28Ip5eR9Ekt/rqnLd8LB/U68qpbxNdkeUywBgXKY0Uyv+IPTXUEwD05nXIoGG9ydbuLbwBd7T7TalYFV+UGKHevqwaLD2Jm2MSgMTWOpkTYOrEejLvq80uI5AsCkKgEd99aysiaYDeOoFGv2sTlXK4ItB7Ryijgyq2jHIRhAvDA9giNy/75GZe+Z2LTcb4NA701ZtWHuJ0pJp7EIGKpqHbnJNXrpedezM8Irf/ut4/cYUz7hc9rOxpx32ICVLQc3v8ixm1GRczWbDmE6cnowScCSwBWYtDvRLqVS2b6gG3n0d7XJtlX/IuiGizOG5PK1AW+2ErTkTQ2fDUj/0=");
+            
             for (int i = 0; i < 32; ++i)
             {
                 encrypted[i + 4] ^= header[i];
@@ -156,9 +160,9 @@ namespace Umamusume
             var sid = encrypted[4..20];
             var udid = encrypted[20..36];
 
-            client.Account.Udid = Utils.ParseHex(udid);
+            //client.Account.Udid = Utils.ParseHex(udid);
 
-            client.RetryRequest(new ToolPreSignupRequest());
+            //client.RetryRequest(new ToolPreSignupRequest());
             byte[] key, iv;
 
             var temp = udid.Concat(header.TakeLast(20)).ToArray();
@@ -195,8 +199,8 @@ namespace Umamusume
             Console.WriteLine(Utils.Unpack(decryptedContent));
 
 
-            encrypted = Convert.FromBase64String("IAAAAACuK3E5mJILZVB14hmXnWDE4gRntziP7D/f25eC/82X+4bmdjf6Nw481zU/ohojcgTB4HQMTNchNVxMKfZlIFbK3qVmWpcuoFOvC2jEKo5axB8A2LyBv4USQDZPjbngRRIwCzuqrRlWF/Dcvwwcl1hw9j8aC7Hn/wiOVqwLfrfdORJTqstJNz1hSQD0OQryCR3BxZK5F0PyK3dry/ZT97JKtb+1mRrpgFAuU2gtYIgYpu91yrOaRohlQkIPwcauPZ+0UH+zB+EjcZVIvg1+JsthTR2/rlUoOw/5GRZB5QB/Uj0IW5IfbGSnc03BECQBkijer6OOlCOi4Tsh1P3etM7N4TYU6ddIXrrWrQvgwOXGFM7aFJlvTlgHc02NMCWAxmwI4IBFPeAOqHKpTZomvoDPJ+j+vxdxNCm4nK2dS24Y");
-
+            encrypted = Convert.FromBase64String(
+                "IAAAAABno2dbIBlOk0oARHXG4A+KzyVCKr2Q/AAKNGfrWjxVxNSkVEwinQveDPMkdyI6XpQRfIFEPVl0sKd6LqS+NULOQ1L4WU/Rew/bu29xDOkvixHgXyqT52MSxk2fM1Uauh91RqEhcLJ0nUre9gv/+yyqGFMH1adHC+26QM+pKSStKzZjhToUJNVGO5pS8C2QxYKNo+qVSlutgTe9Z6dufrgS9Zo/L0HpzspIpwevvPYMtHci7pdRnesyu55YCSdLyukROID0AuM0wr5BBXtZDS5MRq44RKbLdfsyVNQBRSdeZGgU1iuIGQwMwPjwH3jIle3MhBUyGZBDxMBED/dWaUHBXUOM8SHr37TInZ59B8zfWBcbtYLLpvhRTCD5bICtyg==");
             content = encrypted[36..];
             
             using (var ms = new MemoryStream())
